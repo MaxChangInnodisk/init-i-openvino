@@ -9,7 +9,7 @@ sudo ./docker/run.sh -m
 ```
 
 ## Demo config
-Open to app/example_sample/app.json. Change the path of model_json to you will using the application.
+Open to app/example_sample/task.json. Change the path of model_json to you will using the application.
 ```json
 {
     "framework":"openvino",
@@ -44,7 +44,7 @@ If you want to change your model of openvino and parameters, you should be chang
 ```
 ## RUN
 ``` shell
-python3 openvino_demo.py --config app/example_sample/app.json
+python3 openvino_demo.py --config app/example_sample/task.json
 ```
 
 ## Samples
