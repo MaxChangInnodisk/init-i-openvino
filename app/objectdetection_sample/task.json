@@ -1,7 +1,7 @@
 {
     "application": "object detection",
     "framework": "openvino",
-    "source": "/dev/video2",
+    "source": "/dev/video0",
     "prim": {
         "model_json": "./app/objectdetection_sample/yolo.json"
     },
