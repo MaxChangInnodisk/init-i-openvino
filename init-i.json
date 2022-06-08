@@ -1,0 +1,14 @@
+{
+    "PROJECT": "init-i",
+    "VERSION": "v0.1",
+    "PLATFORM": "intel",
+    "FRAMEWORK": "openvino",
+    "HOST": "",
+    "PORT": 819,
+    "LOGGER": "init-i-web.log",
+    "TASK_ROOT": "./app",
+    "DATA": "data",
+    "DEBUG": false,
+    "WORKER": 1,
+    "THREADING": 30
+}   
