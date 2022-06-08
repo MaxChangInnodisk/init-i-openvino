@@ -1,7 +1,7 @@
 FROM openvino/ubuntu18_dev_no_samples
 # ------------------------------------------------------------------
 WORKDIR /workspace
-COPY ["./format_print.sh", "./requirements.sh", "/workspace/" ]
+COPY ["./utils.sh", "./requirements.sh", "/workspace/" ]
 USER root
 # ------------------------------------------------------------------
 # 由於 安裝套件有互動界面會導致報錯 所以先行關閉

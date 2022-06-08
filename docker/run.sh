@@ -1,88 +1,71 @@
 #!/bin/bash
-# --------------------------------------------------------
-# Sub function
-function check_image(){ 
-	echo "$(docker images --format "table {{.Repository}}:{{.Tag}}" | grep ${1} | wc -l )" 
-}
-function check_container(){ 
-	echo "$(docker ps -a --format "{{.Names}}" | grep ${1} | wc -l )" 
-}
+source "$(dirname $(realpath $0))/utils.sh"
 
-function lower_case(){
-	echo "$1" | tr '[:upper:]' '[:lower:]'
-}
-function upper_case(){
-	echo "$1" | tr '[:lower:]' '[:upper:]'
-}
-function get_abbr_frameowkr(){
-	framework=$1
-	framework=$(lower_case $framework)
-	case $framework in 
-		"tensorrt" )
-			echo "trt";;
-		"trt" )
-			echo "trt";;
-		"openvino" )
-			echo "vino";;
-		"vino" )
-			echo "vino";;
-		\? )
-			echo "";;
-		* )
-			echo "";;
-	esac
-
-}
-function print_magic(){
-	info=$1
-	magic=$2
-	echo ""
-	if [[ $magic = true ]];then
-		echo -e $info | boxes -d dog -s 80x10
-	else
-		echo -e $info
-	fi
-	echo ""
-}
 # ---------------------------------------------------------
 # Set the default value of the getopts variable 
-gpu="all"
-port=""
-framework=""
+web=""
+project_name="init-i"
+platform=""
+version="latest"
 magic=false
 server=false
+
+# Install pre-requirement
+if [[ -z $(which jq) ]];then
+    printd "Installing requirements .... " Cy
+    sudo apt-get install jq -yqq
+fi
+
+# Variable
+CONF="init-i.json"
+FLAG=$(ls ${CONF} 2>/dev/null)
+if [[ -z $FLAG ]];then
+    CONF="${RUN_PWD}/${CONF}"
+    FLAG=$(ls ${CONF} 2>/dev/null)
+    if [[ -z $FLAG ]];then
+        printd "Couldn't find configuration (${CONF})" Cy
+        exit
+    fi
+else
+    printd "Detected configuration (${CONF})" Cy
+fi
+
+# Parse information from configuration
+project_name=$(cat ${CONF} | jq -r '.PROJECT')
+version=$(cat ${CONF} | jq -r '.VERSION')
+platform=$(cat ${CONF} | jq -r '.PLATFORM')
+port=$(cat ${CONF} | jq -r '.PORT')
+
 # ---------------------------------------------------------
 # help
 function help(){
-	echo "-----------------------------------------------------------------------"
 	echo "Run the iNIT-I environment."
 	echo
 	echo "Syntax: scriptTemplate [-g|p|c|f|smh]"
 	echo "options:"
-	echo "g		select the target gpu."
-	echo "p		run container with Web API, setup the web api port number."
-	echo "f		Setup framework like [ tensorrt, openvino ]."
+	echo "w		run container with Web API."
+	echo "f		Setup platform like [ nvidia, intel, xillinx ]."
+	echo "v		Setup docker image version like [ v0.1, lastest ]."
 	echo "s		Server mode for non vision user"
 	echo "m		Print information with magic"
 	echo "h		help."
-	echo "-----------------------------------------------------------------------"
 }
-while getopts "g:p:c:f:shm" option; do
+while getopts "c:f:v:wshmh" option; do
 	case $option in
-		g )
-			gpu=$OPTARG
-			;;
-		p )
-			port=$OPTARG
+		w )
+			web=true
 			;;
 		f )
-			framework=$OPTARG
+			platform=$OPTARG
 			;;
 		s )
 			server=true
 			;;
 		m )
 			magic=true
+			;;
+		v )
+			version=$OPTARG
 			;;
 		h )
 			help
@@ -100,11 +83,6 @@ while getopts "g:p:c:f:shm" option; do
 done
 
 # ---------------------------------------------------------
-# App framework
-framework_abbr=$(get_abbr_frameowkr ${framework})
-if [[ -z $framework_abbr ]];then help;echo "[ERROR] Unexcepted framework"; exit; fi
-
-# ---------------------------------------------------------
 # Setup Masgic
 if [[ ${magic} = true ]];then
 	printf "Preparing magic ... "
@@ -118,13 +96,21 @@ docker_image=""
 workspace=""
 docker_name=""
 mount_camera=""
-mount_gpu="--gpus"
 set_vision=""
 command="bash"
-web_api="./run_web_api.sh"
-docker_image="ivinno-${framework_abbr}"
-workspace="/ivinno-${framework_abbr}"
-docker_name="${docker_image}"
+web_api="./exec_web_api.sh"
+docker_image="${project_name}/${platform}:${version}"
+workspace="/workspace"
+docker_name="${project_name}-${platform}"
+
+# ---------------------------------------------------------
+# Check if image come from docker hub
+hub_name="maxchanginnodisk/${docker_image}"
+from_hub=$(check_image $hub_name)
+if [[ ! from_hub -eq 0 ]];then
+	echo "From Docker Hub"
+	docker_image=${hub_name}
+fi
 
 # ---------------------------------------------------------
 # SERVER or DESKTOP MODE
@@ -139,7 +125,7 @@ fi
 
 # ---------------------------------------------------------
 # Combine Camera option
-all_cam=$(ls /dev/video*)
+all_cam=$(ls /dev/video* 2>/dev/null)
 cam_arr=(${all_cam})
 
 for cam_node in "${cam_arr[@]}"
@@ -148,23 +134,21 @@ do
 done
 
 # ---------------------------------------------------------
-# Combine gpu option
-mount_gpu="${mount_gpu} device=${gpu}"
-
-# ---------------------------------------------------------
-# If port is available, run the WEB API
-if [[ -n ${port} ]];then 
-	# command="python3 ${web_api} --host 0.0.0.0 --port ${port} --af ${framework}"
-	command="source ${web_api} -n ${framework_abbr} -b 0.0.0.0:${port} -t 10"
+# If web is available, run the WEB API
+if [[ -n ${web} ]];then 
+	command="${web_api}"
 fi
 
 # ---------------------------------------------------------
+# Show information
 title="\n\
 PROGRAMMER: Welcome to iNIT-I \n\
-FRAMEWORK:  ${framework}\n\
+FRAMEWORK:  ${platform}\n\
 MODE:  ${mode}\n\
-DOCKER: ${docker_name} \n\
-PORT: ${port} \n\
+DOCKER: ${docker_image} \n\
+CONTAINER: ${docker_name} \n\
+Web API: ${web} \n\
+HOST: 0.0.0.0:${port} \n\
 CAMERA:  $((${#cam_arr[@]}/2))\n\
 GPU:  ${gpu}\n\
 COMMAND: ${command}"
@@ -175,7 +159,6 @@ print_magic "${title}" "${magic}"
 # Run container
 docker_cmd="docker run \
 --name ${docker_name} \
-${mount_gpu} \
 --rm -it \
 --net=host --ipc=host \
 -w ${workspace} \
@@ -184,7 +167,7 @@ ${mount_camera} \
 ${set_vision} \
 ${docker_image} \"${command}\""
 
-echo ""
-echo -e "Command: ${docker_cmd}"
-echo ""
+# echo ""
+# echo -e "Command: ${docker_cmd}"
+# echo ""
 bash -c "${docker_cmd}"
