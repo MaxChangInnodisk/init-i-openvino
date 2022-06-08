@@ -5,14 +5,8 @@ A library to inference model of openvino. This library enables the use of classi
 ##  Installation docker container  
 ```shell
 sudo ./docker/build.sh
-sudo ./docker/run.sh
+sudo ./docker/run.sh -m
 ```
-If you want to mount the camera:
-``` shell
-sudo ./docker/build.sh
-sudo ./docker/run.sh -c /dev/video0
-```
-
 
 ## Demo config
 Open to app/example_sample/app.json. Change the path of model_json to you will using the application.
