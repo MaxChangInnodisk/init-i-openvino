@@ -9,33 +9,6 @@ from init_i.vino.utils import Json, Draw
 from init_i.vino.utils.logger import config_logger
 import argparse
 
-# Multi_classification_model_inference 
-class Multimodel():
-    def __init__(self) -> None:
-        pass
-
-    # Get to data of appoint from ObjectDetetion reslut list 
-    def appoint_class(self, classes):
-            return [ [i, element["xmin"],element["ymin"],element["xmax"],element["ymax"]] 
-                                        for i, element in enumerate(self.info['detections']) if classes in element["det_label"] ] 
-
-    # Inference main
-    def cls_inference(self, frame, info, cls_list):
-        self.info = info
-        # Get model from model list 
-        for index in range(len(cls_list)):
-            # Get appoint list from reslut list
-            appoint_list = self.appoint_class(cls_list[index]["class"])
-            # Get obj to inference
-            for obj in appoint_list:
-                cls_info = cls_list[index]["cls"].inference(cls_list[index]["model"], 
-                                frame[obj[2]:obj[4],obj[1]:obj[3]], cls_list[index]["sec-{}".format(index+1)])
-                # Check info
-                if cls_info is not None:
-                    self.info['detections'][obj[0]]['det_label'] = cls_info['detections'][0]['det_label']
-
-            return self.info
-
 def main(args):
     # Instantiation
     json = Json()
@@ -92,10 +65,6 @@ def main(args):
                 frame = cap.read()
                 info = trg.inference(model, frame, dev_cfg[prim_ind])
                 
-                # ---------------------------# Check ObjectDetection and two model inference-------------------------
-                if 'obj' in dev_cfg[prim_ind]['tag'] and seconlist != [] and info is not None:
-                    info = Multimodel().cls_inference(frame.copy(), info, seconlist)
-
         # ---------------------------Drawing detecter to information-----------------------------------------------------------------------
                 if info is not None:
                     frame = draw.draw_detections(info, color_palette, dev_cfg[prim_ind])
