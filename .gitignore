@@ -35,3 +35,4 @@ app/*
 !app/objectdetection_sample
 !app/segmentation_sample
 !app/Retail_Product_objectdetection
+**/*/model/
