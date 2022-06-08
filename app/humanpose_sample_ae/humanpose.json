@@ -1,7 +1,7 @@
 {
     "tag": "pose",
     "openvino": {
-        "model_path": "./app/vino/humanpose_sample_ae/model/FP16/human-pose-estimation-0007.xml",
+        "model_path": "./app/humanpose_sample_ae/model/FP16/human-pose-estimation-0007.xml",
         "architecture_type": "ae",
         "label_path": null,
         "loop": false,

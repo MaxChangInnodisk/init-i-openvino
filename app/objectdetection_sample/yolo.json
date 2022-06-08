@@ -1,8 +1,8 @@
 {
     "tag": "obj",
     "openvino": {
-        "model_path": "./app/vino/objectdetection_sample/model/FP32/yolo-v3-tf.xml",
-        "label_path": "./app/vino/objectdetection_sample/model/coco.names",
+        "model_path": "./app/objectdetection_sample/model/FP32/yolo-v3-tf.xml",
+        "label_path": "./app/objectdetection_sample/model/coco.names",
         "anchors": [
             10,
             13,

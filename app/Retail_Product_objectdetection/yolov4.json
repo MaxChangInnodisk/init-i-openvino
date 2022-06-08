@@ -1,8 +1,8 @@
 {  
     "tag":"obj",
     "openvino":{
-        "model_path":"./app/vino/Retail_Product_objectdetection/model/yolo-v4-tf.xml",
-        "label_path":"./app/vino/Retail_Product_objectdetection/model/classes.txt",
+        "model_path":"./app/Retail_Product_objectdetection/model/yolo-v4-tf.xml",
+        "label_path":"./app/Retail_Product_objectdetection/model/classes.txt",
         "anchors":[86.0, 60.0,  59.0, 99.0, 101.0,109.0,
                     158.0, 76.0,  78.0,198.0, 137.0,146.0, 215.0,128.0, 177.0,197.0, 255.0,265.0],
         "architecture_type":"yolov4",

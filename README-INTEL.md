@@ -5,28 +5,28 @@ A library to inference model of openvino. This library enables the use of classi
 ##  Installation docker container  
 ```shell
 sudo ./docker/build.sh
-sudo ./docker/vino/run.sh
+sudo ./docker/run.sh
 ```
 If you want to mount the camera:
 ``` shell
 sudo ./docker/build.sh
-sudo ./docker/vino/run.sh -c /dev/video0
+sudo ./docker/run.sh -c /dev/video0
 ```
 
 
 ## Demo config
-Open to app/vino/example_sample/app.json. Change the path of model_json to you will using the application.
+Open to app/example_sample/app.json. Change the path of model_json to you will using the application.
 ```json
 {
     "framework":"openvino",
     "input_data":"/dev/video0",
     "prim-1":{
-        "model_json":"./config/vino/model_config/classification.json"
+        "model_json":"./config/model_config/classification.json"
         }
 }
 
 ```
-If you want to change your model of openvino and parameters, you should be changed the content of app/vino/example_sample/example.json 
+If you want to change your model of openvino and parameters, you should be changed the content of app/example_sample/example.json 
 
 ### Example
 ```json
@@ -50,7 +50,7 @@ If you want to change your model of openvino and parameters, you should be chang
 ```
 ## RUN
 ``` shell
-python3 openvino_demo.py --config app/vino/example_sample/app.json
+python3 openvino_demo.py --config app/example_sample/app.json
 ```
 
 ## Samples

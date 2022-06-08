@@ -3,7 +3,7 @@
     "framework": "openvino",
     "source": "/dev/video2",
     "prim": {
-        "model_json": "./app/vino/objectdetection_sample/yolo.json"
+        "model_json": "./app/objectdetection_sample/yolo.json"
     },
     "app_name": "objectdetection_sample",
     "source_type": "V4L2"

@@ -3,7 +3,7 @@
     "framework": "openvino",
     "source": "/dev/video2",
     "prim": {
-        "model_json": "./app/vino/classificaiton_sample/classification.json"
+        "model_json": "./app/classificaiton_sample/classification.json"
     },
     "app_name": "classificaiton_sample",
     "source_type": "V4L2"

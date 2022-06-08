@@ -3,7 +3,7 @@
     "framework": "openvino",
     "source": "/dev/video2",
     "prim": {
-        "model_json": "./app/vino/segmentation_sample/segmentation.json"
+        "model_json": "./app/segmentation_sample/segmentation.json"
     },
     "app_name": "segmentation_sample",
     "source_type": "V4L2"

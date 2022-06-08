@@ -1,8 +1,8 @@
 {
     "tag": "seg",
     "openvino": {
-        "model_path": "./app/vino/segmentation_sample/model/FP16-INT8/semantic-segmentation-adas-0001.xml",
-        "label_path": "./app/vino/segmentation_sample/model/classes.txt",
+        "model_path": "./app/segmentation_sample/model/FP16-INT8/semantic-segmentation-adas-0001.xml",
+        "label_path": "./app/segmentation_sample/model/classes.txt",
         "architecture_type": "segmentation",
         "device": "CPU",
         "thres": 0.8,
