@@ -1,11 +1,10 @@
 {
     "application": "humanpose",
-    "category": "sample",
     "framework": "openvino",
     "source": "/dev/video2",
     "prim": {
         "model_json": "./app/vino/humanpose_sample_ae/humanpose.json"
     },
     "app_name": "humanpose_sample_ae",
-    "input_type": "V4L2"
+    "source_type": "V4L2"
 }

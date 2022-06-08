@@ -1,9 +1,9 @@
 {
     "application": "retail product detection",
-    "category": "smart factory",
     "framework":"openvino",
     "source":"app/vino/Retail_Product_objectdetection/20180824-13-35-55-2.jpg",
     "prim":{
         "model_json":"./app/vino/Retail_Product_objectdetection/yolov4.json"
-        }
+    },
+    "source_type": "Image"
 }
