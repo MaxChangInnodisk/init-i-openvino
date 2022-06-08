@@ -1,0 +1,19 @@
+{
+    "tag": "pose",
+    "openvino": {
+        "model_path": "./app/vino/humanpose_sample_ae/model/FP16/human-pose-estimation-0007.xml",
+        "architecture_type": "ae",
+        "label_path": null,
+        "loop": false,
+        "output": false,
+        "device": "CPU",
+        "thres": 0.1,
+        "tsize": null,
+        "num_infer_requests": 0,
+        "num_streams": "",
+        "num_threads": null,
+        "output_resolution": null,
+        "utilization_monitors": "",
+        "raw_output_message": true
+    }
+}

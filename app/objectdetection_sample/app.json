@@ -1,0 +1,11 @@
+{
+    "application": "object detection",
+    "category": "sample",
+    "framework": "openvino",
+    "source": "/dev/video2",
+    "prim": {
+        "model_json": "./app/vino/objectdetection_sample/yolo.json"
+    },
+    "app_name": "objectdetection_sample",
+    "input_type": "V4L2"
+}

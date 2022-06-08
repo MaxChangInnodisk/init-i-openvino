@@ -1,0 +1,18 @@
+{
+    "tag": "seg",
+    "openvino": {
+        "model_path": "./app/vino/segmentation_sample/model/FP16-INT8/semantic-segmentation-adas-0001.xml",
+        "label_path": "./app/vino/segmentation_sample/model/classes.txt",
+        "architecture_type": "segmentation",
+        "device": "CPU",
+        "thres": 0.8,
+        "num_infer_requests": 1,
+        "num_streams": "",
+        "num_threads": null,
+        "loop": false,
+        "output": false,
+        "output_resolution": null,
+        "utilization_monitors": "",
+        "only_masks": false
+    }
+}

@@ -46,8 +46,8 @@ def main(args):
     dev_cfg = [custom_cfg[key] for key in custom_cfg.keys() if "prim" in key]
     # Summarized previous dictionary and get to relative parameter from secondary json  
     for prim_ind in range(len(dev_cfg)):
-        # Input_data append to dev_cfg
-        dev_cfg[prim_ind].update({"input_data":custom_cfg['input_data']})
+        # source append to dev_cfg
+        dev_cfg[prim_ind].update({"source":custom_cfg['source']})
         dev_cfg[prim_ind].update(json.read_json(dev_cfg[prim_ind]['model_json']))
         # Check is openvino and start processes
         if custom_cfg['framework'] == 'openvino':
@@ -83,7 +83,7 @@ def main(args):
 
         # ---------------------------Check input is camera or image and initial frame id/show id----------------------------------------
             from init_i.vino.common.images_capture import open_images_capture
-            cap = open_images_capture(dev_cfg[prim_ind]['input_data'], dev_cfg[prim_ind]['openvino']['loop'])
+            cap = open_images_capture(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['openvino']['loop'])
 
         # ---------------------------Inference---------------------------------------------------------------------------------------------
             logging.info('Starting inference...')
