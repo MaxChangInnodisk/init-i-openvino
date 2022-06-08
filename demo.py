@@ -1,13 +1,10 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 from ast import parse
-import cv2
-import sys
-import logging
-from init_i.vino.utils import Json, Draw
-# from init_i.vino.utils import config_logger as log
-from init_i.vino.utils.logger import config_logger
-import argparse
+import cv2, sys, os, logging, time, argparse
+from init_i.utils import Json, Draw
+# from init_i.utils import config_logger as log
+from init_i.utils.logger import config_logger
 
 def main(args):
     # Instantiation
@@ -21,18 +18,19 @@ def main(args):
     for prim_ind in range(len(dev_cfg)):
         # source append to dev_cfg
         dev_cfg[prim_ind].update({"source":custom_cfg['source']})
+        dev_cfg[prim_ind].update({"source_type":custom_cfg['source_type']})
         dev_cfg[prim_ind].update(json.read_json(dev_cfg[prim_ind]['model_json']))
         # Check is openvino and start processes
         if custom_cfg['framework'] == 'openvino':
         # ---------------------------Check model architecture-------------------------------------------------------
             if 'obj' in dev_cfg[prim_ind]['tag']:
-                from init_i.vino.obj import ObjectDetection as trg
+                from init_i.obj import ObjectDetection as trg
                 # ---------------------------Check secondary model and loading-------------------------
                 # Get secondary model relative parameter from first json
                 seconlist = [dev_cfg[prim_ind][key] for key in dev_cfg[prim_ind].keys() if "sec" in key]
                 
                 if seconlist != []:
-                    from init_i.vino.cls import Classification as cls
+                    from init_i.cls import Classification as cls
                     for j in range(len(seconlist)):
                         # Append to secondary dictionary relative parameter from secondary model json  
                         seconlist[j].update({"sec-{}".format(j+1):json.read_json(seconlist[j]["model_json"]), "cls":cls()})
@@ -42,27 +40,28 @@ def main(args):
                         seconlist[j].update({"model":model,"color_palette":color_palette})
 
             if "cls" in dev_cfg[prim_ind]['tag']:
-                from init_i.vino.cls import Classification as trg
+                from init_i.cls import Classification as trg
 
             if "seg" in dev_cfg[prim_ind]['tag']:
-                from init_i.vino.seg import Segmentation as trg
+                from init_i.seg import Segmentation as trg
 
             if "pose" in dev_cfg[prim_ind]['tag']:
-                from init_i.vino.pose import Pose as trg
+                from init_i.pose import Pose as trg
                 
-        # ---------------------------Load model and initial pipeline--------------------------------------------------------------------
-            trg = trg()
-            model, color_palette = trg.load_model(dev_cfg[prim_ind])
-
         # ---------------------------Check input is camera or image and initial frame id/show id----------------------------------------
-            from init_i.vino.common.images_capture import open_images_capture
-            cap = open_images_capture(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['openvino']['loop'])
+            from pipeline import Source
+            src = Source(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['source_type'])
 
+        # ---------------------------Load model and initial pipeline--------------------------------------------------------------------
+            trg = trg()  
+            model, color_palette = trg.load_model(dev_cfg[prim_ind]) if not ("pose" in dev_cfg[prim_ind]['tag']) else trg.load_model(dev_cfg[prim_ind], src.get_frame()[1])
+          
         # ---------------------------Inference---------------------------------------------------------------------------------------------
             logging.info('Starting inference...')
             print("To close the application, press 'CTRL+C' here or switch to the output window and press ESC key")
+            
             while True:
-                frame = cap.read()
+                ret_frame, frame = src.get_frame()
                 info = trg.inference(model, frame, dev_cfg[prim_ind])
                 
         # ---------------------------Drawing detecter to information-----------------------------------------------------------------------
@@ -71,17 +70,21 @@ def main(args):
                 else:
                     continue
         # ---------------------------Show--------------------------------------------------------------------------------------------------              
-                cv2.imshow('Detection Results', frame)
-                key = cv2.waitKey(1)
-                ESC_KEY = 27
-                # Quit.
-                if key in {ord('q'), ord('Q'), ESC_KEY}:
-                    break
+                if not args.server:
+                    cv2.imshow('Detection Results', frame)
+                
+                    if cv2.waitKey(1) in {ord('q'), ord('Q'), '27'}:
+                        break
+                else:
+                    if input('Enter q to leave:') in ['Q', 'q']:
+                        break
+            src.release()
 
 if __name__ == '__main__':
     config_logger('./VINO.log', 'w', "info")
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help = "The path of application config")
+    parser.add_argument('-s', '--server', action="store_true", help = "Server mode, not to display the opencv windows")
     args = parser.parse_args()
 
     sys.exit(main(args) or 0)
