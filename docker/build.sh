@@ -32,5 +32,6 @@ IMAGE_NAME="${BASE_NAME}/${TAG_PLATFORM}:${TAG_VER}"
 printd "Concatenate docker image name: ${IMAGE_NAME}" Cy
 
 # Build the docker image
+cd $ROOT
 printd "Build the docker image. (${IMAGE_NAME})" Cy
 docker build -t ${IMAGE_NAME} .
