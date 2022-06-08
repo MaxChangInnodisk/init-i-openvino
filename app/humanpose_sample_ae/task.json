@@ -5,6 +5,6 @@
     "prim": {
         "model_json": "./app/humanpose_sample_ae/humanpose.json"
     },
-    "app_name": "humanpose_sample_ae",
+    "name": "humanpose_sample_ae",
     "source_type": "V4L2"
 }

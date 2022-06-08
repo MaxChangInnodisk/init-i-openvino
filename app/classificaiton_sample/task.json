@@ -1,10 +1,10 @@
 {
     "application": "classification",
     "framework": "openvino",
-    "source": "app/classificaiton_sample/cat01.jpg",
+    "source": "/dev/video0",
     "prim": {
         "model_json": "./app/classificaiton_sample/classification.json"
     },
-    "app_name": "classificaiton_sample",
-    "source_type": "Image"
+    "name": "classificaiton_sample",
+    "source_type": "V4L2"
 }

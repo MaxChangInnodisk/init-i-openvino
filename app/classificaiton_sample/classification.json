@@ -6,7 +6,7 @@
         "loop": false,
         "output": false,
         "device": "CPU",
-        "thres": "0.98",
+        "thres": 0.98,
         "num_infer_requests": 0,
         "num_streams": "",
         "num_threads": null,

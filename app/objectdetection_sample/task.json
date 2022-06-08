@@ -5,6 +5,6 @@
     "prim": {
         "model_json": "./app/objectdetection_sample/yolo.json"
     },
-    "app_name": "objectdetection_sample",
+    "name": "objectdetection_sample",
     "source_type": "V4L2"
 }
