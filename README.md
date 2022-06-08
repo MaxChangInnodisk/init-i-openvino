@@ -1,23 +1,32 @@
-# iNIT-I
-iNIT-I is a ai inference solution on various device.
+# iNIT-I For Intel
+iNIT-I for Intel CPU, GPU
 
-## Feature
-1. Good performance: optimization with NVIDIA, Intel device.
-2. Easy to build: provide the docker image to use.
-3. Easy to use: simplify the `TensorRT`, `OpenVINO` api. 
-4. Multiple Usage we provide the CLI API and WEB API, user could choose what they want.
-5. Provide demo site at [init-i-demo](https://github.com/InnoIPA/init-i-demo)
-6. Provide the sample model in [ai-model-zoo](https://github.com/InnoIPA/ai-model-zoo)
+## Pre-requirements
+* Install [docker](https://max-c.notion.site/Install-Docker-9a0927c9b8aa4455b66548843246152f)
 
-## How to use
-|   Title   |   Content |
-|   ---     |   ---     |
-|   Intel User      |   [README-NV.md](./README-NV.md)
-|   NVIDIA User     |   [README-INTEL.md](./README-INTEL.md)
-|   Xilinx User     |   -
-|   WEB API User    |   [README-WEB.md](./README-WEB.md)
+## Prepare Environment
+1. Clone Repository and submodule
+    > submodule is web api which will be place in [init_i/web](./init_i/web)
+    ```bash
+    # clone repo and submodule
+    git clone --recurse-submodules https://github.com/MaxChangInnodisk/init-i-intel.git
+    
+    # check if submodule is downloaded
+    ls ./init_i/web
+    ai  api  app.py  __init__.py  utils
 
-## Future
-- [x] Integration with Web API
-- [ ] Framework: Integrate Xilinx
-- [ ] Framework: Integrate Hailo
+    # if not exist then download submodule again
+    # $ git submodule init && git submodule update
+    ```
+
+2. Build the docker images
+    ```bash
+    ./docker/build.sh
+    ```
+    > about 12 min.
+3. Run the docker container with web api
+    ```bash
+    ./docker/run.sh -f intel -v v0.1 -wm
+    # enter container without web api
+    ./docker/run.sh -f intel -v v0.1 -m
+    ```
