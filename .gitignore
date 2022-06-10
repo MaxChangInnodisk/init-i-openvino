@@ -36,3 +36,7 @@ app/*
 !app/segmentation_sample
 !app/Retail_Product_objectdetection
 **/*/model/
+# ---------------------------------------
+# Testing Script
+easy_web_demo.py
+template/
