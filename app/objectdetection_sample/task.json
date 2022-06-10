@@ -1,10 +1,10 @@
 {
     "application": "object detection",
     "framework": "openvino",
-    "source": "/dev/video0",
+    "source": "/workspace/data/highway.mp4",
     "prim": {
         "model_json": "./app/objectdetection_sample/yolo.json"
     },
     "name": "objectdetection_sample",
-    "source_type": "V4L2"
+    "source_type": "Video"
 }
