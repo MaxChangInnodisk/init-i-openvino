@@ -31,7 +31,7 @@ if [[ ! -d "./init_i/web" ]];then
 fi
 
 # get ip address
-ip=$(python3 -c "from init_i.web.utils.common import get_address;print(get_address())")
+ip=$(python3 -c "from init_i.web.tools.common import get_address;print(get_address())")
 echo "HOST: ${ip}" | boxes -s 80x5 -a c
 
 gunicorn --worker-class eventlet \
