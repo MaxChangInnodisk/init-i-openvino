@@ -11,7 +11,7 @@ import common
 from common.pipelines import get_user_config, Realtime
 # import common.monitors as monitors
 # from ivinno.vino.common.performance_metrics import PerformanceMetrics
-from ivinno.vino.common.images_capture import open_images_capture
+from init_i.common.images_capture import open_images_capture
 
 from .hpe_associative_embedding import HpeAssociativeEmbedding
 from .open_pose import OpenPose
