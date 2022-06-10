@@ -18,11 +18,11 @@ class Draw():
                 frame = output_transform.resize(frame)
                 for detection in info["detections"]:
                     class_id = int(detection['id'])
-                    det_label = detection['det_label']
+                    label = detection['label']
                     xmin = max(int(detection['xmin']), 0)
                     ymin = max(int(detection['ymin']), 0)
 
-                    cv2.putText(frame, '{} {:.1%}'.format(det_label, detection['score']),
+                    cv2.putText(frame, '{} {:.1%}'.format(label, detection['score']),
                                 (xmin, ymin - 7), cv2.FONT_HERSHEY_COMPLEX, 0.6, palette[0], 1)
 
         # --------------------------segmentation
@@ -47,7 +47,7 @@ class Draw():
                 for detection in info["detections"]:
                     class_id = int(detection['id'])
                     color = palette[class_id]
-                    det_label = detection['det_label']
+                    label = detection['label']
                     xmin = max(int(detection['xmin']), 0)
                     ymin = max(int(detection['ymin']), 0)
                     xmax = min(int(detection['xmax']), size[1])
@@ -55,7 +55,7 @@ class Draw():
                     xmin, ymin, xmax, ymax = output_transform.scale([xmin, ymin, xmax, ymax])
 
                     cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), color, 2)
-                    cv2.putText(frame, '{} {:.1%}'.format(det_label, detection['score']),
+                    cv2.putText(frame, '{} {:.1%}'.format(label, detection['score']),
                                 (xmin, ymin - 7), cv2.FONT_HERSHEY_COMPLEX, 0.6, color, 1)
             else:
                 print("Tag name is wrong")

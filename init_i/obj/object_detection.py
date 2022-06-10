@@ -88,15 +88,15 @@ class ObjectDetection():
                     xmax = min(int(detection.xmax), frame.shape[1])
                     ymax = min(int(detection.ymax), frame.shape[0])
                     class_id = int(detection.id)
-                    det_label = model.labels[class_id] if model.labels and len(model.labels) >= class_id else '#{}'.format(class_id)
+                    label = model.labels[class_id] if model.labels and len(model.labels) >= class_id else '#{}'.format(class_id)
                     logging.info('{:^9} | {:10f} | {:4} | {:4} | {:4} | {:4} '
-                                .format(det_label, detection.score, xmin, ymin, xmax, ymax))
+                                .format(label, detection.score, xmin, ymin, xmax, ymax))
 
                     total_bbox.append({ 'xmin':xmin, 
                                         'ymin':ymin, 
                                         'xmax':xmax, 
                                         'ymax':ymax, 
-                                        'det_label':det_label, 
+                                        'label':label, 
                                         'score': detection.score,
                                         'id': class_id})
 
@@ -137,9 +137,9 @@ def print_raw_results(size, detections, labels, threshold):
             xmax = min(int(detection.xmax), size[1])
             ymax = min(int(detection.ymax), size[0])
             class_id = int(detection.id)
-            det_label = labels[class_id] if labels and len(labels) >= class_id else '#{}'.format(class_id)
+            label = labels[class_id] if labels and len(labels) >= class_id else '#{}'.format(class_id)
             logging.info('{:^9} | {:10f} | {:4} | {:4} | {:4} | {:4} '
-                     .format(det_label, detection.score, xmin, ymin, xmax, ymax))
+                     .format(label, detection.score, xmin, ymin, xmax, ymax))
 
 class ColorPalette():
     def __init__(self, n, rng=None):

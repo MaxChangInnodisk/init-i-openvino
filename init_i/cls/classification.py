@@ -97,7 +97,7 @@ class Classification():
                                     'ymin':40, 
                                     'xmax':30, 
                                     'ymax':30, 
-                                    'det_label':model.labels[top_n_idexes], 
+                                    'label':model.labels[top_n_idexes], 
                                     'score': probs[top_n_idexes],
                                     'id': top_n_idexes})
                                     
