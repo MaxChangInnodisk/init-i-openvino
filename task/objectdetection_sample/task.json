@@ -3,7 +3,7 @@
     "framework": "openvino",
     "source": "/workspace/data/highway.mp4",
     "prim": {
-        "model_json": "./app/objectdetection_sample/yolo.json"
+        "model_json": "./task/objectdetection_sample/yolo.json"
     },
     "name": "objectdetection_sample",
     "source_type": "Video"

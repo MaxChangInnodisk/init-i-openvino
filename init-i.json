@@ -7,7 +7,7 @@
     "HOST": "",
     "PORT": 819,
     "LOGGER": "init-i-web.log",
-    "TASK_ROOT": "./app",
+    "TASK_ROOT": "./task",
     "DATA": "data",
     "DEBUG": false,
     "WORKER": 1,

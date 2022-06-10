@@ -1,10 +1,10 @@
 {
     "application": "humanpose",
     "framework": "openvino",
-    "source": "/dev/video2",
+    "source": "data/street.mp4",
     "prim": {
-        "model_json": "./app/humanpose_sample_ae/humanpose.json"
+        "model_json": "./task/humanpose_sample_ae/humanpose.json"
     },
     "name": "humanpose_sample_ae",
-    "source_type": "V4L2"
+    "source_type": "Video"
 }

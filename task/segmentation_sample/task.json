@@ -1,10 +1,10 @@
 {
     "application": "segmentation",
     "framework": "openvino",
-    "source": "/dev/video2",
+    "source": "./data/street2.mp4",
     "prim": {
-        "model_json": "./app/segmentation_sample/segmentation.json"
+        "model_json": "./task/segmentation_sample/segmentation.json"
     },
     "name": "segmentation_sample",
-    "source_type": "V4L2"
+    "source_type": "Video"
 }
