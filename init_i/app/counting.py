@@ -3,9 +3,9 @@ from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, g
 from init_i.app.pattern import App
 class Counting(App):
     
-    def __init__(self, depend_labels: list) -> None:
+    def __init__(self, depend_labels:list) -> None:
         super().__init__(depend_labels)
-        self.total_num = 0
+        self.total_num = dict()
 
     def __call__(self, frame, info):
         """
@@ -29,6 +29,8 @@ class Counting(App):
         for detection in info["detections"]:
 
             label = detection['label']
+
+            
             if label in self.depend_labels:
                 x1, y1 = max(int(detection['xmin']), 0), max(int(detection['ymin']), 0)
                 x2, y2 = min(int(detection['xmax']), size[1]), min(int(detection['ymax']), size[0])
@@ -90,9 +92,13 @@ class Counting(App):
                 cv2.putText(frame, str(idx), (pt[0]-(wid//2), pt[1]+(hei//2)), 0, 1, self.palette[label], 3)
 
             cur_total_num = list(self.track_obj[label].keys())
-            self.total_num = cur_total_num[-1] if cur_total_num != [] else self.total_num
+            # update key
+            if not label in self.total_num: 
+                self.total_num.update( { label: 0 } )
+            # update total number
+            self.total_num[label] = cur_total_num[-1] if cur_total_num != [] else self.total_num[label]
                 
-            content = f"Detected {self.total_num} {label}"
+            content = f"Detected {self.total_num[label]} {label}"
             wid, hei = get_text_size(content)
             cv2.putText(frame, content, (10, 10+(hei*(label_num+1))+(10*label_num) ), 0, 1, self.palette[label], 2)
 
