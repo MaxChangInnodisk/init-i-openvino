@@ -8,7 +8,7 @@ def get_application(config:dict):
     
     app_config = config[APP_KEY]
     app_name = app_config['name']
-    depend_label = app_config['depeed_on'] if type(app_config['depeed_on'])==list else [ app_config['depeed_on'] ]
+    depend_label = app_config['depend_on'] if type(app_config['depend_on'])==list else [ app_config['depend_on'] ]
 
     if 'counting' in app_name:
         from .counting import Counting as trg
