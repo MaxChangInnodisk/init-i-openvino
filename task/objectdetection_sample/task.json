@@ -1,7 +1,7 @@
 {
     "application": {
         "name": "counting",
-        "depend_on": ["car", "bus" ]
+        "depend_on": ["car", "bus", "person" ]
     },
     "framework": "openvino",
     "source": "/workspace/data/street.mp4",
