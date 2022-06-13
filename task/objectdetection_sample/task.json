@@ -1,7 +1,10 @@
 {
-    "application": "moving_direction",
+    "application": {
+        "name": "counting",
+        "depend_on": ["car", "bus" ]
+    },
     "framework": "openvino",
-    "source": "/workspace/data/highway.mp4",
+    "source": "/workspace/data/street.mp4",
     "prim": {
         "model_json": "./task/objectdetection_sample/yolo.json"
     },
