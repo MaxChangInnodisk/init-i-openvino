@@ -1,5 +1,7 @@
 {
-    "application": "humanpose",
+    "application": {
+        "name": "humanpose"
+    },
     "framework": "openvino",
     "source": "data/street.mp4",
     "prim": {

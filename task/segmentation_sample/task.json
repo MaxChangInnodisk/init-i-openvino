@@ -1,5 +1,7 @@
 {
-    "application": "segmentation",
+    "application": {
+        "name": "segmentation"
+    },
     "framework": "openvino",
     "source": "./data/street2.mp4",
     "prim": {

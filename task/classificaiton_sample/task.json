@@ -1,5 +1,7 @@
 {
-    "application": "classification",
+    "application": {
+        "name": "classification"
+    },
     "framework": "openvino",
     "source": "data/cat01.jpg",
     "prim": {
