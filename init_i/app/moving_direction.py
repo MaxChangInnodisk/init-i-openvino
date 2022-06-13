@@ -1,7 +1,6 @@
 import cv2, logging
-from helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
-from typing import Any
-from pattern import App
+from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
+from init_i.app.pattern import App
 
 class MovingDirection(App):
     
@@ -33,8 +32,9 @@ class MovingDirection(App):
                 self.cnt_pts_cur_frame.append( (cx, cy) )
                 
                 # draw the bbox, label text
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255,0), 2)
-                cv2.putText(frame, detection['label'], (x1, y1-10), FONT, FONT_SCALE, (0, 255, 0), FONT_THICKNESS)
+                color = self.palette[ detection['label'] ]
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                cv2.putText(frame, detection['label'], (x1, y1-10), FONT, FONT_SCALE, color, FONT_THICKNESS)
 
         # if the first frame web have to saving all object here
         if self.frame_idx <= 1:  

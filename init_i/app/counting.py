@@ -1,10 +1,11 @@
 import cv2, logging
-from helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
-from pattern import App
+from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
+from init_i.app.pattern import App
 class Counting(App):
     
     def __init__(self, depend_labels: list) -> None:
         super().__init__(depend_labels)
+        self.total_num = 0
 
     def __call__(self, frame, info):
         """
@@ -15,78 +16,88 @@ class Counting(App):
         5. The remaining items in "self.cnt_pts_cur_frame" is the new one, add to "track_obj".
         6. Draw the information in it.
         """
+        # clear data
+        for key in self.cnt_pts_cur_frame:
+            self.cnt_pts_cur_frame[key] = []
+        
         # get frame size
-        self.cnt_pts_cur_frame = []
         size = frame.shape[:2]
-
         # update frame index
         self.frame_idx += 1
 
         # capture all center point in current frame and draw the bounding box
         for detection in info["detections"]:
 
-            if detection['label'] in self.depend_labels:
+            label = detection['label']
+            if label in self.depend_labels:
                 x1, y1 = max(int(detection['xmin']), 0), max(int(detection['ymin']), 0)
                 x2, y2 = min(int(detection['xmax']), size[1]), min(int(detection['ymax']), size[0])
                 cx, cy = int((x1 + x2) / 2), int((y1 + y2) / 2)
                 
                 # saving the center point
-                self.cnt_pts_cur_frame.append( (cx, cy) )
+                self.cnt_pts_cur_frame[label].append( (cx, cy) )
                 
                 # draw the bbox, label text
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255,0), 2)
-                cv2.putText(frame, detection['label'], (x1, y1-10), FONT, FONT_SCALE, (0, 255, 0), FONT_THICKNESS)
+                cv2.rectangle(frame, (x1, y1), (x2, y2), self.palette[label], 2)
+                cv2.putText(frame, label, (x1, y1-10), FONT, FONT_SCALE, self.palette[label], FONT_THICKNESS)
 
         # if the first frame web have to saving all object here
         if self.frame_idx <= 1:  
-            for pt in self.cnt_pts_cur_frame:
-                for pt2 in self.cnt_pts_prev_frame:
-                    
-                    # calculate the distance, if smaller then limit_distance, then it might the same one
-                    if get_distance(pt, pt2) < self.limit_distance:
-                        self.track_obj[self.track_idx]=pt
-                        self.track_idx +=1
+            for label in self.depend_labels:
+                for pt in self.cnt_pts_cur_frame[label]:
+                    for pt2 in self.cnt_pts_prev_frame[label]:
+                        
+                        # calculate the distance, if smaller then limit_distance, then it might the same one
+                        if get_distance(pt, pt2) < self.limit_distance:
+                            self.track_obj[label][ self.track_idx[label] ]=pt
+                            self.track_idx[label] +=1
 
         # if not the firt frame, we update the center point and separate the new one
         else:
-            track_obj_copy = self.track_obj.copy()
-            self.cnt_pts_cur_frame_copy = self.cnt_pts_cur_frame.copy()
-            
-            for idx, pt2 in track_obj_copy.items():
+            for label in self.depend_labels:
+
+                track_obj_copy = self.track_obj[label].copy()
+                self.cnt_pts_cur_frame_copy = self.cnt_pts_cur_frame[label].copy()
                 
-                # if object not exist we have to remove the the disappear one
-                obj_exist = False
-
-                for pt in self.cnt_pts_cur_frame_copy:                
+                for idx, pt2 in track_obj_copy.items():
                     
-                    # calculate the distance, if the some one we have to update the center point
-                    if get_distance(pt, pt2) < self.limit_distance:
-                        self.track_obj[idx]=pt
-                        
-                        if pt in self.cnt_pts_cur_frame:
-                            self.cnt_pts_cur_frame.remove(pt)
-                        obj_exist = True
+                    # if object not exist we have to remove the the disappear one
+                    obj_exist = False
 
-                if not obj_exist:
-                    self.track_obj.pop(idx)
+                    for pt in self.cnt_pts_cur_frame_copy:                
+                        
+                        # calculate the distance, if the some one we have to update the center point
+                        if get_distance(pt, pt2) < self.limit_distance:
+                            self.track_obj[label][idx]=pt
+                            
+                            if pt in self.cnt_pts_cur_frame[label]:
+                                self.cnt_pts_cur_frame[label].remove(pt)
+                            obj_exist = True
+
+                    if not obj_exist:
+                        self.track_obj[label].pop(idx)
 
         # adding the remaining point to track_obj
-        for pt in self.cnt_pts_cur_frame:
-            self.track_obj[self.track_idx]=pt
-            self.track_idx +=1
-        
-        # draw the number text on frame
-        for idx, pt in self.track_obj.items():
-            wid, hei = get_text_size(str(idx))
-            cv2.putText(frame, str(idx), (pt[0]-(wid//2), pt[1]+(hei//2)), 0, 1, (0,255,50), 3)
-        # draw the total number on left-top corner
-        total_num = list(self.track_obj.keys())[-1]
-        content = f"Detected {total_num} {label}"
-        wid, hei = get_text_size(content)
-        cv2.putText(frame, content, (10, 10+(hei)), 0, 1, (0,255,50), 3)
+        for label_num, label in enumerate(self.depend_labels):
 
-        # update the preview information
-        self.cnt_pts_prev_frame = self.cnt_pts_cur_frame.copy()
+            for pt in self.cnt_pts_cur_frame[label]:
+                self.track_obj[label][ self.track_idx[label] ]=pt
+                self.track_idx[label] +=1
+            
+            # draw the number text on frame
+            for idx, pt in self.track_obj[label].items():
+                wid, hei = get_text_size(str(idx))
+                cv2.putText(frame, str(idx), (pt[0]-(wid//2), pt[1]+(hei//2)), 0, 1, self.palette[label], 3)
 
-        # return frame and total number
-        return frame, total_num
+            cur_total_num = list(self.track_obj[label].keys())
+            self.total_num = cur_total_num[-1] if cur_total_num != [] else self.total_num
+                
+            content = f"Detected {self.total_num} {label}"
+            wid, hei = get_text_size(content)
+            cv2.putText(frame, content, (10, 10+(hei*(label_num+1))+(10*label_num) ), 0, 1, self.palette[label], 2)
+
+            # update the preview information
+            self.cnt_pts_prev_frame[label] = self.cnt_pts_cur_frame[label].copy()
+
+        # return frame
+        return frame
