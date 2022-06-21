@@ -3,7 +3,7 @@
         "name": "classification"
     },
     "framework": "openvino",
-    "source": "data/cat01.jpg",
+    "source": "data/cat.jpg",
     "prim": {
         "model_json": "./task/classificaiton_sample/classification.json"
     },
