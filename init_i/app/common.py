@@ -18,6 +18,8 @@ class App(object):
         self.depend_labels = depend_labels
         self.palette = self.get_palette(depend_labels)
 
+        self.detected_labels = []
+
     def get_random_palette( self, labels:list ):
         ret = {}
         for label in labels:

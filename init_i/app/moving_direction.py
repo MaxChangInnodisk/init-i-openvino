@@ -1,6 +1,6 @@
 import cv2, logging
 from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
-from init_i.app.pattern import App
+from init_i.app.common import App
 
 class MovingDirection(App):
     
