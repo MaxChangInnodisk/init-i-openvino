@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 from ast import parse
+from copy import deepcopy
 import cv2, sys, os, logging, time, argparse
 from init_i.utils import Json, Draw
 from init_i.utils.logger import config_logger
@@ -49,7 +50,7 @@ def main(args):
 
             if "pose" in dev_cfg[prim_ind]['tag']:
                 from init_i.pose import Pose as trg
-                
+    
         # ---------------------------Check input is camera or image and initial frame id/show id----------------------------------------
             src = Source(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['source_type'])
 
@@ -69,14 +70,15 @@ def main(args):
             
             while True:
                 ret_frame, frame = src.get_frame()
-                info = trg.inference(model, frame, dev_cfg[prim_ind])
+                org_frame = frame.copy()
+                info = trg.inference(model, org_frame, dev_cfg[prim_ind])
                 
         # ---------------------------Drawing detecter to information-----------------------------------------------------------------------
                 if info is not None:
                     if not has_application:
                         frame = draw.draw_detections(info, color_palette, dev_cfg[prim_ind])
                     else:
-                        frame = application(frame, info)
+                        frame = application(org_frame, info)
                 else:
                     continue
         # ---------------------------Show--------------------------------------------------------------------------------------------------              
