@@ -9,6 +9,7 @@
     "LOGGER": "init-i-web.log",
     "TASK_ROOT": "./task",
     "DATA": "data",
+    "TEMP_PATH": "./temp",
     "DEBUG": false,
     "WORKER": 1,
     "THREADING": 30
