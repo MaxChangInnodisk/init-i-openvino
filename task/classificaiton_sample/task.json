@@ -1,6 +1,6 @@
 {
     "application": {
-        "name": "classification"
+        "name": ""
     },
     "framework": "openvino",
     "source": "data/cat.jpg",
