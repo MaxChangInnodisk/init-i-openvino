@@ -1,7 +1,31 @@
 
-import logging
+import logging, os
 APP_KEY = "application"
 FRAMEWORK = "openvino"
+
+def get_tag_app_list():
+    logging.warning(__file__)
+    dir_path = os.path.dirname(__file__)    
+    logging.warning(dir_path)
+    ret = {}
+    for path in os.listdir(dir_path):
+        
+        full_path = os.path.join(dir_path, path)
+
+        if os.path.isdir(full_path) and path!="__pycache__":
+
+            ret[path]=list()    
+
+            for app in os.listdir(full_path):
+
+                app_path = os.path.join(full_path, app)
+                check_file = os.path.isfile(app_path)
+                check_ext = os.path.splitext(app)[1]!=".pyc"
+                check_name = app != "__init__.py"
+
+                if check_file and check_ext and check_name:
+                    ret[path].append(os.path.splitext(app)[0])
+    return ret
 
 def get_application(config:dict):
     
@@ -25,21 +49,39 @@ def get_application(config:dict):
     else:
         depend_label = app_config['depend_on'] if type(app_config['depend_on'])==list else [ app_config['depend_on'] ]
 
-    if 'tracking' == app_name:
+    if 'tracking' in app_name:
         logging.warning("Got {} application".format("tracking"))
-        from .tracking import Tracking as trg
+        from .obj.tracking import Tracking as trg
 
     elif 'direction' in app_name:
         logging.warning("Got {} application".format("moving direction"))
-        from .moving_direction import MovingDirection as trg
+        from .obj.moving_direction import MovingDirection as trg
     
     elif 'counting' == app_name:
         logging.warning("Got {} application".format("pure counting"))
-        from .counting import Counting as trg
+        from .obj.counting import Counting as trg
+    
+    elif 'area' in app_name:
+        logging.warning("Got {} application".format("area detection"))
+        from .obj.area_detection import AeraDetection as trg
+    
+    elif 'heatmap' in app_name:
+        logging.warning("Got {} application".format("heatmap"))
+        from .obj.heatmap import Heatmap as trg
+    
     else:
         return None
     
-    return trg(depend_label)
+    app = trg(depend_label)
+
+    # other setting in certain application
+    if "area" in app_name:
+        if "area_points" in app_config:
+            app.set_area(app_config["area_points"])
+        else:
+            logging.error("Could not find 'area_points'")
+    
+    return app
             
 def get_labels(config:dict) -> list:
     """ get the label file and capture all category in it """
