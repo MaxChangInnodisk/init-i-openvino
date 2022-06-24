@@ -38,11 +38,7 @@ def config_logger(log_name=None, write_mode='a', level='Debug', clear_log=False)
 # ===============================================================================================
 if __name__ == '__main__':
     
-    import test
-
     config_logger(log_name='ivinno-vino.log', write_mode='w', level='debug')
     
     logging.info('start')
-
-    test.start()
 
