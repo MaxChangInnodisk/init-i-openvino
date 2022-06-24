@@ -1,6 +1,6 @@
 {
     "application": {
-        "name": ""
+        "name": "default"
     },
     "framework": "openvino",
     "source": "data/cat.jpg",
