@@ -8,6 +8,8 @@ from init_i.utils.logger import config_logger
 from init_i.web.ai.pipeline import Source
 from init_i.app.handler import get_application
 
+CV_WIN = "Detection Results"
+
 def main(args):
     # Instantiation
     json = Json()
@@ -58,38 +60,78 @@ def main(args):
             trg = trg()  
             model, color_palette = trg.load_model(dev_cfg[prim_ind]) if not ("pose" in dev_cfg[prim_ind]['tag']) else trg.load_model(dev_cfg[prim_ind], src.get_frame()[1])
 
-            has_application=True
+            has_application=False
             try:
                 application = get_application(dev_cfg[prim_ind])
+                has_application = True
             except Exception as e:
                 logging.error(e)
                 has_application=False
+                application = None
+            
+            try:
+                app_info = dev_cfg[prim_ind]["application"]
+                
+                # area_detection have to setup area
+                logging.debug('\n\n\n{}'.format(app_info["name"]))
+                if "area" in app_info["name"]:
+                    key = "area_points"
+                    if not key in app_info:
+                        logging.debug("Setting Area")
+                        ret_frame, frame = src.get_frame()
+                        if ret_frame:
+                            logging.debug("Send per frame into application to help it setting")
+                            application.set_area(pnts=None, frame=frame)
+                    else:
+                        logging.debug("Detected Area Points")
+                        application.set_area(pnts=app_info[key])
+
+                
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                msg = 'Stream Error: \n{}\n{} ({}:{})'.format(exc_type, exc_obj, fname, exc_tb.tb_lineno)
+                logging.error(msg)
+            
         # ---------------------------Inference---------------------------------------------------------------------------------------------
             logging.info('Starting inference...')
             print("To close the application, press 'CTRL+C' here or switch to the output window and press ESC key")
             
+            # define cv
+            # cv2.namedWindow(CV_WIN, cv2.WND_PROP_FULLSCREEN)
+            # cv2.setWindowProperty(CV_WIN,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+
             while True:
                 ret_frame, frame = src.get_frame()
+                t1 = time.time()
+
                 org_frame = frame.copy()
+                
                 info = trg.inference(model, org_frame, dev_cfg[prim_ind])
                 
         # ---------------------------Drawing detecter to information-----------------------------------------------------------------------
                 if info is not None:
-                    if not has_application:
+                    if not has_application or application==None:
+                        logging.debug("No application here")
                         frame = draw.draw_detections(info, color_palette, dev_cfg[prim_ind])
                     else:
                         frame = application(org_frame, info)
+                        
                 else:
                     continue
         # ---------------------------Show--------------------------------------------------------------------------------------------------              
+                t2 = time.time()
+                cv2.putText(frame, f"FPS:{int(1/(t2-t1))}", (10 , 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 1, cv2.LINE_AA)
+
                 if not args.server:
-                    cv2.imshow('Detection Results', frame)
+                    cv2.imshow(CV_WIN, frame)
                 
                     if cv2.waitKey(1) in {ord('q'), ord('Q'), '27'}:
                         break
                 else:
                     if input('Enter q to leave:') in ['Q', 'q']:
                         break
+                
             src.release()
 
 if __name__ == '__main__':
