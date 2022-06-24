@@ -160,6 +160,9 @@ print_magic "${title}" "${magic}"
 docker_cmd="docker run \
 --name ${docker_name} \
 --rm -it \
+--device /dev/dri \
+--device-cgroup-rule='c 189:* rmw' \
+-v /dev/bus/usb:/dev/bus/usb \
 --net=host --ipc=host \
 -w ${workspace} \
 -v `pwd`:${workspace} \
