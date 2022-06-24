@@ -19,14 +19,6 @@ __pycahe__
 # Plugins
 **/*/*.so
 **/*/*.o
-
-task/
-!task/classificaiton_sample/*
-!task/humanpose_sample_ae/*
-!task/objectdetection_sample/*
-!task/segmentation_sample/*
-!task/retail_product_objectdetection/*
-
 # --------------------------------------
 # Temprate Data
 **/*/*_colormap.txt
@@ -37,10 +29,15 @@ task/
 **/*/*.png
 **/*/*.avi
 **/*/*.mp4
-!**/*/*.json
-
-# ---------------------------------------
 temp/
+# --------------------------------------
+# Tasks
+task/
+!task/classificaiton_sample/
+!task/humanpose_sample_ae/
+!task/objectdetection_sample/
+!task/segmentation_sample/
+!task/retail_product/
 # ---------------------------------------
 # Testing Script
 easy_web_demo.py
