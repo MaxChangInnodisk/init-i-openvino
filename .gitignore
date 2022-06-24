@@ -29,14 +29,15 @@ __pycahe__
 **/*/*.png
 **/*/*.avi
 **/*/*.mp4
-app/*
-!app/classificaiton_sample
-!app/humanpose_sample_ae
-!app/objectdetection_sample
-!app/segmentation_sample
-!app/Retail_Product_objectdetection
-**/*/model/
+task/
+!task/classificaiton_sample/*
+!task/humanpose_sample_ae/*
+!task/objectdetection_sample/*
+!task/segmentation_sample/*
+# ---------------------------------------
+temp/
 # ---------------------------------------
 # Testing Script
 easy_web_demo.py
 template/
+test*.py
