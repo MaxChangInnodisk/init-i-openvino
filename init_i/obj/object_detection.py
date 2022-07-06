@@ -1,31 +1,24 @@
-#!/usr/bin/env python3
 import numpy as np
-import random
-import colorsys
+import random, os, sys, colorsys, logging
 from time import perf_counter
-import sys
+# sys.path.append(f'{os.getcwd()}')
+
 from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parents[1]/""))
-sys.path.append(str(Path(__file__).resolve().parents[3]/"")) #ivinno_api
 
 from openvino.inference_engine import IECore
 import common
 from common.pipelines import get_user_config, Realtime
-# from common.performance_metrics import PerformanceMetrics
-# import common.monitors as monitors
-
 from .yolo import YOLO, YoloV4
-
-import logging
 
 class ObjectDetection():
 
     def __init__(self):
         self.next_frame_id = 0
         self.next_frame_id_to_show = 0
-        # self.metrics = PerformanceMetrics()
         
     def load_model(self, config_path=""):
+
         # ---------------------------Step 1. Initialize inference engine core--------------------------------------------------
         logging.info('Initializing Inference Engine...')
         ie = IECore()
@@ -33,19 +26,22 @@ class ObjectDetection():
         # ---------------------------Step 2. Read a model in OpenVINO Intermediate Representation or ONNX format---------------
         model = get_model(ie, config_path)
         logging.info('Reading the network: {}'.format(config_path['openvino']['model_path']))
-        
         logging.info('Loading network...')
+
         # Get device relative info for inference 
         plugin_config = get_user_config( config_path['openvino']['device'], config_path['openvino']["num_streams"], config_path['openvino']["num_threads"])
+        
         # Initialize Pipeline(for inference)
         self.detector_pipeline = Realtime(ie, model, plugin_config,
                                         device=config_path['openvino']['device'])
+        
         # ---------------------------Step 3. Create detection words of color---------------
         palette = ColorPalette(len(model.labels) if model.labels else 100)
         
         return model, palette
 
     def inference(self, model, frame, json):
+        
         # Check pipeline is ready & setting output_shape & inference
         start_time = perf_counter()
         if frame is None:
