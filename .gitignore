@@ -42,3 +42,7 @@ task/
 # Testing Script
 easy_web_demo.py
 template/
+
+# ---------------------------------------
+!docs
+!docs/images/*
