@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Store the utilities
 ROOT=$(dirname `realpath $0`)
 source "${ROOT}/utils.sh"
 
@@ -8,7 +10,7 @@ if [[ -z $(which jq) ]];then
     sudo apt-get install jq -yqq
 fi
 
-# Variable
+# Checking environment configuration is existed.
 CONF="init-i.json"
 FLAG=$(ls ${CONF} 2>/dev/null)
 if [[ -z $FLAG ]];then

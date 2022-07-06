@@ -1,7 +1,6 @@
 #!/bin/bash
 source "$(dirname $(realpath $0))/utils.sh"
 
-# ---------------------------------------------------------
 # Set the default value of the getopts variable 
 web=""
 project_name="init-i"
@@ -36,16 +35,13 @@ version=$(cat ${CONF} | jq -r '.VERSION')
 platform=$(cat ${CONF} | jq -r '.PLATFORM')
 port=$(cat ${CONF} | jq -r '.PORT')
 
-# ---------------------------------------------------------
 # help
 function help(){
 	echo "Run the iNIT-I environment."
 	echo
-	echo "Syntax: scriptTemplate [-g|p|c|f|smh]"
+	echo "Syntax: scriptTemplate [-wsmh]"
 	echo "options:"
 	echo "w		run container with Web API."
-	echo "f		Setup platform like [ nvidia, intel, xillinx ]."
-	echo "v		Setup docker image version like [ v0.1, lastest ]."
 	echo "s		Server mode for non vision user"
 	echo "m		Print information with magic"
 	echo "h		help."
@@ -55,17 +51,11 @@ while getopts "c:f:v:wshmh" option; do
 		w )
 			web=true
 			;;
-		f )
-			platform=$OPTARG
-			;;
 		s )
 			server=true
 			;;
 		m )
 			magic=true
-			;;
-		v )
-			version=$OPTARG
 			;;
 		h )
 			help
