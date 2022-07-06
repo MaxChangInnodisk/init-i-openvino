@@ -1,6 +1,13 @@
-import cv2, logging
+
+import cv2, logging, copy, math
 from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
 from init_i.app.common import App
+
+def get_coord_distance(p1 , p2):
+
+    coordinate_distance = math.sqrt( ((int(p1[0])-int(p2[0]))**2)+((int(p1[1])-int(p2[1]))**2) )
+
+    return coordinate_distance
 
 class MovingDirection(App):
     
@@ -95,28 +102,46 @@ class MovingDirection(App):
                 self.track_obj[label][ self.track_idx[label] ]=pt
                 self.track_idx[label] +=1
 
-            # draw the arrow text on frame
+            # draw the arrow text on frame   
             if label in self.prev_track_obj:
-                
-                for idx, cur_pt in self.track_obj[label].items():
-                
-                    if not (idx in self.prev_track_obj[label]):
-                        continue
 
-                    prev_pt = self.prev_track_obj[label][idx]
-                    prev_pt, cur_pt = list(prev_pt), list(cur_pt)
+                if self.frame_idx > 1:
+
+                    for idx, cur_pt in self.track_obj[label].items():
                     
-                    bias = 20
-                    for i in range(2):
-                        padding = bias * (1 if prev_pt[i]> cur_pt[i] else -1)
-                        prev_pt[i] = int(prev_pt[i] + padding)
-                        cur_pt[i] = int(cur_pt[i] + padding *-1 )
+                        if not (idx in self.prev_track_obj[label]):
+                            continue
 
-                    cv2.arrowedLine(frame, cur_pt , prev_pt, self.palette[label], 2, tipLength=0.5)
+                        # get previous points
+                        prev_pt = self.prev_track_obj[label][idx]
+                        
+                        # define the lenth of arrow
+                        arrowLength = 50
+
+                        # split x and y
+                        (cur_x, cur_y), (prev_x, prev_y) = cur_pt, prev_pt
+                        
+                        # calculate momentum
+                        distance = get_coord_distance( prev_pt, cur_pt )
+                        scale = arrowLength/(1 if distance==0 else distance)
+                        momentum_x, momentum_y = ( cur_x - prev_x), ( cur_y - prev_y)
+                        bias_x , bias_y = int(scale * momentum_x), int(scale * momentum_y)
+
+                        # add bias
+                        cur_x, prev_x = (cur_x + bias_x), (prev_x - bias_x)
+                        cur_y, prev_y = (cur_y + bias_y), (prev_y - bias_y)
+                        
+                        # cv2.circle(frame, (prev_x, prev_y), 3, (0, 0, 255), 3)
+                        # cv2.circle(frame, (cur_x, cur_y), 3, (0, 255, 255), 3)
+
+                        cv2.arrowedLine(frame, (prev_x, prev_y), (cur_x, cur_y), self.palette[label], 5, tipLength=0.5)
         
-                # update the preview information
+                # update the preview information    
                 self.cnt_pts_prev_frame[label] = self.cnt_pts_cur_frame[label].copy()
+                
+            else:
+                self.prev_track_obj.update( {label: list()})
 
-        self.prev_track_obj = self.track_obj.copy()
+            self.prev_track_obj[label] = self.track_obj[label].copy()
 
         return frame
