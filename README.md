@@ -1,6 +1,7 @@
-# iVINNO-VINO
-A library to inference model of openvino. This library enables the use of classification, object detection, segmentation, humanpose.
+# iNIT-I-Intel
+iNIT-I is an AI inference tool which could support multiple AI framework and this repository is just for intel platform.
 
+* [Pre-requirements](#pre-requirements)
 * [Setting up configuration](#setting-environment)
 * [Build docker image](#build-docker-image)
 * [Run docker container](#run-docker-container)
@@ -8,8 +9,10 @@ A library to inference model of openvino. This library enables the use of classi
 * [Run DEMO](#run-demo)
 * [Samples](#samples)
 
-## Setting environment
+## Pre-requirements
+* Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
+## Setting environment
 We use [init-i.json](init-i.json) to configure environment, you can see the detail in [configure_environment.md](docs/configure_environment.md)
 | Key       | Sample            | Describe
 | ---       | ---               | --- 
@@ -17,7 +20,6 @@ We use [init-i.json](init-i.json) to configure environment, you can see the deta
 | VERSION   | v0.1              | docker image version
 | HOST      |                 | ip address, it will capture automatically if not setting.
 | PORT      | 819               | port number, 819 for intel
-
 
 ##  Build docker image
 ```shell
@@ -29,8 +31,9 @@ sudo ./docker/build.sh
 sudo ./docker/run.sh -wm
 ```
 
-## Run Classfication DEMO
+## Run DEMO
 We Using `task.json` to configure each AI task and using `<model>.json` to configure each models, check [ task configuration ](./docs/task_configuration.md) and [model configuration](./docs/model_configuration.md) to see more detail.
+> Classficiation
 ``` shell
 python3 demo.py --config task/classificaiton_sample/task.json
 ```
