@@ -12,8 +12,8 @@ ALPHA = 0.7
 BORDER = 2
 
 CV_WIN = "Setup Area"
-cv2.namedWindow(CV_WIN, cv2.WND_PROP_FULLSCREEN)
-cv2.setWindowProperty(CV_WIN,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+# cv2.namedWindow(CV_WIN, cv2.WND_PROP_FULLSCREEN)
+# cv2.setWindowProperty(CV_WIN,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
 class AeraDetection(App):
 
