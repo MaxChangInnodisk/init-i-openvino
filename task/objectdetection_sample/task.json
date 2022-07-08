@@ -3,7 +3,7 @@
         "name": "counting"
     },
     "framework": "openvino",
-    "source": "/workspace/data/street2.mp4",
+    "source": "/workspace/data/street.mp4",
     "prim": {
         "model_json": "./task/objectdetection_sample/yolo.json"
     },
