@@ -14,7 +14,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 ##  Build docker image
 * Build from docker file
     
-    We use [init-i.json](init-i.json) to manage environment, like "docker image name", "docker image version", "port number", etc. You can see more detail in [setup_environment.md](docs/setup_environment.md)
+    We use [ivit-i.json](ivit-i.json) to manage environment, like "docker image name", "docker image version", "port number", etc. You can see more detail in [setup_environment.md](docs/setup_environment.md)
     ```bash
     sudo ./docker/build.sh
     ```
