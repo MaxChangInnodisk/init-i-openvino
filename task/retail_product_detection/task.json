@@ -1,0 +1,12 @@
+{
+    "application": {
+        "name": "default"
+    },
+    "framework":"openvino",
+    "source":"./data/retail_sample.png",
+    "prim":{
+        "model_json":"./task/retail_product_detection/yolov4.json"
+    },
+    "name": "retail_product_detection",
+    "source_type": "Image"
+}

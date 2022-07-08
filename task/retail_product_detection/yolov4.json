@@ -1,0 +1,27 @@
+{  
+    "tag":"obj",
+    "openvino":{
+        "model_path":"./task/retail_product_detection/model/yolo-v4-tf.xml",
+        "label_path":"./task/retail_product_detection/model/classes.txt",
+        "anchors":[86.0, 60.0,  59.0, 99.0, 101.0,109.0,
+                    158.0, 76.0,  78.0,198.0, 137.0,146.0, 215.0,128.0, 177.0,197.0, 255.0,265.0],
+        "architecture_type":"yolov4",
+        "device":"CPU",
+        "thres":0.8,
+        "keep_aspect_ratio":false,
+        "masks":null,
+        "num_infer_requests":0,
+        "num_streams":"",
+        "num_threads":null,
+        "loop":true,
+        "output":false,
+        "output_resolution":null,
+        "utilization_monitors":"",
+        "reverse_input_channels":false,
+        "mean_values":null,
+        "scale_values":null,
+        "raw_output_message":false
+    }
+}
+
+ 
