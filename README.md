@@ -11,8 +11,13 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 ## Pre-requirements
 * Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
-##  Build docker image
-* Build from docker file
+
+##  Prepare Environment
+1. Download iVIT-I with Web API
+    ```shell
+    git clone --recurse-submodules https://github.com/MaxChangInnodisk/ivit-i-intel.git && cd ivit-i-intel
+    ```
+2. Build from docker file
     
     We use [ivit-i.json](ivit-i.json) to manage environment, like "docker image name", "docker image version", "port number", etc. You can see more detail in [setup_environment.md](docs/setup_environment.md)
     ```bash
