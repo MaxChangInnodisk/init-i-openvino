@@ -1,4 +1,4 @@
 [submodule "init_i/web"]
 	path = init_i/web
-	url = https://github.com/MaxChangInnodisk/ivit_i-i-web-api.git
+	url = https://github.com/MaxChangInnodisk/ivit-i-web-api.git
 	branch = master
