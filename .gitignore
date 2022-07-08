@@ -6,6 +6,7 @@ __pycahe__
 **/*/*.pyc
 # --------------------------------------
 # Model and Configuration file ( YOLO )
+**/*/model
 **/*/*.trt
 **/*/*.plan
 **/*/*.pth
@@ -24,25 +25,10 @@ __pycahe__
 **/*/*_colormap.txt
 *.log
 **/*/*.log
-**/*/*.jpg
-**/*/*.jpeg
-**/*/*.png
-**/*/*.avi
-**/*/*.mp4
-temp/
+temp
+data
 # --------------------------------------
-# Tasks
-task/
-!task/classificaiton_sample/
-!task/humanpose_sample_ae/
-!task/objectdetection_sample/
-!task/segmentation_sample/
-!task/retail_product/
-# ---------------------------------------
-# Testing Script
-easy_web_demo.py
-template/
-
+# Sample Tasks
 # ---------------------------------------
 !docs
 !docs/images/*

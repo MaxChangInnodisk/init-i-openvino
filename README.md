@@ -32,7 +32,7 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
     ./task/classificaiton_sample/download_model.sh
 
     # Meta data
-    wget https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262_960_720.jpg -O ./data/cat.jpg
+    ./task/classificaiton_sample/download_data.sh
     ```
 3. Run demo script.
     ``` bash
@@ -53,6 +53,7 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 
 ## Check Web API
 We recommand [Postman](https://www.postman.com/) to test your web api , you could see more detail in `<Your IP Address>:819/help` or `<Your IP Address>:819/apidocs`.
+![apidocs](docs/images/apidocs.png)
 
 ## Samples
 
