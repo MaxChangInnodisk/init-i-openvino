@@ -1,18 +1,18 @@
-# Configure Environment ( `init-i.json` )
+# Configure Environment ( `ivit-i.json` )
 
-We use [init-i.json](../init-i.json) to configure environment.
+We use [ivit-i.json](../ivit-i.json) to configure environment.
 
 
 | Key       | Sample            | Describe
 | ---       | ---               | --- 
-| PROJECT   | init-i            | project name
+| PROJECT   | ivit-i            | project name
 | VERSION   | v0.1              | docker image version
 | PLATFORM  | intel             | the platform name, etc. nvidia, intel, xilinx
 | FRAMEWORK | openvino          | tensorrt (nvidia), openvino (intel), vitis-ai (xilinx)
 | AF        | openvino          | same with FRAMEWORK
 | HOST      |                 | ip address, it will capture automatically if not setting.
 | PORT      | 819               | port number, 819 for intel
-| LOGGER    | init-i-web.log    | logger name
+| LOGGER    | ivit-i-web.log    | logger name
 | TASK_ROOT | task              | AI task directory
 | DATA      | data              | path to meta data
 | TEMP_PATH | temp              | path to temporary folder

@@ -7,7 +7,7 @@ if [[ -z $(which jq) ]];then
 fi
 
 # Variable
-CONF="init-i.json"
+CONF="ivit-i.json"
 FLAG=$(ls ${CONF} 2>/dev/null)
 if [[ -z $FLAG ]];then
     CONF="${RUN_PWD}/${CONF}"
@@ -22,7 +22,7 @@ fi
 PORT=$(cat ${CONF} | jq -r '.PORT')
 WORKER=$(cat ${CONF} | jq -r '.WORKER')
 THREADING=$(cat ${CONF} | jq -r '.THREADING')
-export INIT_I=/workspace/init-i.json
+export IVIT_I=/workspace/ivit-i.json
 
 # Run
 if [[ ! -d "./init_i/web" ]];then
