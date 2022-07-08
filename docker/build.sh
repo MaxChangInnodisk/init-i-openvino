@@ -1,4 +1,6 @@
 #!/bin/bash
+CONF="ivit-i.json"
+
 
 # Store the utilities
 ROOT=$(dirname `realpath $0`)
@@ -11,7 +13,6 @@ if [[ -z $(which jq) ]];then
 fi
 
 # Checking environment configuration is existed.
-CONF="init-i.json"
 FLAG=$(ls ${CONF} 2>/dev/null)
 if [[ -z $FLAG ]];then
     CONF="${RUN_PWD}/${CONF}"

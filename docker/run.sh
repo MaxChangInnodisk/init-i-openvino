@@ -3,7 +3,7 @@ source "$(dirname $(realpath $0))/utils.sh"
 
 # Set the default value of the getopts variable 
 web=""
-project_name="init-i"
+project_name="ivit-i"
 platform=""
 version="latest"
 magic=false
@@ -16,7 +16,7 @@ if [[ -z $(which jq) ]];then
 fi
 
 # Variable
-CONF="init-i.json"
+CONF="ivit-i.json"
 FLAG=$(ls ${CONF} 2>/dev/null)
 if [[ -z $FLAG ]];then
     CONF="${RUN_PWD}/${CONF}"
