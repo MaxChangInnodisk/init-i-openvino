@@ -131,7 +131,7 @@ def main(args):
             src.release()
 
 if __name__ == '__main__':
-    config_logger('./init-i.log', 'w', "info")
+    config_logger('./ivit-i.log', 'w', "info")
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help = "The path of application config")
     parser.add_argument('-s', '--server', action="store_true", help = "Server mode, not to display the opencv windows")
