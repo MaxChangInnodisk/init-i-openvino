@@ -150,17 +150,17 @@ print_magic "${title}" "${magic}"
 docker_cmd="docker run \
 --name ${docker_name} \
 --rm -it \
+--net=host --ipc=host \
 --device /dev/dri \
 --device-cgroup-rule='c 189:* rmw' \
 -v /dev/bus/usb:/dev/bus/usb \
---net=host --ipc=host \
 -w ${workspace} \
 -v `pwd`:${workspace} \
 ${mount_camera} \
 ${set_vision} \
 ${docker_image} \"${command}\""
 
-# echo ""
-# echo -e "Command: ${docker_cmd}"
-# echo ""
+echo ""
+echo -e "Command: ${docker_cmd}"
+echo ""
 bash -c "${docker_cmd}"
