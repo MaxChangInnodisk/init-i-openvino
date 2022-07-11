@@ -25,17 +25,17 @@ THREADING=$(cat ${CONF} | jq -r '.THREADING')
 export IVIT_I=/workspace/ivit-i.json
 
 # Run
-if [[ ! -d "./init_i/web" ]];then
+if [[ ! -d "./ivit_i/web" ]];then
     echo "Could not found the web api, make sure the submodule is downloaded."
     exit
 fi
 
 # get ip address
-ip=$(python3 -c "from init_i.web.tools.common import get_address;print(get_address())")
+ip=$(python3 -c "from ivit_i.web.tools.common import get_address;print(get_address())")
 echo "HOST: ${ip}" | boxes -s 80x5 -a c
 
 gunicorn --worker-class eventlet \
 -w ${WORKER} \
 --threads ${THREADING} \
 --bind 0.0.0.0:${PORT} \
-init_i.web.app:app
+ivit_i.web.app:app

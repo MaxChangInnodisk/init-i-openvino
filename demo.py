@@ -3,10 +3,10 @@
 from ast import parse
 from copy import deepcopy
 import cv2, sys, os, logging, time, argparse
-from init_i.utils import Json, Draw
-from init_i.utils.logger import config_logger
-from init_i.web.ai.pipeline import Source
-from init_i.app.handler import get_application
+from ivit_i.utils import Json, Draw
+from ivit_i.utils.logger import config_logger
+from ivit_i.web.ai.pipeline import Source
+from ivit_i.app.handler import get_application
 
 CV_WIN = "Detection Results"
 
@@ -29,13 +29,13 @@ def main(args):
         if custom_cfg['framework'] == 'openvino':
         # ---------------------------Check model architecture-------------------------------------------------------
             if 'obj' in dev_cfg[prim_ind]['tag']:
-                from init_i.obj import ObjectDetection as trg
+                from ivit_i.obj import ObjectDetection as trg
                 # ---------------------------Check secondary model and loading-------------------------
                 # Get secondary model relative parameter from first json
                 seconlist = [dev_cfg[prim_ind][key] for key in dev_cfg[prim_ind].keys() if "sec" in key]
                 
                 if seconlist != []:
-                    from init_i.cls import Classification as cls
+                    from ivit_i.cls import Classification as cls
                     for j in range(len(seconlist)):
                         # Append to secondary dictionary relative parameter from secondary model json  
                         seconlist[j].update({"sec-{}".format(j+1):json.read_json(seconlist[j]["model_json"]), "cls":cls()})
@@ -45,13 +45,13 @@ def main(args):
                         seconlist[j].update({"model":model,"color_palette":color_palette})
 
             if "cls" in dev_cfg[prim_ind]['tag']:
-                from init_i.cls import Classification as trg
+                from ivit_i.cls import Classification as trg
 
             if "seg" in dev_cfg[prim_ind]['tag']:
-                from init_i.seg import Segmentation as trg
+                from ivit_i.seg import Segmentation as trg
 
             if "pose" in dev_cfg[prim_ind]['tag']:
-                from init_i.pose import Pose as trg
+                from ivit_i.pose import Pose as trg
     
         # ---------------------------Check input is camera or image and initial frame id/show id----------------------------------------
             src = Source(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['source_type'])

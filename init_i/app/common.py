@@ -37,7 +37,7 @@ class App(object):
 
     def get_palette( self, labels):
         ret = {}
-        path = "init_i/app/palette.json"
+        path = "ivit_i/app/palette.json"
         if not os.path.exists(path):
             path = "./palette.json"
         if not os.path.exists(path):

@@ -1,7 +1,7 @@
 
 import cv2, logging, copy, math
-from init_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
-from init_i.app.common import App
+from ivit_i.app.helper import FONT, FONT_SCALE, FONT_THICKNESS, get_text_size, get_distance
+from ivit_i.app.common import App
 
 def get_coord_distance(p1 , p2):
 

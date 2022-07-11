@@ -2,7 +2,7 @@
 from cProfile import label
 import logging, cv2
 from demo import CV_WIN
-from init_i.app.common import App
+from ivit_i.app.common import App
 import numpy as np
 
 DET_COLOR = ( 0, 255, 0 )
