@@ -15,7 +15,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 ##  Prepare Environment
 1. Download iVIT-I with Web API
     ```shell
-    git clone --recurse-submodules https://github.com/MaxChangInnodisk/ivit-i-intel.git && cd ivit-i-intel
+    git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
     ```
 2. Build from docker file
     
