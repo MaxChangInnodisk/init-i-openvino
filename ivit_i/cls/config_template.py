@@ -4,8 +4,8 @@ from re import TEMPLATE
 TEMPLATE = {
     "tag": "cls",
     "openvino": {
-        "model_path": "./task/classificaiton_sample/model/resnet_v1_50_inference.xml",
-        "label_path": "./task/classificaiton_sample/model/imagenet.names",
+        "model_path": "./task/classification_sample/model/resnet_v1_50_inference.xml",
+        "label_path": "./task/classification_sample/model/imagenet.names",
         "loop": False,
         "output": False,
         "device": "CPU",
