@@ -4,8 +4,8 @@ function download(){
 	ID=$1
 	NAME=$2
 
-	if [[ -z $(ls ${NAME}) ]];then
-		echo "$(date +"%F %T") $NAME is exists !"
+	if [[ ! -z $(ls model 2>/dev/null )  ]];then
+		echo "$(date +"%F %T") the model folder has already exist !"
 	else
 		gdown --id $ID -O $NAME
 	fi
