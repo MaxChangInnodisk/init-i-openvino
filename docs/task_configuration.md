@@ -2,10 +2,10 @@
 
 ```json
 {
-    "name": "classificaiton_sample",
+    "name": "classification_sample",
     "framework": "openvino",
     "prim": {
-        "model_json": "./task/classificaiton_sample/classification.json"
+        "model_json": "./task/classification_sample/classification.json"
     },
     "source_type": "Image",
     "source": "data/cat.jpg",
