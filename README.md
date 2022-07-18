@@ -34,14 +34,14 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 2. Download model ( only in sample task ) and meta data.
     ```bash
     # Model
-    ./task/classificaiton_sample/download_model.sh
+    ./task/classification_sample/download_model.sh
 
     # Meta data
-    ./task/classificaiton_sample/download_data.sh
+    ./task/classification_sample/download_data.sh
     ```
 3. Run demo script.
     ``` bash
-    python3 demo.py --config task/classificaiton_sample/task.json
+    python3 demo.py --config task/classification_sample/task.json
     ```
 
 ## Execute Web API
