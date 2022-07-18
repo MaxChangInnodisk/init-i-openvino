@@ -1,17 +1,35 @@
 #!/bin/bash
+printf "\n"
+printf "# Download File \n"
 
+# Define Parameters 
+URL="https://drive.google.com/file/d/13EB1tusc55goSD1XzSAr1K0WCeWjdXze/view?usp=sharing"
+GID="13EB1tusc55goSD1XzSAr1K0WCeWjdXze"
 TRG_FOLDER="/workspace/data"
 FILE_NAME="retail_sample.png"
+LEN=20
 
-URL="https://innodisk365-my.sharepoint.com/:i:/g/personal/max_chang_innodisk_com/EXVnV4iQ-WRBrDElhVxLGWcB13ghVNv7yzXIVLIuE99Lww?e=lM2WRO"
-KEY="&download=1"
-URL="${URL}${KEY}"
-
+# Combine Parameter
 FILE_PATH="${TRG_FOLDER}/${FILE_NAME}"
 
+# Show information
+printf "%-${LEN}s | %-${LEN}s \n" "TRG_FOLDER" "${TRG_FOLDER}"
+printf "%-${LEN}s | %-${LEN}s \n" "FILE_NAME" "${FILE_NAME}"
+printf "%-${LEN}s | %-${LEN}s \n" "DOWNLOAD_URL" "${URL}"
+
+
+# Check if folder exist
 if [[ ! -d "${TRG_FOLDER}" ]];then
-	echo "Not found ${TRG_FOLDER}"
+	printf "Create ${TRG_FOLDER} ... "
 	mkdir ${TRG_FOLDER}
+	if [[ $? == 0 ]];then printf "Done \n";else printf "Failed \n"; fi
 fi
 
-wget "${URL}" -O ${FILE_PATH}
+# Check if file exist
+if [[ ! -f "${FILE_PATH}" ]];then
+	printf "Download the file (${FILE_PATH}) ... "
+	gdown --id $GID -O ${FILE_PATH} > /dev/null 2>&1
+	if [[ $? == 0 ]];then printf "Done \n";else printf "Failed \n"; fi
+else
+	printf "File alread exist ! \n"
+fi

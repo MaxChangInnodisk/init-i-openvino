@@ -5,8 +5,8 @@
     "framework": "openvino",
     "source": "data/cat.jpg",
     "prim": {
-        "model_json": "./task/classificaiton_sample/classification.json"
+        "model_json": "./task/classification_sample/classification.json"
     },
-    "name": "classificaiton_sample",
+    "name": "classification_sample",
     "source_type": "Image"
 }

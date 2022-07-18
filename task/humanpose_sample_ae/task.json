@@ -3,10 +3,10 @@
         "name": "default"
     },
     "framework": "openvino",
-    "source": "data/street.mp4",
+    "source": "data/pedestrians.jpg",
     "prim": {
         "model_json": "./task/humanpose_sample_ae/humanpose.json"
     },
     "name": "humanpose_sample_ae",
-    "source_type": "Video"
+    "source_type": "Image"
 }

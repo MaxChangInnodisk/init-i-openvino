@@ -3,10 +3,10 @@ printf "\n"
 printf "# Download File \n"
 
 # Define Parameters 
-URL="https://drive.google.com/file/d/15X2EwgdtNmLgaLOWlMyBytJ3gM1c1Wqd/view?usp=sharing"
-GID="15X2EwgdtNmLgaLOWlMyBytJ3gM1c1Wqd"
+URL="https://drive.google.com/file/d/1hq2CvCT4SRTvvkHo3QVZSh85bdUuiXbR/view?usp=sharing"
+GID="1hq2CvCT4SRTvvkHo3QVZSh85bdUuiXbR"
 TRG_FOLDER="/workspace/data"
-FILE_NAME="car.mp4"
+FILE_NAME="cat.jpg"
 LEN=20
 
 # Combine Parameter
@@ -16,7 +16,6 @@ FILE_PATH="${TRG_FOLDER}/${FILE_NAME}"
 printf "%-${LEN}s | %-${LEN}s \n" "TRG_FOLDER" "${TRG_FOLDER}"
 printf "%-${LEN}s | %-${LEN}s \n" "FILE_NAME" "${FILE_NAME}"
 printf "%-${LEN}s | %-${LEN}s \n" "DOWNLOAD_URL" "${URL}"
-
 
 # Check if folder exist
 if [[ ! -d "${TRG_FOLDER}" ]];then
@@ -31,5 +30,5 @@ if [[ ! -f "${FILE_PATH}" ]];then
 	gdown --id $GID -O ${FILE_PATH} > /dev/null 2>&1
 	if [[ $? == 0 ]];then printf "Done \n";else printf "Failed \n"; fi
 else
-	printf "File alread exist ! \n"
+	printf "File alread exist ! \n\n"
 fi

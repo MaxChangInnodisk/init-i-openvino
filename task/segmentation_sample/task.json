@@ -3,10 +3,10 @@
         "name": "segmentation"
     },
     "framework": "openvino",
-    "source": "./data/street2.mp4",
+    "source": "./data/pedestrians.jpg",
     "prim": {
         "model_json": "./task/segmentation_sample/segmentation.json"
     },
     "name": "segmentation_sample",
-    "source_type": "Video"
+    "source_type": "Image"
 }
