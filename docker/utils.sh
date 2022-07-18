@@ -27,6 +27,10 @@ function check_container(){
 	echo "$(docker ps -a --format "{{.Names}}" | grep ${1} | wc -l )" 
 }
 
+function check_container_run(){
+	echo "$( docker container inspect -f '{{.State.Running}}' ${1} )"
+}
+
 function lower_case(){
 	echo "$1" | tr '[:upper:]' '[:lower:]'
 }
