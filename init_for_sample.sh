@@ -6,13 +6,21 @@ echo "-----------------------------------"
 printd "Initialize Classification Sample" G
 ./test/classification.sh
 
-# echo "-----------------------------------"
-# printd "Initialize YOLOv4 Sample" G
-# ./test/yolov4.sh
+echo "-----------------------------------"
+printd "Initialize humanpose_sample_ae" G
+./test/humanpose_sample_ae.sh
 
-# echo "-----------------------------------"
-# printd "Initialize YOLOv4-tiny Sample" G
-# ./test/yolov4-tiny.sh
+echo "-----------------------------------"
+printd "Initialize objectdetection_sample" G
+./test/objectdetection_sample.sh
+
+echo "-----------------------------------"
+printd "Initialize retail_product_detection" G
+./test/retail_product_detection.sh
+
+echo "-----------------------------------"
+printd "Initialize segmentation_sample" G
+./test/segmentation_sample.sh
 
 echo "-----------------------------------"
 printd "ALL DONE !" G
