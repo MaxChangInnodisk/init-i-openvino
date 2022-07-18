@@ -4,7 +4,7 @@ function download(){
 	ID=$1
 	NAME=$2
 
-	if [[ -f $NAME ]];then
+	if [[ -z $(ls ${NAME}) ]];then
 		echo "$(date +"%F %T") $NAME is exists !"
 	else
 		gdown --id $ID -O $NAME
