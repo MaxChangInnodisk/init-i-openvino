@@ -122,16 +122,17 @@ done
 
 # Combine docker RUN_CMD line
 DOCKER_CMD="docker run \
+-dt \
+--privileged \
 --name ${DOCKER_NAME} \
 ${MOUNT_GPU} \
--dt \
 --net=host --ipc=host \
 -v /etc/localtime:/etc/localtime:ro \
 --device /dev/dri \
 --device-cgroup-rule='c 189:* rmw' \
 -w ${WORKSPACE} \
 -v `pwd`:${WORKSPACE} \
-${MOUNT_CAMERA} \
+-v /dev:/dev \
 ${SET_VISION} \
 ${DOCKER_IMAGE} \"bash\" \n"
 
