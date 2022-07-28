@@ -12,7 +12,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 * Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
 
-#  Prepare Environment
+# Build docker image
 1. Download iVIT-I with Web API
     ```shell
     git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
