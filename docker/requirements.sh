@@ -14,7 +14,7 @@ apt-get install -qqy libxrender1 libsm6 libxext6 #> /dev/null 2>&1
 
 printd "Install other msicellaneous packages " Cy
 apt-get -qy install bsdmainutils zip jq wget
-pip3 install --disable-pip-version-check tqdm cython gdown setuptools packaging pycocotools GPUtil wget colorlog
+pip3 install --disable-pip-version-check tqdm cython gdown setuptools packaging pycocotools wget colorlog psutil
 
 # For web api
 pip3 install flask flask-socketio==5.1.2 flask-cors flasgger gunicorn==20.1.0 eventlet==0.30.2
