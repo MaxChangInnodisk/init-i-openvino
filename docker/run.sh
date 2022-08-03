@@ -176,7 +176,7 @@ else
 	# Check is the container still running
 	if [ $(check_container_run ${DOCKER_NAME}) == "true" ]; then
 		printd "Container is running" Cy
-		docker exec -it ${DOCKER_NAME} ${INIT_CMD};
+		# docker exec -it ${DOCKER_NAME} ${INIT_CMD};
 		docker exec -it ${DOCKER_NAME} ${RUN_CMD};
 	
 	# Start container if container not running 

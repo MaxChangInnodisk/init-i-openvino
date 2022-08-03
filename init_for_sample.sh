@@ -1,6 +1,16 @@
 #!/bin/bash
 source /workspace/docker/utils.sh
 
+printd "Start to initialize Sample ..." BCy
+echo -e "\
+\n
+Supported Samples: \n\
+    - Classification \n\
+    - objectdetection_sample \n\
+    - retail_product_detection \n\
+    - segmentation_sample \n\
+    - humanpose_sample_ae \n"
+
 cd /workspace
 echo "-----------------------------------"
 printd "Initialize Classification Sample" G
