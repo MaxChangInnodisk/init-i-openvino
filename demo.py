@@ -99,6 +99,13 @@ def main(args):
             
             while True:
                 ret_frame, frame = src.get_frame()
+
+                # 7.2. if not frame break
+                if not ret_frame: 
+                    if src.get_type().lower() in ["rtsp", "video"]:
+                        src = Source(total_conf['source'], total_conf['source_type'])
+                        continue
+
                 t1 = time.time()
 
                 org_frame = frame.copy()
