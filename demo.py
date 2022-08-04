@@ -9,8 +9,15 @@ from ivit_i.web.ai.pipeline import Source
 from ivit_i.app.handler import get_application
 
 CV_WIN = "Detection Results"
+alpha_slider_max = 100
+thres = 0
+
+def on_trackbar(val):
+    global thres
+    thres = float(val/alpha_slider_max)
 
 def main(args):
+
     # Instantiation
     json = Json()
     draw = Draw()
@@ -18,18 +25,23 @@ def main(args):
     # Get to relative parameter from first json
     custom_cfg = json.read_json(args.config)
     dev_cfg = [custom_cfg[key] for key in custom_cfg.keys() if "prim" in key]
+
     # Summarized previous dictionary and get to relative parameter from secondary json  
     for prim_ind in range(len(dev_cfg)):
+
         # source append to dev_cfg
         dev_cfg[prim_ind].update({"source":custom_cfg['source']})
         dev_cfg[prim_ind].update({"source_type":custom_cfg['source_type']})
         dev_cfg[prim_ind].update({"application":custom_cfg['application']})
         dev_cfg[prim_ind].update(json.read_json(dev_cfg[prim_ind]['model_json']))
+
         # Check is openvino and start processes
         if custom_cfg['framework'] == 'openvino':
+
         # ---------------------------Check model architecture-------------------------------------------------------
             if 'obj' in dev_cfg[prim_ind]['tag']:
                 from ivit_i.obj import ObjectDetection as trg
+
                 # ---------------------------Check secondary model and loading-------------------------
                 # Get secondary model relative parameter from first json
                 seconlist = [dev_cfg[prim_ind][key] for key in dev_cfg[prim_ind].keys() if "sec" in key]
@@ -55,6 +67,13 @@ def main(args):
     
         # ---------------------------Check input is camera or image and initial frame id/show id----------------------------------------
             src = Source(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['source_type'])
+
+            # Create Windows
+            
+            cv2.imshow(CV_WIN, src.get_first_frame())
+            trackbar_name = 'Thres'
+            cv2.createTrackbar(trackbar_name, CV_WIN , 0, alpha_slider_max, on_trackbar)
+            on_trackbar(0)
 
         # ---------------------------Load model and initial pipeline--------------------------------------------------------------------
             trg = trg()  
@@ -110,6 +129,10 @@ def main(args):
 
                 org_frame = frame.copy()
                 
+                # update thres
+                if thres>0 and (dev_cfg[prim_ind]["openvino"]["thres"] != thres):
+                    dev_cfg[prim_ind]["openvino"]["thres"] = thres
+
                 info = trg.inference(model, org_frame, dev_cfg[prim_ind])
                 
         # ---------------------------Drawing detecter to information-----------------------------------------------------------------------
