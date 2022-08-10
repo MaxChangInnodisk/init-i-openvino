@@ -70,6 +70,7 @@ ${RUN_DOWNLOAD_MODEL}
 # Run Sample
 if [[ "$RUN_DEMO" = true ]];then
 	printf "Run Sample ... \n"
+	export IVIT_I=/workspace/ivit-i.json
 	python3 demo.py -c ${CONF_PATH} ${SERVER_MODE}
 else
 	printf "${TASK_NAME} Initialize finished \n"
