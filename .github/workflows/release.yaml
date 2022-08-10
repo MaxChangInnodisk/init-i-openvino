@@ -23,6 +23,7 @@ jobs:
         run: |
           cd ..
           zip ${{ github.event.repository.name }}/${{ github.event.repository.name }}-${{ steps.get_version.outputs.VERSION }}.zip -r ${{ github.event.repository.name }}
+      
       - name: Release Repository  
         uses: pyTooling/Actions/releaser@r0
         with:
