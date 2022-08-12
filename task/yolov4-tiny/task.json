@@ -1,0 +1,12 @@
+{
+    "application": {
+        "name": "default"
+    },
+    "framework": "openvino",
+    "name": "objectdetection_sample",
+    "source": "/dev/video0",
+    "source_type": "V4L2",
+    "prim": {
+        "model_json": "./task/yolov4-tiny/yolo.json"
+    }
+}
