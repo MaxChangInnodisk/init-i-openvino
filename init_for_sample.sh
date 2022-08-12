@@ -9,7 +9,8 @@ Supported Samples: \n\
     - objectdetection_sample \n\
     - retail_product_detection \n\
     - segmentation_sample \n\
-    - humanpose_sample_ae \n"
+    - humanpose_sample_ae \n\
+    - yolov4-tiny \n"
 
 cd /workspace
 echo "-----------------------------------"
@@ -31,6 +32,10 @@ printd "Initialize retail_product_detection" G
 echo "-----------------------------------"
 printd "Initialize segmentation_sample" G
 ./test/segmentation_sample.sh
+
+echo "-----------------------------------"
+printd "Initialize yolov4-tiny" G
+./test/yolov4-tiny.sh
 
 echo "-----------------------------------"
 printd "ALL DONE !" G

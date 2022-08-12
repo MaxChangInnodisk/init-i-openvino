@@ -4,8 +4,8 @@
     },
     "framework": "openvino",
     "name": "objectdetection_sample",
-    "source": "/dev/video0",
-    "source_type": "V4L2",
+    "source": "data/car.mp4",
+    "source_type": "Video",
     "prim": {
         "model_json": "./task/yolov4-tiny/yolo.json"
     }
