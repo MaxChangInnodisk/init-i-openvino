@@ -3,7 +3,7 @@
         "name": "default"
     },
     "framework": "openvino",
-    "name": "objectdetection_sample",
+    "name": "yolov4-tiny-sample",
     "source": "data/car.mp4",
     "source_type": "Video",
     "prim": {
