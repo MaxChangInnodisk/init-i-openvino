@@ -1,17 +1,18 @@
 # ivit-i-intel
-
 FROM openvino/ubuntu18_dev_no_samples
-
-WORKDIR /workspace
-
-COPY ["./utils.sh", "./requirements.sh", "/workspace/" ]
 
 USER root
 
-ENV DEBIAN_FRONTEND noninteractive  
+# RUN ln -sf /bin/bash /bin/sh && ln -sf /bin/bash /bin/sh.distrib
+# SHELL ["/bin/bash", "-ec"]
 
-RUN chmod +x ./requirements.sh \
-&& ./requirements.sh \
-&& rm ./*.sh
+COPY ["./utils.sh", "./requirements.sh", "/workspace/" ]
+
+WORKDIR /workspace
+
+RUN chmod u+x /workspace/*.sh \
+&& ./requirements.sh
 
 ENTRYPOINT [ "/bin/bash", "-c" ]
+
+CMD [ "bash" ]
