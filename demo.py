@@ -10,22 +10,23 @@ from ivit_i.app.handler import get_application
 from ivit_i.web.tools.common import handle_exception
 import math
 
-FONT_FACE       = cv2.FONT_HERSHEY_COMPLEX_SMALL
-BORDER_FACE     = cv2.LINE_AA
-FONT_SCALE      = 2e-3  # Adjust for larger font size in all images
-THICKNESS_SCALE = 1e-3  # Adjust for larger thickness in all images
+FONT_FACE           = cv2.FONT_HERSHEY_COMPLEX_SMALL
+BORDER_FACE         = cv2.LINE_AA
+FONT_SCALE          = 2e-3  # Adjust for larger font size in all images
+THICKNESS_SCALE     = 1e-3  # Adjust for larger thickness in all images
 
-CV_WIN          = "Detection Results"
-FULL_SCREEN     = True
+CV_WIN              = "Detection Results"
+FULL_SCREEN         = True
 
-alpha_slider_max = 100
-thres = 0
+alpha_slider_max    = 100
+thres               = 0
 
 def on_trackbar(val):
     global thres
     thres = float(val/alpha_slider_max)
 
 def main(args):
+
     global FULL_SCREEN
 
     # Instantiation
@@ -176,7 +177,7 @@ def main(args):
             src.release()
 
 if __name__ == '__main__':
-    config_logger('./ivit-i.log', 'w', "info")
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help = "The path of application config")
     parser.add_argument('-s', '--server', action="store_true", help = "Server mode, not to display the opencv windows")
