@@ -66,7 +66,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
         2. Initialize Automatically
         
-            It will initialize serveral samples which define in [init_for_sample.sh](./init_for_sample.sh).
+            It will initialize serveral samples which define in [init_samples.sh](./init_samples.sh).
         
     * Run container with **web api**
         ```bash

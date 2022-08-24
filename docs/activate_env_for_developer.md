@@ -55,7 +55,7 @@ ivit-i-${BRAND}:${VER} \
 
 ## Initialize Default Samples
 ```bash
-docker exec -it ivit-i-${BRAND} ./init_for_sample.sh
+docker exec -it ivit-i-${BRAND} ./init_samples.sh
 ```
 
 ## Attach Container

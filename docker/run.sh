@@ -86,7 +86,7 @@ MOUNT_GPU=""
 WORKSPACE="/workspace"
 SET_VISION=""
 
-INIT_CMD="./init_for_sample.sh"
+INIT_CMD="./init_samples.sh"
 WEB_CMD="./exec_web_api.sh"
 CLI_CMD="bash"
 RUN_CMD=""
