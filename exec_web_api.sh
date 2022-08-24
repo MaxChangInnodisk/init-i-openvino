@@ -1,4 +1,5 @@
 #!/bin/bash
+WID=80
 
 # Install pre-requirement
 if [[ -z $(which jq) ]];then
@@ -31,12 +32,11 @@ if [[ ! -d "./ivit_i/web" ]];then
 fi
 
 # get ip address
-IP=$(python3 -c "from ivit_i.web.tools.common import get_address;print(get_address())")
-if [[ -z $IP ]];then exit; fi
+IP=$(python3 ./docker/update_available_ip.py)
 
-echo -e "\n"
-echo "HOST: ${IP}:${PORT}" | boxes -s 80x5 -a c
-echo -e "\n"
+figlet -w ${WID} -c "iVIT-I Web API"
+echo "HOST: ${IP}:${PORT}" | boxes -s "${WID}x5" -a c
+echo ""
 
 gunicorn --worker-class eventlet \
 -w ${WORKER} \
