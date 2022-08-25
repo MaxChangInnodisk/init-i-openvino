@@ -130,3 +130,12 @@ We provide the fast-test for each sample, please check the [document](./test/REA
     <img src="docs/images/apidocs.png" width=80%>
 </details>
 <br>
+
+# Release
+```bash
+# not initialize and run background
+./docker/run.sh -nb
+
+# package python module
+docker exec ivit-i-intel ./release.sh
+```
