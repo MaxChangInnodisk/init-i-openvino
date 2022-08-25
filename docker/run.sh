@@ -2,12 +2,13 @@
 source "$(dirname $(realpath $0))/utils.sh"
 
 # Set the default value of the getopts variable 
+BG=false
 GPU="all"
 RUN_WEB=true
 RUN_CLI=false
 MAGIC=true
 SERVER=false
-INIT=false
+INIT=true
 FIRST_TIME=true
 LOG="./docker/docker_info.log"
 
@@ -44,11 +45,15 @@ function help(){
 	echo "c		Run as command line mode"
 	echo "m		Print information with MAGIC."
 	echo "i		Initialize docker container ( start over )."
+	echo "b		background"
+	echo "n		Not to initialize samples."
 	echo "h		help."
 }
 
-while getopts "g:wcsihmh" option; do
+while getopts "g:wcsihmhnb" option; do
 	case $option in
+		b )
+			BG=true;;
 		g )
 			GPU=$OPTARG ;;
 		s )
@@ -59,6 +64,8 @@ while getopts "g:wcsihmh" option; do
 			MAGIC=false ;;
 		i )
 			INIT=true ;;
+		n )
+			INIT=false ;;
 		h )
 			help; exit ;;
 		\? )
@@ -166,9 +173,9 @@ if [[ $(check_container ${DOCKER_NAME}) -eq 0 ]];then
 	
 	printd "Run docker container in background" Cy;
 	bash -c "${DOCKER_CMD}";
-	docker exec -it ${DOCKER_NAME} ${INIT_CMD};
-	docker exec -it ${DOCKER_NAME} ${RUN_CMD};
-
+	if [[ "${INIT}" = true ]];then docker exec -it ${DOCKER_NAME} ${INIT_CMD}; fi
+	if [[ "${BG}" = false ]];then docker exec -it ${DOCKER_NAME} ${RUN_CMD}; fi
+	
 # If container exist
 else
     printd "Found docker container " Cy
@@ -177,13 +184,15 @@ else
 	if [ $(check_container_run ${DOCKER_NAME}) == "true" ]; then
 		printd "Container is running" Cy
 		# docker exec -it ${DOCKER_NAME} ${INIT_CMD};
-		docker exec -it ${DOCKER_NAME} ${RUN_CMD};
+		# docker exec -it ${DOCKER_NAME} ${RUN_CMD};
+		if [[ "${BG}" = false ]];then docker exec -it ${DOCKER_NAME} ${RUN_CMD}; fi
 	
 	# Start container if container not running 
 	else
 		printd "Start the docker container" Cy
 		docker start ${DOCKER_NAME};
-		docker exec -it ${DOCKER_NAME} ${INIT_CMD};
-		docker exec -it ${DOCKER_NAME} ${RUN_CMD};
+		if [[ "${INIT}" = true ]];then docker exec -it ${DOCKER_NAME} ${INIT_CMD}; fi
+		# docker exec -it ${DOCKER_NAME} ${RUN_CMD};
+		if [[ "${BG}" = false ]];then docker exec -it ${DOCKER_NAME} ${RUN_CMD}; fi
 	fi;
 fi;
