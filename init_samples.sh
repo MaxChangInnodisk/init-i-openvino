@@ -40,3 +40,5 @@ printd "Initialize yolov4-tiny" G
 echo "-----------------------------------"
 printd "ALL DONE !" G
 echo ""
+
+/bin/bash -c "$@"
