@@ -10,6 +10,7 @@ OUTPUT="./out"
 mv -f "${API}/${WEB}" "${ROOT}/"
 
 # Start to cythonize via merak
+ln -s /usr/bin/python3 /usr/bin/python
 merak cythonize "${API}" "${OUTPUT}"
 
 # Remove whole ivit_i folder and create a new one
