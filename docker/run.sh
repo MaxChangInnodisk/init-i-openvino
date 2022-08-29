@@ -5,6 +5,7 @@ source "$(dirname $(realpath $0))/utils.sh"
 GPU="all"
 RUN_WEB=true
 RUN_CLI=false
+RELEASE=false
 MAGIC=true
 SERVER=false
 INIT=true
@@ -43,7 +44,7 @@ function help(){
 }
 
 # Get information from argument
-while getopts "g:wcshmhn" option; do
+while getopts "g:wcshmhnl" option; do
 	case $option in
 		g )
 			GPU=$OPTARG ;;
@@ -55,6 +56,8 @@ while getopts "g:wcshmhn" option; do
 			MAGIC=false ;;
 		n )
 			INIT=false ;;
+		l )
+			RELEASE=true ;;
 		h )
 			help; exit ;;
 		\? )
@@ -89,6 +92,7 @@ SET_TIME=""
 INIT_CMD="/workspace/init_samples.sh"
 WEB_CMD="/workspace/exec_web_api.sh"
 CLI_CMD="bash"
+REL_CMD="release.sh"
 RUN_CMD=""
 
 # --------------------------------------------------
@@ -99,9 +103,11 @@ RUN_CMD=""
 if [[ ${INIT} = true ]]; then RUN_CMD=${INIT_CMD}; fi
 
 # Run CLI or Web
-if [[ ${RUN_CLI} = true ]]; 
-then RUN_CMD="${RUN_CMD} ${CLI_CMD}"; 
+if [[ ${RUN_CLI} = true ]]; then RUN_CMD="${RUN_CMD} ${CLI_CMD}";
 else RUN_CMD="${RUN_CMD} ${WEB_CMD}"; fi
+
+# If need release, no initialize
+if [[ ${RELEASE} = true ]]; then RUN_CMD="${REL_CMD}"; fi
 
 # Check if image come from docker hub
 # DOCKER_HUB_IMAGE="maxchanginnodisk/${DOCKER_IMAGE}"
