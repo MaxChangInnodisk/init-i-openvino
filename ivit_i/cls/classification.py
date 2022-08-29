@@ -5,15 +5,15 @@ from openvino.inference_engine import IECore
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parents[1]/""))
-sys.path.append(str(Path(__file__).resolve().parents[3]/"")) #ivinno_api
+# sys.path.append(str(Path(__file__).resolve().parents[1]/""))
+# sys.path.append(str(Path(__file__).resolve().parents[3]/"")) #ivinno_api
 
-import common
-from common.model import Model
-from common.pipelines import get_user_config, Realtime
+from ivit_i import common
+from ivit_i.common.model import Model
+from ivit_i.common.pipelines import get_user_config, Realtime
 # import common.monitors as monitors
 # from common.performance_metrics import PerformanceMetrics
-from common.utils import load_labels, resize_image
+from ivit_i.common.utils import load_labels, resize_image
 
 import logging
 

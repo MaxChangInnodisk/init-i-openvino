@@ -23,7 +23,7 @@ except ImportError:
     from numpy import clip
 from openvino.inference_engine import IENetwork
 
-from common.model import Model
+from ivit_i.common.model import Model
 
 class OpenPose(Model):
     def __init__(self, ie, model_path, target_size, aspect_ratio, prob_threshold, size_divisor=8, upsample_ratio=1):

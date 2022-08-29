@@ -2,8 +2,8 @@
 import numpy as np
 import ngraph
 
-from common.model import Model
-from common.utils import Detection, resize_image, resize_image_letterbox, load_labels
+from ivit_i.common.model import Model
+from ivit_i.common.utils import Detection, resize_image, resize_image_letterbox, load_labels
 
 ANCHORS = {
     'YOLOV3': [108.0,177.0, 176.0,117.0, 123.0,182.0, 163.0,147.0, 144.0,170.0, 181.0,141.0],

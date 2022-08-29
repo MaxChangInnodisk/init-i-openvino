@@ -17,8 +17,8 @@
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
-from common.model import Model
-from common.utils import resize_image
+from ivit_i.common.model import Model
+from ivit_i.common.utils import resize_image
 
 
 class HpeAssociativeEmbedding(Model):

@@ -4,12 +4,12 @@ from time import perf_counter
 # sys.path.append(f'{os.getcwd()}')
 
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parents[1]/""))
+# sys.path.append(str(Path(__file__).resolve().parents[1]/""))
 
 from openvino.inference_engine import IECore
-import common
-from common.pipelines import get_user_config, Realtime
-from .yolo import YOLO, YoloV4
+from ivit_i import common
+from ivit_i.common.pipelines import get_user_config, Realtime
+from ivit_i.obj.yolo import YOLO, YoloV4
 
 class ObjectDetection():
 

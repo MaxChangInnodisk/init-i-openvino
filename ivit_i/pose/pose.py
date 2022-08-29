@@ -3,12 +3,13 @@ from time import perf_counter
 
 import sys
 from pathlib import Path
-sys.path.append(str(Path(__file__).resolve().parents[1]/""))
-sys.path.append(str(Path(__file__).resolve().parents[3]/"")) #ivinno_api
+# sys.path.append(str(Path(__file__).resolve().parents[1]/""))
+# sys.path.append(str(Path(__file__).resolve().parents[3]/"")) #ivinno_api
+
 
 from openvino.inference_engine import IECore 
-import common
-from common.pipelines import get_user_config, Realtime
+from ivit_i import common
+from ivit_i.common.pipelines import get_user_config, Realtime
 # import common.monitors as monitors
 # from ivinno.vino.common.performance_metrics import PerformanceMetrics
 from ivit_i.common.images_capture import open_images_capture
