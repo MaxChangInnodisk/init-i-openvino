@@ -37,13 +37,16 @@ class App(object):
 
     def get_palette( self, labels):
         ret = {}
-        path = "ivit_i/app/palette.json"
-        if not os.path.exists(path):
-            path = "./palette.json"
-        if not os.path.exists(path):
-            raise Exception("Couldn't find palette")
+        # path = "ivit_i/app/palette.json"
+        # if not os.path.exists(path):
+        #     path = "./palette.json"
+        # if not os.path.exists(path):
+        #     raise Exception("Couldn't find palette")
         
-        color_map = read_json(path)
+        # color_map = read_json(path)
+
+        from .palette import palette
+        color_map = palette
         
         for idx, label in enumerate(labels):
             idx = str(idx+1)
