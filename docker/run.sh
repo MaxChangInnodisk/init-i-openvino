@@ -92,7 +92,7 @@ SET_TIME=""
 INIT_CMD="/workspace/init_samples.sh"
 WEB_CMD="/workspace/exec_web_api.sh"
 CLI_CMD="bash"
-REL_CMD="release.sh"
+REL_CMD="/workspace/release.sh"
 RUN_CMD=""
 
 # --------------------------------------------------
