@@ -1,1 +1,1 @@
-python3 setup.py build_ext --inplace --src ivit_i
+python3 setup.py build_ext --inplace --src ivit_i --exclude '__inti__|web'

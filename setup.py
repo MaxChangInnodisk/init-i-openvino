@@ -43,6 +43,7 @@ def helper():
         "--dst       if not provide the destination path, will backup and replace the original one.",
         "--backup    change the backup path, the default is './backup'",
         "--build     change the path of build folder, the default is './build'",
+        "--exclude   exclude file, using | to split each argument, e.g. '*/web|*.pyc'. "
         "" ]
     [print(i) for i in info]
     sys.exit(1)
@@ -56,10 +57,11 @@ if not (('build_ext' in args) and ('--inplace' in args) and ('--src' in args)) o
 # ------------------------------------------------------------------------------------------------------------------------------
 # parse custom variable
 print('parse custom option')
-src_path = get_args(args, '--src') 
-dst_path = get_args(args, '--dst', src_path)                   
-backup_path = get_args(args, '--backup', './backup') 
-build_path = os.path.normpath(get_args(args, '--build', './build') )
+src_path        = get_args(args, '--src') 
+dst_path        = get_args(args, '--dst', src_path)                   
+backup_path     = get_args(args, '--backup', './backup') 
+build_path      = os.path.normpath(get_args(args, '--build', './build') )
+exclude_list    = get_args(args, '--exclude', "" )
 
 # if the source is exists, clear pycahe folder
 if not os.path.exists(src_path):
@@ -82,21 +84,32 @@ print('create a temp_dst ({})'.format(temp_dst))
 # distutils
 # cpature all python files but exclude __init__.py
 print('start package')
-extensions = [ f for f in glob.glob(f"{temp_dst}/**/*.py", recursive=True) if not ("__init__" in f) ]
 
-# exclude the web api
-extensions = [ f for f in extensions if not ("web" in f) ]
-print(extensions)
+# Get list of excludes
+exclude_list = [] if exclude_list=="" else exclude_list.split("|")
 
+# Get pure data
+exts = []
+for f in glob.glob(f"{temp_dst}/**/*.py", recursive=True):
+    
+    jump_flag = False
+    for excl in exclude_list:
+        if excl in f: jump_flag = True
+
+    if jump_flag: continue
+
+    exts.append(f)
+
+# Package
 setup(
     name=temp_dst,
-    ext_modules=cythonize(extensions),
+    ext_modules=cythonize(exts),
     cmdclass = {'build_ext': build_ext},
     # build_dir=build_path
 )
 
 # remove build and `.py`
-[ os.remove(f) for f in extensions ]
+[ os.remove(f) for f in exts ]
 [ os.remove(f) for f in glob.glob(f"{temp_dst}/**/*.c", recursive=True) ]
 
 # overwrite
