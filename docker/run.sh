@@ -9,7 +9,6 @@ RELEASE=false
 MAGIC=true
 SERVER=false
 INIT=true
-LOG="./docker/docker_info.log"
 CONF="./ivit-i.json"
 
 # Install pre-requirement
@@ -172,9 +171,9 @@ print_magic "${INFO}" "${MAGIC}"
 echo -e "Command: ${DOCKER_CMD}"
 
 # Log
-date +%m-%d-%Y > "${LOG}"
-echo "${INFO}" >> "${LOG}"
-echo -ne "\nDOCKER COMMAND: \n${DOCKER_CMD}" >> "${LOG}"
+date +%m-%d-%Y
+echo "${INFO}"
+echo -ne "\nDOCKER COMMAND: \n${DOCKER_CMD}"
 
 # Define run command
 RUN_CMD=$(if [[ ${RUN_CLI} = false ]]; then echo ${WEB_CMD}; else echo ${CLI_CMD};fi)
