@@ -3,13 +3,20 @@ CONF="ivit-i.json"
 
 
 # Store the utilities
-ROOT=$(dirname `realpath $0`)
+FILE=$(realpath "$0")
+ROOT=$(dirname "${FILE}")
 source "${ROOT}/utils.sh"
 
 # Install pre-requirement
 if [[ -z $(which jq) ]];then
     printd "Installing requirements .... " Cy
     sudo apt-get install jq -yqq
+fi
+
+# Install pyinstaller for inno-verify
+if [[ -z $(which jq) ]];then
+    printd "Installing pyinstaller for inno-verify .... " Cy
+    pip3 install pyinstaller -q
 fi
 
 # Checking environment configuration is existed.
@@ -34,7 +41,10 @@ TAG_PLATFORM=$(cat ${CONF} | jq -r '.PLATFORM')
 IMAGE_NAME="${BASE_NAME}-${TAG_PLATFORM}:${TAG_VER}"
 printd "Concatenate docker image name: ${IMAGE_NAME}" Cy
 
+# Generate inno_verify
+cd "${ROOT}" || exit
+./gen_inno_verify.sh
+
 # Build the docker image
-cd $ROOT
 printd "Build the docker image. (${IMAGE_NAME})" Cy
 docker build -t ${IMAGE_NAME} .
