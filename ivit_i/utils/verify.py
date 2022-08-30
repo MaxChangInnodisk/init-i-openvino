@@ -78,8 +78,6 @@ def get_logger():
 
 def innousb():
 
-    logger = get_logger()
-
     p = sb.run( f"lsusb | grep {PID}:{VID}", 
                 shell   = True,
                 stdout  = sb.DEVNULL, 
@@ -87,15 +85,10 @@ def innousb():
 
     if not p.returncode:
         msg = f"SUCCESS: Found Innodisk Device !!! "
-        
-        print()
-        sb.run( f"echo '\n{msg}\n' | boxes -s {WID}x5 -a c", shell = True)
-        print()
+        sb.run( f"echo '' && echo '\n{msg}\n' | boxes -s {WID}x5 -a c && echo ''", shell = True)
     else:
         msg = f"FAILED: Could not Innodisk Device ... "
-        print()
-        sb.run( f"echo '\n{msg}\n' | boxes -s {WID}x5 -a c", shell = True)
-        print()
+        sb.run( f"echo '' && echo '\n{msg}\n' | boxes -s {WID}x5 -a c && echo ''", shell = True)
         sys.exit(errno.EINTR)
 
 if __name__ == '__main__':
