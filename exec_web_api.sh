@@ -32,7 +32,7 @@ if [[ ! -d "./ivit_i/web" ]];then
 fi
 
 # get ip address
-IP=$(python3 ./docker/update_available_ip.py)
+IP=$(python3 ./tools/update_available_ip.py)
 
 figlet -w ${WID} -c "iVIT-I Web API"
 echo "HOST: ${IP}:${PORT}" | boxes -s "${WID}x5" -a c
