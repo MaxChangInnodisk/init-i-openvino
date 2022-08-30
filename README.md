@@ -137,5 +137,5 @@ We provide the fast-test for each sample, please check the [document](./test/REA
 ./docker/run.sh -nb
 
 # package python module
-docker exec ivit-i-intel ./release.sh
+docker exec ivit-i-intel ./cythonize.sh
 ```
