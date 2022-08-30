@@ -19,6 +19,7 @@ rm -rf "${API}" && mv -f "${OUTPUT}/${API}" "${ROOT}"
 # Move so api file and web api into ivit_i folder
 mv -f "${ROOT}/${WEB}"  ${API}
 
+# Change Owner
 chown 1000:1000 -R /workspace
 
 echo "Done !!!!"
