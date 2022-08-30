@@ -1,0 +1,39 @@
+# ivit-i-intel
+FROM openvino/ubuntu18_dev_no_samples
+USER root
+ARG VER
+
+ENV IVIT=ivit-i-intel
+ENV WS=/workspace
+ENV GITHUB_USER="MaxChangInnodisk"
+ENV GITHUB_TOKEN="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"
+ENV GITHUB_REPOSITORY=InnoIPA/${IVIT}
+ENV DEBIAN_FRONTEND noninteractive  
+
+RUN apt-get update \
+&& apt-get install -qy figlet boxes tree \
+&& apt-get install -qy bsdmainutils zip jq wget usbutils git
+
+# Get the target version of ivit-i-${ }
+# RUN git clone --recurse-submodules "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
+RUN git clone "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
+RUN mv ${IVIT} ${WS}
+
+# Install Package
+WORKDIR /workspace/docker
+# RUN chmod u+x ./*.sh \
+# && ./requirements.sh
+
+# Generate verify script and move inno_verify and entrypoint into /usr/bin
+RUN ./gen_inno_verify.sh \
+&& mv inno_verify entrypoint /usr/bin
+
+# Cythonize iVIT-I
+WORKDIR /workspace
+RUN chmod u+x /workspace/cythonize.sh && /workspace/cythonize.sh
+
+# Remove Relatived Script
+RUN rm -rf ./docker
+
+# Define Entrypoint
+ENTRYPOINT [ "entrypoint" ]
