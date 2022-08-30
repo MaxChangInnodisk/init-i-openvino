@@ -182,7 +182,7 @@ RUN_CMD=$(if [[ ${RUN_CLI} = false ]]; then echo ${WEB_CMD}; else echo ${CLI_CMD
 # Check is the container not exist
 if [[ $(check_container "${DOCKER_NAME}") -eq 0 ]];then
 	
-	printd "Run docker container in background" Cy
+	printd "Run docker container ..." Cy
 	bash -c "${DOCKER_CMD}"
 
 # If container exist
