@@ -15,8 +15,7 @@ RUN apt-get update \
 && apt-get install -qy bsdmainutils zip jq wget usbutils git
 
 # Get the target version of ivit-i-${ }
-# RUN git clone --recurse-submodules "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
-RUN git clone "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
+RUN git clone --recurse-submodules "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
 RUN mv ${IVIT} ${WS}
 
 # Install Package
