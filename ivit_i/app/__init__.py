@@ -9,5 +9,3 @@ APP_LIST = {
     'seg'   : seg_list,
     'pose'  : pose_list,
 }
-
-print(APP_LIST)
