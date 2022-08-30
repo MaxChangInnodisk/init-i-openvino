@@ -23,24 +23,16 @@ printd ()
     printf "${time} ${COLOR}${1}${REST} \n"
 }
 
-verify(){
-    PID="196d"
-    VID="0201"
-
-    result=$(lsusb | grep "${PID}:${VID}")
-
-
-    if [ -z "${result}" ];then
-        printd "Verify Innodisk Device ... FAILED\n" R
-        exit
-    else
-        printd "Verify Innodisk Device ... PASS\n" BCy
-    fi
-}
-
 # Verify USB
-verify
+res=$(inno_verify)
+echo "${res}"
 
-# Entry Point
-printf "Entry: %s\n" "$@"
-exec "$@"
+flag=$(echo "${res}" | grep FAILED )
+if [ -z "${flag}" ];then
+    # Entry Point
+    printf "Entry: %s\n" "$@"
+    exec "$@"
+else
+    echo "Exit"
+    exit
+fi
