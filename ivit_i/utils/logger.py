@@ -25,6 +25,7 @@ def config_logger(log_name=None, write_mode='a', level='Debug', clear_log=False)
         if clear_log and os.path.exists(log_name):
             logging.warning('Clearing exist log files')
             os.remove(log_name)
+            
         if log_name:
             file_handler = logging.FileHandler(log_name, write_mode, 'utf-8')
             file_handler.setFormatter(basic_formatter)
@@ -34,10 +35,4 @@ def config_logger(log_name=None, write_mode='a', level='Debug', clear_log=False)
         logger.info('Create logger.({})'.format(logger.name))
         logger.info('Enabled stream {}'.format(f'and file mode.({log_name})' if log_name else 'mode'))
     return logger
-
-if __name__ == '__main__':
-    
-    config_logger(log_name='ivinno-vino.log', write_mode='w', level='debug')
-    
-    logging.info('start')
 
