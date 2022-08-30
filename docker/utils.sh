@@ -49,3 +49,19 @@ function print_magic(){
 	fi
 	echo ""
 }
+
+function check_jq(){
+	# Install pre-requirement
+	if [[ -z $(which jq) ]];then
+		printd "Installing requirements .... " Cy
+		sudo apt-get install jq -yqq
+	fi
+}
+
+function check_pyinstaller(){
+	# Install pyinstaller for inno-verify
+	if [[ -z $(which pyinstaller) ]];then
+		printd "Installing pyinstaller for inno-verify .... " Cy
+		pip3 install pyinstaller -q
+	fi
+}
