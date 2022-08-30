@@ -6,7 +6,7 @@
     "AF":"openvino",
     "HOST": "",
     "PORT": 819,
-    "LOGGER": "ivit-i-web.log",
+    "LOGGER": "./ivit-i.log",
     "TASK_ROOT": "./task",
     "DATA": "data",
     "TEMP_PATH": "./temp",
