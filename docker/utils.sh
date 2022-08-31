@@ -62,6 +62,6 @@ function check_pyinstaller(){
 	# Install pyinstaller for inno-verify
 	if [[ -z $(which pyinstaller) ]];then
 		printd "Installing pyinstaller for inno-verify .... " Cy
-		pip3 install pyinstaller -q
+		pip install setuptools pyinstaller -q
 	fi
 }
