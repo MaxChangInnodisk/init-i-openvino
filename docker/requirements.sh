@@ -3,7 +3,7 @@
 FILE=$(realpath "$0")
 DIR=$(dirname "${FILE}")
 
-source ${DIR}/utils.sh
+source ./utils.sh
 
 # Initial
 printd "Initialize ... " Cy
