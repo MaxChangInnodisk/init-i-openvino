@@ -30,7 +30,9 @@ WORKDIR /workspace
 RUN echo -e "\n - Cythonize iVIT-I ... \n" \
 && chmod u+x ./*.sh \
 && ./cythonize.sh \
-&& echo -e "\n - Remove Relatived Script  ... \n"
+&& echo -e "\n - Remove Relatived Script  ... \n" \
+&& rm -rf ./docker \
+&& rm ./cythonize.sh
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]
