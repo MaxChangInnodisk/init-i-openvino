@@ -3,8 +3,7 @@
 FILE=realpath $0
 DIR=dirname $FILE
 
-cd $DIR
-source utils.sh
+source $DIR/utils.sh
 
 # Initial
 printd "Initialize ... " Cy
