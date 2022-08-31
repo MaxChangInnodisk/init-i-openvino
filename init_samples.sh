@@ -41,4 +41,12 @@ echo "-----------------------------------"
 printd "ALL DONE !" G
 echo ""
 
-/bin/bash -c "$@"
+VAR="$@"
+CMD="bash"
+
+if [[ ! -z "$VAR" ]];then 
+    CMD="$VAR"; 
+    echo $CMD
+fi
+
+/bin/bash -c "$CMD"
