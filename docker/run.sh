@@ -168,12 +168,9 @@ COMMAND: ${RUN_CMD} \n"
 
 # Print the INFO
 print_magic "${INFO}" "${MAGIC}"
-echo -e "Command: ${DOCKER_CMD}"
 
 # Log
-date +%m-%d-%Y
-echo "${INFO}"
-echo -ne "\nDOCKER COMMAND: \n${DOCKER_CMD}"
+echo -ne "\nDOCKER COMMAND: \n${DOCKER_CMD}\n\n"
 
 # Define run command
 RUN_CMD=$(if [[ ${RUN_CLI} = false ]]; then echo ${WEB_CMD}; else echo ${CLI_CMD};fi)
