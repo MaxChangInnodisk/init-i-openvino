@@ -22,17 +22,15 @@ RUN echo -e "\n - Install Git package ... \n" \
 && mv -f ${IVIT} ${WS}
 
 # Install Relatived Package
-WORKDIR /workspace/docker
-
-RUN ./requirements.sh \
-&& ./gen_inno_verify.sh \
-&& mv ./inno_verify ./entrypoint /usr/bin \
-&& echo -e "\n - Cythonize iVIT-I ... \n" \
-&& chmod u+x ./cythonize.sh \
-&& ./cythonize.sh \
-&& echo -e "\n - Remove Relatived Script  ... \n" \
-
 WORKDIR /workspace
+
+RUN /workspace/docker/requirements.sh \
+&& /workspace/docker/gen_inno_verify.sh \
+&& mv /workspace/docker/inno_verify /workspace/docker/entrypoint /usr/bin \
+&& echo -e "\n - Cythonize iVIT-I ... \n" \
+&& chmod u+x /workspace/cythonize.sh \
+&& /workspace/cythonize.sh \
+&& echo -e "\n - Remove Relatived Script  ... \n" \
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]

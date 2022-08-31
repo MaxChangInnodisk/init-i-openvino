@@ -1,4 +1,9 @@
 #!/bin/bash
+
+FILE=realpath $0
+DIR=dirname $FILE
+
+cd $DIR
 source utils.sh
 
 # Initial
@@ -9,9 +14,6 @@ apt-get install -qy figlet boxes tree > /dev/null 2>&1
 
 printd "System Require " Cy
 apt-get -qy install bsdmainutils zip jq wget usbutils
-
-ROOT=`pwd`
-echo "Workspace is ${ROOT}" | boxes -p a1
 
 printd "Install OpenCV " Cy
 apt-get install -qqy libxrender1 libsm6 libxext6 #> /dev/null 2>&1
