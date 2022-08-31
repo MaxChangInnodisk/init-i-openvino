@@ -12,10 +12,8 @@ ENV GITHUB_REPOSITORY=InnoIPA/ivit-i-intel
 # ENV DEBIAN_FRONTEND noninteractive  
 
 # Download Repository
-RUN echo -e "\n - Install Git package ... \n" \
-&& apt-get update \
-&& apt-get install -qy git ssh openssh-server jq boxes \
-&& echo -e "\n - Downlaod Githun Repository ... \n" \
+RUN apt-get update -q \
+&& apt-get install -qqy git ssh openssh-server jq boxes \
 && git config --system credential.helper store \
 && echo "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com" > ~/.git-credentials \
 && git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git --branch ${VER} \
@@ -26,7 +24,7 @@ WORKDIR /workspace/docker/
 RUN chmod u+x ./*.sh \
 && ./requirements.sh \
 && ./gen_inno_verify.sh \
-&& mv ./inno_verify ./entypoint /usr/bin
+&& mv ./inno_verify ./entrypoint /usr/bin
 
 WORKDIR /workspace
 RUN echo -e "\n - Cythonize iVIT-I ... \n" \

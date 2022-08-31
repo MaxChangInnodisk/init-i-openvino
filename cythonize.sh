@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ROOT=$(pwd)
-API="bk"
+API="ivit_i"
 WEB="web"
 
 OUTPUT="./out"
