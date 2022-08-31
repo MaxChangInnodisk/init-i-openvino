@@ -8,8 +8,7 @@ WORKDIR $WS
 COPY ["./utils.sh", "./requirements.sh", "./py-requirements.txt", "${WS}/" ]
 
 RUN chmod u+x ${WS}/*.sh \
-&& ${WS}/requirements.sh \
-&& rm -rf ${WS}/*.sh
+&& ${WS}/requirements.sh
 
 # `inno_verify` will be generated when execute gen_inno_verify.sh which base on the source code from ivit_i library
 COPY [ "./inno_verify", "./entrypoint",  "/usr/bin/" ]
