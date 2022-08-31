@@ -1,7 +1,8 @@
 #!/bin/bash
 CONF="ivit-i.json"
 USER="maxchanginnodisk"
-
+GITHUB_USER="MaxChangInnodisk"
+GITHUB_TOKEN="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"
 
 # Store the utilities
 FILE=$(realpath "$0")
@@ -36,6 +37,12 @@ TAG_PLATFORM=$(cat ${CONF} | jq -r '.PLATFORM')
 IMAGE_NAME="${USER}/${BASE_NAME}-${TAG_PLATFORM}:${TAG_VER}"
 printd "Concatenate docker image name: ${IMAGE_NAME}" Cy
 
+
 # Build the docker image
 printd "Build the docker image. (${IMAGE_NAME})" Cy
-docker build -t "${IMAGE_NAME}" --build-arg "VER=${TAG_VER//v/r}" -f "${ROOT}/DockerfileRelease" . 
+
+docker build -t "${IMAGE_NAME}" \
+--build-arg "VER=${TAG_VER//v/r}" \
+--build-arg "GITHUB_USER=${GITHUB_USER}" \
+--build-arg "GITHUB_TOKEN=${GITHUB_TOKEN}" \
+-f "${ROOT}/DockerfileRelease" . 

@@ -1,38 +1,38 @@
 # ivit-i-intel
 FROM openvino/ubuntu18_dev_no_samples
 USER root
+
 ARG VER
+ARG GITHUB_USER
+ARG GITHUB_TOKEN
 
 ENV IVIT=ivit-i-intel
 ENV WS=/workspace
-ENV GITHUB_USER="MaxChangInnodisk"
-ENV GITHUB_TOKEN="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"
-ENV GITHUB_REPOSITORY=InnoIPA/${IVIT}
-ENV DEBIAN_FRONTEND noninteractive  
+ENV GITHUB_REPOSITORY=InnoIPA/ivit-i-intel
+# ENV DEBIAN_FRONTEND noninteractive  
 
-RUN apt-get update \
-&& apt-get install -qy figlet boxes tree \
-&& apt-get install -qy bsdmainutils zip jq wget usbutils git
+# Download Repository
+RUN echo -e "\n - Install Git package ... \n" \
+&& apt-get update \
+&& apt-get install -qy git ssh openssh-server jq boxes \
+&& echo -e "\n - Downlaod Githun Repository ... \n" \
+&& git config --system credential.helper store \
+&& echo "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com" > ~/.git-credentials \
+&& git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git --branch ${VER} \
+&& mv ${IVIT} ${WS} \
 
-# Get the target version of ivit-i-${ }
-RUN git clone --recurse-submodules "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}" --branch "${VER}"
-RUN mv ${IVIT} ${WS}
-
-# Install Package
-WORKDIR /workspace/docker
-# RUN chmod u+x ./*.sh \
-# && ./requirements.sh
-
-# Generate verify script and move inno_verify and entrypoint into /usr/bin
-RUN ./gen_inno_verify.sh \
-&& mv inno_verify entrypoint /usr/bin
-
-# Cythonize iVIT-I
+# Install Relatived Package
 WORKDIR /workspace
-RUN chmod u+x /workspace/cythonize.sh && /workspace/cythonize.sh
-
-# Remove Relatived Script
-RUN rm -rf ./docker
+RUN /workspace/docker/requirements.sh \
+&& /workspace/docker/gen_inno_verify.sh \
+&& mv /workspace/docker/inno_verify /workspace/docker/entrypoint /usr/bin \
+&& echo -e "\n - Cythonize iVIT-I ... \n" \
+&& chmod u+x /workspace/cythonize.sh \
+&& /workspace/cythonize.sh \
+&& echo -e "\n - Remove Relatived Script  ... \n" \
+&& rm -rf ./docker
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]
+
+# docker run -it --privileged -v /dev:/dev --name ivit-i-intel  --device /dev/dri --device-cgroup-rule='c 189:* rmw'  --net=host --ipc=host -v /etc/localtime:/etc/localtime:ro -v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=unix:0 maxchanginnodisk/ivit-i-intel:v0.8 /workspace/init_samples.sh bash
