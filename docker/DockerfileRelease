@@ -32,7 +32,8 @@ RUN echo -e "\n - Cythonize iVIT-I ... \n" \
 && ./cythonize.sh \
 && echo -e "\n - Remove Relatived Script  ... \n" \
 && rm -rf ./docker \
-&& rm ./cythonize.sh
+&& rm ./cythonize.sh \
+&& rm -rf .git
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]
