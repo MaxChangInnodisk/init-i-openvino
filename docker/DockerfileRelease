@@ -19,18 +19,20 @@ RUN echo -e "\n - Install Git package ... \n" \
 && git config --system credential.helper store \
 && echo "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com" > ~/.git-credentials \
 && git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git --branch ${VER} \
-&& mv ${IVIT} ${WS} \
+&& mv -f ${IVIT} ${WS}
 
 # Install Relatived Package
-WORKDIR /workspace
-RUN /workspace/docker/requirements.sh \
-&& /workspace/docker/gen_inno_verify.sh \
-&& mv /workspace/docker/inno_verify /workspace/docker/entrypoint /usr/bin \
+WORKDIR /workspace/docker
+
+RUN ./requirements.sh \
+&& ./gen_inno_verify.sh \
+&& mv ./inno_verify ./entrypoint /usr/bin \
 && echo -e "\n - Cythonize iVIT-I ... \n" \
-&& chmod u+x /workspace/cythonize.sh \
-&& /workspace/cythonize.sh \
+&& chmod u+x ./cythonize.sh \
+&& ./cythonize.sh \
 && echo -e "\n - Remove Relatived Script  ... \n" \
-&& rm -rf ./docker
+
+WORKDIR /workspace
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]
