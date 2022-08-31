@@ -26,7 +26,6 @@ pip3 install python-engineio==4.3.2 python-socketio==5.6.0
 apt-get -o Dpkg::Options::="--force-confmiss" install --reinstall netbase
 
 # For Package
-pip3 install merak
-pip install pyinstaller
+pip3 install merak pyinstaller
 
 printd "Done"
