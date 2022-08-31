@@ -1,9 +1,9 @@
 #!/bin/bash
 
-FILE=realpath $0
-DIR=dirname $FILE
+FILE=$(realpath "$0")
+DIR=$(dirname "${FILE}")
 
-source $DIR/utils.sh
+source ${DIR}/utils.sh
 
 # Initial
 printd "Initialize ... " Cy
