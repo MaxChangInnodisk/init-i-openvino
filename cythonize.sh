@@ -14,7 +14,9 @@ ln -s /usr/bin/python3 /usr/bin/python
 merak cythonize "${API}" "${OUTPUT}"
 
 # Remove whole ivit_i folder and create a new one
-rm -rf "${API}" && mv -f "${OUTPUT}/${API}" "${ROOT}"
+rm -rf "${API}" \
+&& mv -f "${OUTPUT}/${API}" "${ROOT}" \
+&& rm -rf out
 
 # Move so api file and web api into ivit_i folder
 mv -f "${ROOT}/${WEB}"  ${API}
