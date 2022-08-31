@@ -1,5 +1,5 @@
 #!/bin/bash
-source /workspace/docker/utils.sh
+source /workspace/tools/utils.sh
 
 printd "Start to initialize Sample ..." BCy
 echo -e "\
