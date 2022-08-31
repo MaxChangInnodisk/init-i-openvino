@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FILE=$(realpath "$0")
-DIR=$(dirname "${FILE}")
+# FILE=$(realpath "$0")
+# DIR=$(dirname "${FILE}")
 
 source ./utils.sh
 
