@@ -78,7 +78,7 @@ fi
 # --------------------------------------------------
 
 DOCKER_IMAGE="${PROJECT}-${PLATFORM}:${VERSION}"
-DOCKER_NAME="${PROJECT}-${PLATFORM}"
+DOCKER_NAME="${PROJECT}-${PLATFORM}-${VERSION}"
 
 # MOUNT_CAMERA=""	# legacy
 MOUNT_GPU=""
