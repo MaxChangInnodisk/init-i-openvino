@@ -26,5 +26,6 @@ apt-get -o Dpkg::Options::="--force-confmiss" install --reinstall netbase
 
 # For Package
 pip3 install merak
+pip install pyinstaller
 
 printd "Done"
