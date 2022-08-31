@@ -30,7 +30,7 @@ RUN /workspace/docker/requirements.sh \
 && echo -e "\n - Cythonize iVIT-I ... \n" \
 && chmod u+x /workspace/cythonize.sh \
 && /workspace/cythonize.sh \
-&& echo -e "\n - Remove Relatived Script  ... \n" \
+&& echo -e "\n - Remove Relatived Script  ... \n"
 
 # Define Entrypoint
 ENTRYPOINT [ "entrypoint" ]
