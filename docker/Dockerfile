@@ -7,8 +7,7 @@ WORKDIR $WS
 
 COPY ["./utils.sh", "./requirements.sh", "./py-requirements.txt", "${WS}/" ]
 
-RUN pwd ${WS}/ && ls ${WS}/ \
-&& chmod u+x ${WS}/*.sh \
+RUN chmod u+x ${WS}/*.sh \
 && ${WS}/requirements.sh \
 && rm -rf ${WS}/*.sh
 

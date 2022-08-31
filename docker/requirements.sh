@@ -8,7 +8,6 @@ source utils.sh
 # Initial
 printd "Initialize ... " Cy
 apt-get update -qqy
-apt-get install -qy python-pip python3-pip
 apt-get install -qy figlet boxes tree > /dev/null 2>&1
 
 printd "System Require " Cy
