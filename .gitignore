@@ -32,3 +32,5 @@ data
 # ---------------------------------------
 !docs
 !docs/images/*
+
+./docker/inno_verify
