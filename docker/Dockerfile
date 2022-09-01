@@ -2,8 +2,9 @@
 FROM openvino/ubuntu18_dev_no_samples
 
 USER root
-ENV WS=/opt/inno/ivit_i
 WORKDIR $WS
+ENV DEBIAN_FRONTEND=noninteractive  
+ENV WS=/opt/inno/ivit_i
 
 COPY ["./utils.sh", "./requirements.sh", "./py-requirements.txt", "${WS}/" ]
 
