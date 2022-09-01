@@ -12,9 +12,6 @@ source "${ROOT}/utils.sh"
 # Install pre-requirement
 check_jq
 
-# Install pyinstaller for inno-verify
-check_pyinstaller
-
 # Checking environment configuration is existed.
 FLAG=$(ls ${CONF} 2>/dev/null)
 if [[ -z $FLAG ]];then
@@ -36,7 +33,6 @@ TAG_PLATFORM=$(cat ${CONF} | jq -r '.PLATFORM')
 # Concate name
 IMAGE_NAME="${USER}/${BASE_NAME}-${TAG_PLATFORM}:${TAG_VER}"
 printd "Concatenate docker image name: ${IMAGE_NAME}" Cy
-
 
 # Build the docker image
 printd "Build the docker image. (${IMAGE_NAME})" Cy
