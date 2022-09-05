@@ -37,7 +37,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
         ```
     * Clone specificall branch ( with submodule )
         ```bash
-        VER=r0.6
+        VER=r0.8
         git clone --recurse-submodules --branch ${VER} https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
         ```
 
