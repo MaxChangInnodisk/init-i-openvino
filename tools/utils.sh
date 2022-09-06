@@ -1,23 +1,34 @@
 #!/bin/bash
 
-REST='\e[0m';
-GREEN='\e[0;32m';
-BGREEN='\e[7;32m';
-BRED='\e[7;31m';
-Cyan='\033[0;36m';
+# Dear Developer
+# this script is link from `tools/utils.sh` to `docker/utils.sh`
+# the command I execute is `ln ./tools/utils.sh docker/utilsh`
+
+REST='\e[0m'
+GREEN='\e[0;32m'
+BGREEN='\e[7;32m'
+RED='\e[0;31m'
+BRED='\e[7;31m'
+YELLOW='\e[0;33m'
+BYELLOW='\e[7;33m'
+Cyan='\033[0;36m'
 BCyan='\033[7;36m'
 
 function printd(){            
     
     if [ -z $2 ];then COLOR=$REST
     elif [ $2 = "G" ];then COLOR=$GREEN
-    elif [ $2 = "R" ];then COLOR=$BRED
+	elif [ $2 = "BG" ];then COLOR=$BGREEN
+	elif [ $2 = "R" ];then COLOR=$RED
+    elif [ $2 = "BR" ];then COLOR=$BRED
+	elif [ $2 = "Y" ];then COLOR=$YELLOW
+    elif [ $2 = "BY" ];then COLOR=$BYELLOW
     elif [ $2 = "Cy" ];then COLOR=$Cyan
     elif [ $2 = "BCy" ];then COLOR=$BCyan
     else COLOR=$REST
     fi
 
-    echo -e "$(date +"%T") ${COLOR}$1${REST}"
+    echo -e "$(date +"%y:%m:%d %T") ${COLOR}$1${REST}"
 }
 
 function check_image(){ 
@@ -62,6 +73,22 @@ function check_pyinstaller(){
 	# Install pyinstaller for inno-verify
 	if [[ -z $(which pyinstaller) ]];then
 		printd "Installing pyinstaller for inno-verify .... " Cy
-		pip3 install pyinstaller -q
+		pip3 install setuptools pyinstaller -q
 	fi
 }
+
+function check_boxes(){
+	# Setup Masgic package
+	if [[ -z $(which boxes) ]];then 
+		printd "Preparing MAGIC "; 
+		sudo apt-get install -qy boxes > /dev/null 2>&1; 
+	fi
+}
+
+function check_lsof(){
+	if [[ -z $(which lsof) ]];then
+		printd "Preparing lsof "; 
+		apt-get install -qy lsof > /dev/null 2>&1; 
+	fi
+}
+

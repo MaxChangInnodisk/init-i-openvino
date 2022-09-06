@@ -1,6 +1,6 @@
 {
     "PROJECT": "ivit-i",
-    "VERSION": "v0.8",
+    "VERSION": "v0.9",
     "PLATFORM": "intel",
     "FRAMEWORK": "openvino",
     "AF":"openvino",
