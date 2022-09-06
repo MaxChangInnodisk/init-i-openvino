@@ -8,7 +8,7 @@ ARG GITHUB_TOKEN
 
 ENV IVIT=ivit-i-intel
 ENV WS=/workspace
-ENV GITHUB_REPOSITORY=MaxChangInnodisk/ivit-i-intel
+ENV GITHUB_REPOSITORY=InnoIPA/ivit-i-intel
 ENV DEBIAN_FRONTEND=noninteractive  
 
 # Download Repository
@@ -16,7 +16,7 @@ RUN apt-get update -q \
 && apt-get install -qqy git ssh openssh-server jq boxes \
 && git config --system credential.helper store \
 && echo "https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com" > ~/.git-credentials \
-&& git clone --recurse-submodules https://github.com/MaxChangInnodisk/ivit-i-intel.git --branch ${VER} \
+&& git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git --branch ${VER} \
 && mv -f ${IVIT} ${WS}
 
 # Install Relatived Package

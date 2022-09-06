@@ -23,7 +23,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
     * Clone with submodule
         ```bash
-        git clone --recurse-submodules https://github.com/MaxChangInnodisk/ivit-i-intel.git && cd ivit-i-intel
+        git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
         
         # check if submodule is downloaded
         ls ./ivit_i/web
@@ -31,14 +31,14 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
         ```
     * Clone pure-repository and download submodule
         ```bash
-        git clone https://github.com/MaxChangInnodisk/ivit-i-intel.git && cd ivit-i-intel
+        git clone https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
         
         git submodule init && git submodule update
         ```
     * Clone specificall branch ( with submodule )
         ```bash
         VER=r0.8
-        git clone --recurse-submodules --branch ${VER} https://github.com/MaxChangInnodisk/ivit-i-intel.git && cd ivit-i-intel
+        git clone --recurse-submodules --branch ${VER} https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
         ```
 
 2. Build the docker images
