@@ -15,49 +15,13 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
 # Prepare Environment
 
-1. Clone Repository and submodule
+1. Clone Repository
 
-    * About submodules
-    
-        Submodule is the web api for ivit-i which will be place in [ivit_i/web](./ivit_i/web)
+    ```bash
+    git clone  https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
+    ```
 
-    * Clone with submodule
-        ```bash
-        git clone --recurse-submodules https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
-        
-        # check if submodule is downloaded
-        ls ./ivit_i/web
-        ai  api  app_bk.py  app.py  docs  __init__.py tools    
-        ```
-    * Clone pure-repository and download submodule
-        ```bash
-        git clone https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
-        
-        git submodule init && git submodule update
-        ```
-    * Clone specificall branch ( with submodule )
-        ```bash
-        VER=r0.8
-        git clone --recurse-submodules --branch ${VER} https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
-        ```
-
-2. Build the docker images
-
-    * Before building docker images
-
-        We use [ivit-i.json](ivit-i.json) to manage environment, like "docker image name", "docker image version", "port number", etc. You can see more detail in [setup_environment.md](docs/setup_environment.md)
-    
-    * Build docker image with shell script
-        ```bash
-        sudo ./docker/build.sh
-        ```
-        In my case, it costs about 12 minutes.
-
-    * Build docker image step by step for developer
-
-        Here is the [documentation](docs/activate_env_for_developer.md) explaining the workflow of `build docker image` and `run docker container`.
-
-3. Run the docker container with web api
+2. Run the docker container with web api
 
     * Before running the container
         1. Avoid Container Conflict
