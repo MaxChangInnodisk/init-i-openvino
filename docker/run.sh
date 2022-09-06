@@ -109,7 +109,7 @@ else RUN_CMD="${RUN_CMD} ${WEB_CMD}"; fi
 if [[ ${RELEASE} = true ]]; then RUN_CMD="${REL_CMD}"; fi
 
 # Check if image come from docker hub
-# DOCKER_HUB_IMAGE="maxchanginnodisk/${DOCKER_IMAGE}"
+# DOCKER_HUB_IMAGE="InnoIPA/${DOCKER_IMAGE}"
 # if [[ ! $(check_image $DOCKER_HUB_IMAGE) -eq 0 ]];then
 # 	DOCKER_IMAGE=${DOCKER_HUB_IMAGE}
 # 	echo "From Docker Hub ... Update Docker Image Name: ${DOCKER_IMAGE}"

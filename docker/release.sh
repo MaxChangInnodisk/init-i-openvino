@@ -1,7 +1,7 @@
 #!/bin/bash
 CONF="ivit-i.json"
-USER="maxchanginnodisk"
-GITHUB_USER="MaxChangInnodisk"
+USER="InnoIPA"
+GITHUB_USER="InnoIPA"
 GITHUB_TOKEN="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"
 
 # Store the utilities
