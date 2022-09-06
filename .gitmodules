@@ -1,4 +1,0 @@
-[submodule "ivit_i/web"]
-	path = ivit_i/web
-	url = https://github.com/MaxChangInnodisk/ivit-i-web-api.git
-	branch = r0.8

@@ -7,23 +7,8 @@
 ```bash
 # Must modify to the correct information
 BRAND=intel
-VER=v0.5
+VER=v0.9
 ROOT=</path/to/ivit-i-${BRAND}>
-```
-
-## Build Docker
-```bash
-# Move to docker directory in ivit-i-intel
-cd ${ROOT}/docker
-
-# Change the docker runtime
-sudo python3 docker_daemon.py
-
-# Restart the service
-sudo systemctl restart docker
-
-# Build
-docker build -t ivit-i-${BRAND}:${VER} .
 ```
 
 ## Run Docker

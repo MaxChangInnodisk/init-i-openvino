@@ -1,11 +1,6 @@
 #!/bin/bash
 WID=80
-
-# Install pre-requirement
-if [[ -z $(which jq) ]];then
-    echo "Installing requirements .... "
-    sudo apt-get install jq -yqq
-fi
+source /workspace/tools/utils.sh
 
 # Variable
 CONF="ivit-i.json"
@@ -14,8 +9,7 @@ if [[ -z $FLAG ]];then
     CONF="${RUN_PWD}/${CONF}"
     FLAG=$(ls ${CONF} 2>/dev/null)
     if [[ -z $FLAG ]];then
-        echo "Couldn't find configuration (${CONF})"
-        exit
+        printd "Couldn't find configuration (${CONF})" R && exit
     fi
 fi
 
@@ -25,19 +19,17 @@ WORKER=$(cat ${CONF} | jq -r '.WORKER')
 THREADING=$(cat ${CONF} | jq -r '.THREADING')
 export IVIT_I=/workspace/ivit-i.json
 
-# Run
-if [[ ! -d "./ivit_i/web" ]];then
-    echo "Could not found the web api, make sure the submodule is downloaded."
-    exit
+# Check is web api is running
+if [[ -n $(lsof -i:${PORT}) ]];then
+    printd "Web API is still running" Y && exit
 fi
 
 # get ip address
 IP=$(python3 ./tools/update_available_ip.py)
+printd "Update available ip address ($IP)"
 
-figlet -w ${WID} -c "iVIT-I Web API"
-echo "HOST: ${IP}:${PORT}" | boxes -s "${WID}x5" -a c
-echo ""
-
+# Run web api
+printd "Run Web API in background"
 gunicorn --worker-class eventlet \
 -w ${WORKER} \
 --threads ${THREADING} \

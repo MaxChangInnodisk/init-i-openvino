@@ -12,7 +12,6 @@ Supported Samples: \n\
     - humanpose_sample_ae \n\
     - yolov4-tiny \n"
 
-cd /workspace
 echo "-----------------------------------"
 printd "Initialize Classification Sample" G
 ./test/classification.sh
