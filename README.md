@@ -44,7 +44,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
     * Run docker container step by step for developer
 
-        Here is the [documentation](docs/activate_env_for_developer.md) explaining the workflow of `build docker image` and `run docker container`.
+        Here is the [documentation](docs/activate_env_for_developer.md) explaining the workflow of `run docker container`.
 
     * Terminal Output
 
@@ -97,9 +97,18 @@ We provide the fast-test for each sample, please check the [document](./test/REA
 
 # Release
 ```bash
-# not initialize and run background
-./docker/run.sh -nb
 
-# package python module
-docker exec ivit-i-intel ./cythonize.sh
+# Make sure ivit-i-intel next to ivit-i-intel-dev
+# 
+# tree .
+#   ./ivit-i-intel
+#   ./ivit-i-intel-dev
+
+# not initialize and run background
+cd ./ivit-i-intel-dev
+./docker/release.sh
+
+# Push docker image
+docker push ${DOCKER_IMAGE_NAME}
+
 ```
