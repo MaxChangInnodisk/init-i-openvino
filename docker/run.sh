@@ -157,38 +157,3 @@ printd "Start to run docker command" Cy
 echo -ne "${DOCKER_CMD}\n"
 
 bash -c "${DOCKER_CMD}"
-
-# Check is the container not exist
-# if [[ $(check_container "${DOCKER_NAME}") -eq 0 ]];then
-	
-# 	printd "Run docker container ..." Cy
-# 	bash -c "${DOCKER_CMD}"
-
-# # If container exist
-# else
-#     printd "Found docker container " Cy
-
-# 	# Define run command
-# 	RUN_CMD=$(if [[ ${RUN_CLI} = false ]]; then echo ${WEB_CMD}; else echo ${CLI_CMD};fi)
-
-# 	# Check is the container still running
-# 	if [ "$(check_container_run "${DOCKER_NAME}")" == "true" ]; then
-# 		printd "Container is running" Cy
-		
-# 		if [[ ${RUN_CLI} = false ]]; then
-# 			result=$(docker exec -i ivit-i-intel-v0.9 lsof -i:${PORT})
-# 			if [[ -n $result ]];then
-# 				printd "Attach Container, because Web API is running ... " Y
-# 				docker attach ${DOCKER_NAME}
-# 			fi
-# 		fi
-
-# 		docker exec -it "${DOCKER_NAME}" "${RUN_CMD}"
-	
-# 	# Start container if container not running 
-# 	else
-# 		printd "Start the docker container" Cy
-# 		docker start "${DOCKER_NAME}"
-# 		docker exec -it "${DOCKER_NAME}" "${RUN_CMD}"
-# 	fi;
-# fi;
