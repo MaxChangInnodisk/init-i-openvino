@@ -1,3 +1,5 @@
+![LOGO](docs/images/iVIT-I-Logo-B.png)
+
 # iVIT-I-Intel
 iNIT-I is an AI inference tool which could support multiple AI framework and this repository is just for intel platform.
 
