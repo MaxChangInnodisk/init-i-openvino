@@ -6,12 +6,9 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 * [Run Sample](#run-sample)
 * [Fast Testing](#fast-testing)
 * [Web API](#web-api)
-* [Sample Information](#sample-information)
 
 # Pre-requirements
-* Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
-
-
+* [Docker](https://docs.docker.com/engine/install/ubuntu/)
 
 # Prepare Environment
 
@@ -21,25 +18,32 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
     git clone  https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
     ```
 
+    * Clone specificall branch
+        ```bash
+        VER=r1.0
+        git clone --branch ${VER} https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
+        ```
 2. Run the docker container with web api
 
-    * Before running the container
-        1. Avoid Container Conflict
-
-            If you run `ivit-i-{brand}` before, make sure there is no container naming `ivit-i-{brand}` exists, you could run `docker rm ivit-i-{brand}` to remove it.
-
-        2. Initialize Automatically
-        
-            It will initialize serveral samples which define in [init_samples.sh](./init_samples.sh).
-        
     * Run container with **web api**
         ```bash
         sudo ./docker/run.sh
         ```
 
-    * Run container with **interactive mode**
+    * Run container with **command line mode**
         ```bash
         sudo ./docker/run.sh -c
+        ```
+
+    * Run container without initialize sample
+        ```bash
+        sudo ./docker/run.sh -sc
+
+        # if you need to initialize samples
+        ./init_samples.sh
+
+        # if you need to launch web api
+        ./exec_web_api.sh
         ```
 
     * Run docker container step by step for developer
@@ -50,7 +54,6 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
         <img src="docs/images/run_script_info.png" width=80%>
         
-        Refer to [running_workflow.md](docs/running_workflow.md) to see more output information.
 
 # Run Sample
 We use `task.json` to configure each AI tasks and using `<model>.json` to configure each AI models, check [ task configuration ](./docs/task_configuration.md) and [model configuration](./docs/model_configuration.md) to get more detail.
@@ -94,21 +97,3 @@ We provide the fast-test for each sample, please check the [document](./test/REA
     <img src="docs/images/apidocs.png" width=80%>
 </details>
 <br>
-
-# Release
-```bash
-
-# Make sure ivit-i-intel next to ivit-i-intel-dev
-# 
-# tree .
-#   ./ivit-i-intel
-#   ./ivit-i-intel-dev
-
-# not initialize and run background
-cd ./ivit-i-intel-dev
-./docker/release.sh
-
-# Push docker image
-docker push ${DOCKER_IMAGE_NAME}
-
-```
