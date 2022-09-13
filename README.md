@@ -39,7 +39,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
     * Run container without initialize sample
         ```bash
-        sudo ./docker/run.sh -sc
+        sudo ./docker/run.sh -nc
 
         # if you need to initialize samples
         ./init_samples.sh
