@@ -20,11 +20,6 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
     git clone  https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
     ```
 
-    * Clone specificall branch
-        ```bash
-        VER=r1.0
-        git clone --branch ${VER} https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
-        ```
 2. Run the docker container with web api
 
     * Run container with **web api**
