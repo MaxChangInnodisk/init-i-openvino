@@ -110,7 +110,7 @@ else RUN_CMD="${RUN_CMD} ${WEB_CMD}"; fi
 if [[ ${BG} == true ]]; then RUN_CMD="bash"; fi
 
 # If is desktop mode
-if [[ ${SERVER} = true ]];then
+if [[ ${SERVER} = false ]];then
 	MODE="DESKTOP"
 	SET_VISION="-v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=unix${DISPLAY}"
 	xhost + > /dev/null 2>&1
@@ -150,6 +150,7 @@ ${SET_NETS} \
 ${SET_TIME} \
 ${MOUNT_WS} \
 ${SET_VISION} \
+-e \"IVIT_DEBUG=True\" \
 ${DOCKER_IMAGE} ${RUN_CMD}"
 
 # Log

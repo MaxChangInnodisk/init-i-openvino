@@ -3,7 +3,7 @@
 from ast import parse
 from copy import deepcopy
 import cv2, sys, os, logging, time, argparse
-from ivit_i.utils import Json, Draw
+from ivit_i.utils import Json, Draw, get_scale, get_text_size, draw_text
 from ivit_i.utils.logger import config_logger
 from ivit_i.web.ai.pipeline import Source
 from ivit_i.app.handler import get_application
@@ -154,9 +154,12 @@ def main(args):
                 padding         = 10
                 (text_width, text_height), baseLine = cv2.getTextSize(fps, FONT_FACE, font_scale, thickness)
                 
-
-                cv2.putText(frame, fps, (width - text_width - padding , text_height + baseLine ), FONT_FACE, font_scale, (0, 0, 0), thickness+2, BORDER_FACE)
-                cv2.putText(frame, fps, (width - text_width - padding , text_height + baseLine ), FONT_FACE, font_scale, (0, 255, 255), thickness, BORDER_FACE)
+                frame = draw_text(
+                        frame, 
+                        fps, 
+                        (width - padding - text_width , 0 ), 
+                        (0, 255, 255)
+                )
 
                 if not args.server:
                     
