@@ -5,9 +5,9 @@ from copy import deepcopy
 import cv2, sys, os, logging, time, argparse
 from ivit_i.utils import Json, Draw, get_scale, get_text_size, draw_text
 from ivit_i.utils.logger import config_logger
-from ivit_i.web.ai.pipeline import Source
+from ivit_i.common.pipeline import Source
 from ivit_i.app.handler import get_application
-from ivit_i.web.tools.common import handle_exception
+from ivit_i.utils import handle_exception
 import math
 
 FONT_FACE           = cv2.FONT_HERSHEY_COMPLEX_SMALL

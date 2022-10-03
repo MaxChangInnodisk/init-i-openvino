@@ -13,6 +13,7 @@
     "DEBUG": false,
     "WORKER": 1,
     "THREADING": 30,
+    "ICAP": false,
     "MQTT_KEEPALIVE": 5,
     "MQTT_REFRESH_TIME": 1.0,
     "TB": "10.204.16.110",

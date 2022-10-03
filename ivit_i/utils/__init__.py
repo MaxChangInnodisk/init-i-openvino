@@ -9,7 +9,8 @@ from .utils import (
     PADDING,
     BASE_FONT_SIZE,
     BASE_FONT_THICK,
-    CUSTOM_SCALE )
+    CUSTOM_SCALE,
+    handle_exception )
 from .logger import config_logger
 
 __all__ = [
@@ -24,5 +25,6 @@ __all__ = [
     "PADDING",
     "BASE_FONT_SIZE",
     "BASE_FONT_THICK",
-    "CUSTOM_SCALE"
+    "CUSTOM_SCALE",
+    "handle_exception"
 ]
