@@ -92,3 +92,14 @@ function check_lsof(){
 	fi
 }
 
+function run_webrtc_server(){
+	printd "Launch WebRTC to Web Docker Service" Cy
+	docker run --rm -d \
+	--name ivit-webrtc-server \
+	--network host \
+	ghcr.io/deepch/rtsptoweb:latest
+}
+
+function stop_webrtc_server(){
+	docker stop ivit-webrtc-server
+}

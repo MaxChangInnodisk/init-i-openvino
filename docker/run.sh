@@ -104,8 +104,15 @@ RUN_CMD=""
 if [[ ${INIT} = true ]]; then RUN_CMD=${INIT_CMD}; fi
 
 # Run CLI or Web
-if [[ ${RUN_CLI} = true ]]; then RUN_CMD="${RUN_CMD} ${CLI_CMD}";
-else RUN_CMD="${RUN_CMD} ${WEB_CMD}"; fi
+if [[ ${RUN_CLI} = true ]]; then 
+	RUN_CMD="${RUN_CMD} ${CLI_CMD}";
+else 
+	RUN_CMD="${RUN_CMD} ${WEB_CMD}"; 
+
+	# Run WebRTC to Web Docker Service
+	run_webrtc_server;
+
+fi
 
 if [[ ${BG} == true ]]; then RUN_CMD="bash"; fi
 
@@ -158,3 +165,5 @@ printd "Start to run docker command" Cy
 echo -ne "${DOCKER_CMD}\n"
 
 bash -c "${DOCKER_CMD}"
+
+stop_webrtc_server; exit 0;
