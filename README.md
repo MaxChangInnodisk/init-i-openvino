@@ -83,8 +83,49 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 
 
 # Fast Testing
-We provide the fast-test for each sample, please check the [document](./test/README.md).
 
+* Supported Samples: 
+    - Classification 
+    - object-detection-sample 
+    - yolov4-tiny 
+    - parking-lot-detect 
+    - traffic-flow-detect 
+    - wrong-side-detect 
+
+* classification-sample
+    ```bash
+    # Initialize
+    ivit-launcher --task classification-sample
+
+    # Initialize and Run
+    ivit-launcher --task classification-sample --demo 
+
+    # Start with RTSP
+    ivit-launcher --task classification-sample --demo --rtsp
+    ```
+* show available task name
+    ```bash
+    List Tasks
+        1  classification-sample
+        2  object-detection-sample
+        3  parking-lot-detect
+        4  traffic-flow-detect
+        5  wrong-side-detect
+        6  yolov4-tiny-sample
+    ```
+* usage (help)
+    ```
+    ivit-launcher --help
+
+    Usage:
+            -t | --task             : define task name
+            -l | --list             : show available task name
+            -d | --demo             : run demo ( display cv window )
+            -s | --server   : run server mode ( only show log )
+            -r | --rtsp             : run rtsp mode ( rtsp://127.0.0.0:8554/mystream )
+            --route                 : define rtsp route, ( rtsp://127.0.0.0:8554/<route> )
+            --help                  : show usage
+    ```
 
 # Web API
 <details>
@@ -94,3 +135,25 @@ We provide the fast-test for each sample, please check the [document](./test/REA
     <img src="docs/images/apidocs.png" width=80%>
 </details>
 <br>
+
+
+# Log
+* r1.0.3
+    1. Add source pipeline to improve the streaming.
+    2. Add async inference pipeline to improve the streaming.
+    3. Add RTSP output: add [rtsp-simple-server](https://github.com/aler9/rtsp-simple-server), gstreamer and rebuild opencv.
+    4. Add WebRTC server: add [rtsp-to-web](https://github.com/deepch/RTSPtoWeb).
+    5. Provide new entrance `ivit-launcher` to test sample quickly. ([check here](#fast-testing)).
+    6. Reset application when source pipeline is restart.
+
+* r1.0.2
+    1. Application with `new condition` and `new algorithm`
+        * Add `Area Event` in Each Application.
+        * Add `Condition Event (Logic)` , `Alerm` in `Counting`.
+        * Add `Alerm`, `Sensitivity` in `Area Detection` and `Moving Direction`.
+        * Add `Direction` in `Moving Direction`.
+    2. New Default Task Sample ( More Realistic Use Case )
+        * Add `parking-lot-detect` ,`wrong-side-detect` , `traffic-flow-detect` 
+        * delete `pose estimation` and `segmentation`  samples.
+    3. New Model and Label Path
+        * Change the model path to `/workspace/model` folder to reduce the task operation time and reduce disk space.
