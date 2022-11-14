@@ -6,8 +6,8 @@ from .. import socketio, app
 
 # from ..ai.pipeline import Source
 # from ivit_i.utils.utils import handle_exception
-from ivit_i.common.pipeline import Source
-from ivit_i.utils.utils import handle_exception
+from ivit_i.common.pipeline import Source, Pipeline
+from ivit_i.utils.err_handler import handle_exception
 
 # Define app config key
 AF              = "AF"
@@ -146,11 +146,11 @@ def get_request_file(save_file=False):
     if save_file:
         try:
             file_path = os.path.join(app.config[DATA], secure_filename(file_name))
-
             file.save( file_path )
         except Exception as e:
             err = handle_exception(e, "Error when saving file ...")
-            abort(404, {'message': err } )
+            logging.error(err)
+            # abort(404, {'message': err } )
 
         return file_path
     
@@ -160,7 +160,7 @@ def get_request_data():
     """ Get data form request and parse content. """
     # Support form data and json
     data = dict(request.form) if bool(request.form) else request.get_json()
-
+    
     # Put framework information into data
     if FRAMEWORK_KEY not in data.keys(): 
         data.update( { FRAMEWORK_KEY : app.config[AF] } )
@@ -177,6 +177,7 @@ def get_request_data():
         logging.debug("Convert data[{}] to float format".format(THRES_KEY))
     
     # Print out to check information
+
     print_data(data)
 
     return data
@@ -225,6 +226,11 @@ def frame2btye(frame):
     }
     return ret
 
+def stop_task_thread(task_uuid, err):
+    stop_src( task_uuid, True )
+    app.config[TASK][task_uuid]["status"] = "error"
+    app.config[TASK][task_uuid]["error"] = err
+
 def get_src(task_uuid, reload_src=False):
     """ 
     Setup the source object and run 
@@ -253,7 +259,9 @@ def get_src(task_uuid, reload_src=False):
     if ( src_obj == None ) or reload_src:
         logging.info('Initialize a new source.')
         try: 
-            app.config[SRC][src_name][OBJECT] = Source(src_name, app.config[SRC][src_name][TYPE])
+            # app.config[SRC][src_name][OBJECT] = Source(src_name, app.config[SRC][src_name][TYPE])
+            app.config[SRC][src_name][OBJECT] = Pipeline(src_name, app.config[SRC][src_name][TYPE])
+            app.config[SRC][src_name][OBJECT].start()
         except Exception as e:
             handle_exception(e)
             raise (handle_exception(e))

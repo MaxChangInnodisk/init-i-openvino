@@ -1,0 +1,37 @@
+{
+    "tag": "obj",
+    "openvino": {
+        "model_path": "./model/yolo-v4-tiny-tf/yolo-v4-tiny-tf.xml",
+        "label_path": "./model/yolo-v4-tiny-tf/coco.names",
+        "anchors": [
+            10,
+            14,
+            23,
+            27,
+            37,
+            58,
+            81,
+            82,
+            135,
+            169,
+            344,
+            319
+        ],
+        "architecture_type": "yolov4",
+        "device": "CPU",
+        "thres": 0.9,
+        "keep_aspect_ratio": false,
+        "masks": null,
+        "num_infer_requests": 0,
+        "num_streams": "",
+        "num_threads": null,
+        "loop": true,
+        "output": false,
+        "output_resolution": null,
+        "utilization_monitors": "",
+        "reverse_input_channels": false,
+        "mean_values": null,
+        "scale_values": null,
+        "raw_output_message": false
+    }
+}

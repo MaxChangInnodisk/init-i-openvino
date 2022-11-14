@@ -1,189 +1,201 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from ast import parse
-from copy import deepcopy
-import cv2, sys, os, logging, time, argparse
-from ivit_i.utils import Json, Draw, get_scale, get_text_size, draw_text
+import cv2, sys, os, logging, time, argparse, math
+from collections import deque
+
+from ivit_i.utils import Draw, draw_text, read_json
+from ivit_i.utils.draw_tools import draw_fps
 from ivit_i.utils.logger import config_logger
-from ivit_i.common.pipeline import Source
+from ivit_i.common.pipeline import Source, Pipeline
 from ivit_i.app.handler import get_application
-from ivit_i.utils import handle_exception
-import math
+from ivit_i.utils import handle_exception, get_display
 
-FONT_FACE           = cv2.FONT_HERSHEY_COMPLEX_SMALL
-BORDER_FACE         = cv2.LINE_AA
-FONT_SCALE          = 2e-3  # Adjust for larger font size in all images
-THICKNESS_SCALE     = 1e-3  # Adjust for larger thickness in all images
+from ivit_i.app.common import CV_WIN
 
-CV_WIN              = "Detection Results"
-FULL_SCREEN         = True
+FULL_SCREEN     = False
+FRMAEWORK       = "framework"
+TAG             = "tag"
+FRAMEWORK       = "openvino"
+WAIT_KEY_TIME   = 1
 
-alpha_slider_max    = 100
-thres               = 0
+SERV    = 'server'
+RTSP    = 'rtsp'
+GUI     = 'gui'
 
-def on_trackbar(val):
-    global thres
-    thres = float(val/alpha_slider_max)
+def init_cv_win():
+    logging.info('Init Display Window')
+    cv2.namedWindow( CV_WIN, cv2.WND_PROP_FULLSCREEN )
+    cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN )
+
+def fullscreen_toggle():
+    global FULL_SCREEN
+    cv2.setWindowProperty( 
+        CV_WIN, cv2.WND_PROP_FULLSCREEN, 
+        cv2.WINDOW_FULLSCREEN if FULL_SCREEN else cv2.WINDOW_NORMAL )
+    FULL_SCREEN = not FULL_SCREEN
+
+def display(frame, t_wait_key):
+
+    exit_flag = False
+
+    cv2.imshow(CV_WIN, frame)            
+    
+    key = cv2.waitKey(t_wait_key)
+    if key in {ord('q'), ord('Q'), 27}:
+        exit_flag = True
+    elif key in { ord('a'), 201, 206, 210, 214 }:
+        fullscreen_toggle()
+
+    return exit_flag
+
+def get_api(key):
+    # Check model architecture
+    if 'obj' in key:
+        from ivit_i.obj import ObjectDetection as trg
+
+    if "cls" in key:
+        from ivit_i.cls import Classification as trg
+
+    if "seg" in key:
+        from ivit_i.seg import Segmentation as trg
+
+    if "pose" in key:
+        from ivit_i.pose import Pose as trg
+
+    return trg()
+
+def get_running_mode(args):
+    if(args.server): return SERV
+    elif(args.rtsp): return RTSP
+    else: return GUI
 
 def main(args):
 
-    global FULL_SCREEN
+    # Get Mode
+    mode = get_running_mode(args)
 
-    # Instantiation
-    json = Json()
-    draw = Draw()
+    t_wait_key  = 0 if args.debug else WAIT_KEY_TIME
 
     # Get to relative parameter from first json
-    custom_cfg = json.read_json(args.config)
-    dev_cfg = [custom_cfg[key] for key in custom_cfg.keys() if "prim" in key]
+    app_cfg = read_json(args.config)
+    dev_cfg = app_cfg['prim']
+    app_cfg.update( read_json(dev_cfg['model_json']) )
 
-    # Summarized previous dictionary and get to relative parameter from secondary json  
-    for prim_ind in range(len(dev_cfg)):
+    # Check is openvino and start processes
+    trg = get_api(app_cfg[TAG])
+        
+    # Check input is camera or image and initial frame id/show id
+    src = Pipeline(app_cfg['source'], app_cfg['source_type'])
+    src.start()
 
-        # source append to dev_cfg
-        dev_cfg[prim_ind].update({"source":custom_cfg['source']})
-        dev_cfg[prim_ind].update({"source_type":custom_cfg['source_type']})
-        dev_cfg[prim_ind].update({"application":custom_cfg['application']})
-        dev_cfg[prim_ind].update(json.read_json(dev_cfg[prim_ind]['model_json']))
+    (src_hei, src_wid), src_fps = src.get_shape(), src.get_fps()
+    # Concate RTSP pipeline
 
-        # Check is openvino and start processes
-        if custom_cfg['framework'] == 'openvino':
+    if mode==RTSP:
+        gst_pipeline = 'appsrc is-live=true block=true ' + \
+            ' ! videoconvert ' + \
+            ' ! video/x-raw,format=I420 ' + \
+            ' ! x264enc speed-preset=ultrafast bitrate=2048 key-int-max=25' + \
+            f' ! rtspclientsink location=rtsp://{args.ip}:{args.port}{args.name}'
+        out = cv2.VideoWriter(  gst_pipeline, cv2.CAP_GSTREAMER, 0, 
+                                src_fps, (src_wid, src_hei), True )
 
-            # Check model architecture
-            if 'obj' in dev_cfg[prim_ind]['tag']:
-                from ivit_i.obj import ObjectDetection as trg
+        logging.info(f'Define Gstreamer Pipeline: {gst_pipeline}')
+        if not out.isOpened():
+            raise Exception("can't open video writer")
 
-                # Check secondary model and loading
-                #   - Get secondary model relative parameter from first json
-                seconlist = [dev_cfg[prim_ind][key] for key in dev_cfg[prim_ind].keys() if "sec" in key]
-                
-                if seconlist != []:
-                    from ivit_i.cls import Classification as cls
-                    for j in range(len(seconlist)):
-                        # Append to secondary dictionary relative parameter from secondary model json  
-                        seconlist[j].update({"sec-{}".format(j+1):json.read_json(seconlist[j]["model_json"]), "cls":cls()})
-                        # Read every cls model
-                        model, color_palette = seconlist[j]["cls"].load_model(seconlist[j]["sec-{}".format(j+1)])
-                        # Add model and color to secondary dictionary
-                        seconlist[j].update({"model":model,"color_palette":color_palette})
+    # Load model and initial pipeline
+    trg.load_model(app_cfg, src.read()[1])
 
-            if "cls" in dev_cfg[prim_ind]['tag']:
-                from ivit_i.cls import Classification as trg
+    # Setup Application
+    try:
+        application = get_application(app_cfg)
+        
+        # area_detection have to setup area
+        if get_display():
+            application.set_area(frame=src.read()[1])
 
-            if "seg" in dev_cfg[prim_ind]['tag']:
-                from ivit_i.seg import Segmentation as trg
+    except Exception as e:
+        raise Exception(handle_exception(error=e, title="Could not load application ... set app to None"))
 
-            if "pose" in dev_cfg[prim_ind]['tag']:
-                from ivit_i.pose import Pose as trg
-    
-            # Check input is camera or image and initial frame id/show id
-            src = Source(dev_cfg[prim_ind]['source'], dev_cfg[prim_ind]['source_type'])
+    # Inference
+    logging.info('Starting inference...')
+    cur_info, temp_info    = None, None
+    cur_fps , temp_fps     = 30, 30
 
-            # Load model and initial pipeline
-            trg = trg()  
-            model, color_palette = trg.load_model(dev_cfg[prim_ind]) if not ("pose" in dev_cfg[prim_ind]['tag']) else trg.load_model(dev_cfg[prim_ind], src.get_frame()[1])
+    try:    
+        # Setup CV Windows
+        if mode==GUI: init_cv_win()
 
-            # Setup Application
-            has_app=False
-            try:
-                application = get_application(dev_cfg[prim_ind])
-                has_app = False if application == None else True
-                
-                app_info = dev_cfg[prim_ind]["application"]
-                
-                # area_detection have to setup area
-                if "area" in app_info["name"]:
-                    key = "area_points"
-                    if not key in app_info: application.set_area(pnts=None, frame=src.get_first_frame())
-                    else: application.set_area(pnts=app_info[key])
-
-            except Exception as e:
-                handle_exception(error=e, title="Could not load application ... set app to None", exit=False)
-                has_app=False
-
-            # Setup CV Windows
-            if not args.server:
-                cv2.namedWindow( CV_WIN, cv2.WND_PROP_FULLSCREEN)
-                cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN if FULL_SCREEN else cv2.WINDOW_NORMAL )
-
-            # Inference
-            logging.info('Starting inference...')
-            logging.warning("To close the application, press 'CTRL+C' here or switch to the output window and press ESC key")
+        while(True):
             
-            while True:
-
-                # Get current frame
-                ret_frame, frame = src.get_frame()
-                org_frame = frame.copy()
-                t1 = time.time()
-
-                # Check frame is exist
-                if not ret_frame: 
-                    if src.get_type().lower() in ["rtsp", "video"]:
-                        src = Source(total_conf['source'], total_conf['source_type'])
-                        continue
-                    else:
-                        break
-
-                # Update thres
-                if thres>0 and (dev_cfg[prim_ind]["openvino"]["thres"] != thres):
-                    dev_cfg[prim_ind]["openvino"]["thres"] = thres
-
-                # Do inference
-                info = trg.inference(model, org_frame, dev_cfg[prim_ind])
-                
-                # Drawing detecter to information
-                if not args.server:
-                    
-                    if info is None: continue
-
-                    if not has_app:
-                        frame = draw.draw_detections(info, color_palette, dev_cfg[prim_ind])
-                    else:
-                        frame = application(org_frame, info)            
-                
-                # Show the results
-
-                # Calculate FPS
-                t2              = time.time()
-                fps             = f"FPS:{int(1/(t2-t1))}"
-                height, width   = frame.shape[:2]
-                
-                font_scale      = min(width, height) * FONT_SCALE
-                thickness       = math.ceil(min(width, height) * THICKNESS_SCALE)
-                padding         = 10
-                (text_width, text_height), baseLine = cv2.getTextSize(fps, FONT_FACE, font_scale, thickness)
-                
-                frame = draw_text(
-                        frame, 
-                        fps, 
-                        (width - padding - text_width , 0 ), 
-                        (0, 255, 255)
-                )
-
-                if not args.server:
-                    
-                    cv2.imshow(CV_WIN, frame)
-
-                    key = cv2.waitKey(1)
-                    if key in {ord('q'), ord('Q'), 27}:
-                        break                 
-                    elif key in { ord('a'), 201, 206, 210, 214 }:
-                        FULL_SCREEN = not FULL_SCREEN
-                        cv2.setWindowProperty(CV_WIN,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN if FULL_SCREEN else cv2.WINDOW_NORMAL )
-                    elif key in { ord('c'), 32 }:
-                        pass
-
+            t_start = time.time()
+            
+            # Get current frame
+            success, frame = src.read()
+            
+            # Check frame
+            if not success:
+                if src.get_type() == 'v4l2':
+                    break
                 else:
-                    logging.info( info["detections"])
-                
-            src.release()
+                    application.reset()
+                    src.reload()
+                    continue
+
+            # Do inference
+            temp_info = trg.inference(frame, args.mode)
+            
+            # Drawing result using application
+            if(temp_info):
+                cur_info, cur_fps = temp_info, temp_fps
+
+            if(cur_info):
+                frame, app_info = application(frame, cur_info)
+            
+            # Draw fps
+            frame = draw_fps( frame, cur_fps )
+
+            # Display Frame
+            if mode==GUI:
+                exit_win = display(frame, t_wait_key)
+                if exit_win: break
+
+            elif mode==RTSP:
+                out.write(frame)
+
+            # Log
+            # if(app_info): logging.cur_info(app_info)
+
+            # Delay to fix in 30 fps
+            t_cost, t_expect = (time.time()-t_start), (1/src.get_fps())
+            if(t_cost<t_expect):
+                time.sleep(t_expect-t_cost)
+
+            # Calculate FPS
+            if(temp_info):
+                temp_fps = int(1/(time.time()-t_start))
+        
+        src.release()
+
+    except Exception as e:
+        logging.error(handle_exception(e))
+    
+    finally:
+        sys.exit(0)
 
 if __name__ == '__main__':
     
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', help = "The path of application config")
     parser.add_argument('-s', '--server', action="store_true", help = "Server mode, not to display the opencv windows")
+    parser.add_argument('-r', '--rtsp', action="store_true", help = "RTSP mode, not to display the opencv windows")
+    parser.add_argument('-d', '--debug', action="store_true", help = "Debug mode")
+    parser.add_argument('-m', '--mode', type=int, default = 1, help = "Select sync mode or async mode{ 0: sync, 1: async }")
+    parser.add_argument('-i', '--ip', type=str, default = '127.0.0.1', help = "The ip address of RTSP uri")
+    parser.add_argument('-p', '--port', type=str, default = '8554', help = "The port number of RTSP uri")
+    parser.add_argument('-n', '--name', type=str, default = '/mystream', help = "The name of RTSP uri")
+
     args = parser.parse_args()
 
     sys.exit(main(args) or 0)

@@ -1,0 +1,52 @@
+{
+    "application": {
+        "name": "tracking",
+        "depend_on": [
+            "car"
+        ],
+        "area_points": {
+            "0": [
+                [
+                    419,
+                    663
+                ],
+                [
+                    463,
+                    644
+                ],
+                [
+                    1206,
+                    589
+                ],
+                [
+                    1596,
+                    770
+                ],
+                [
+                    1582,
+                    788
+                ],
+                [
+                    629,
+                    898
+                ],
+                [
+                    526,
+                    884
+                ]
+            ],
+            "1": []
+        },
+        "area_vector": {
+            "0": [],
+            "1": []
+        }
+    },
+    "framework": "openvino",
+    "name": "traffic-flow-detect",
+    "source": "data/4-corner-downtown.mp4",
+    "source_type": "Video",
+    "prim": {
+        "model_json": "./task/traffic-flow-detect/yolo.json"
+    }
+}

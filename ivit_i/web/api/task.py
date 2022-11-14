@@ -10,7 +10,7 @@ from .common import get_src, stop_src
 from ..tools.parser import get_pure_jsonify
 from ..tools.handler import get_tasks
 from ..tools.parser import get_pure_jsonify
-from ivit_i.utils.utils import handle_exception
+from ivit_i.utils.err_handler import handle_exception
 from ..ai.get_api import get_api
 
 YAML_PATH   = "/workspace/ivit_i/web/docs/task"
@@ -104,20 +104,14 @@ def task_label(uuid):
     status  = 200
 
     try:
-        label_list = []
+        message = [ ]
         
         is_err_path = current_app.config[TASK][uuid][LABEL_PATH] in [ "", "None", None, False ]
-        is_not_txt = os.path.splitext(current_app.config[TASK][uuid][LABEL_PATH])[1] != ".txt"
-        if is_err_path or is_not_txt:
-
-            message = [ ]
-            
-        else:
-
-            with open( current_app.config[TASK][uuid][LABEL_PATH], 'r') as f:
-                [ label_list.append( line.rstrip("\n") ) for line in f.readlines() ]
-
-            message = label_list
+        if is_err_path:
+            logging.warning("Could not found label file")
+    
+        with open( current_app.config[TASK][uuid][LABEL_PATH], 'r') as f:
+            message = [ line.rstrip("\n") for line in f.readlines() ]
 
     except Exception as e:
         message = handle_exception(e)
@@ -160,29 +154,18 @@ def run_task(uuid):
         current_app.config[TASK][uuid][ERROR] = src_err
         return src_err, PASS_CODE
     
-    # avoid changing the configuration data during initailization ( init)
+    # avoid changing the configuration data during initailization ( init_ai_model)
     temp_config = copy.deepcopy(current_app.config[TASK][uuid][CONFIG]) 
     
     # get ai objects
-    init, _ = get_api()
+    init_ai_model = get_api()[0]
     
     # only pose estimation in openvino have to input a frame
     is_openvino = (current_app.config[TASK][uuid][FRAMEWORK]==OV)
     is_pose = (current_app.config[TASK][uuid][CONFIG][TAG]=='pose')
-    input_frame = src.get_frame()[1] if is_openvino and is_pose else None
+    input_frame = src.read()[1] if is_openvino and is_pose else None
         
-    ai_objects = init(temp_config, input_frame)
-    
-    # if no object then return error message
-    if None in ai_objects:
-        msg = '{}\n( {} )'.format( ai_objects[0], "Auto restart the service" )    
-        logging.critical(msg)
-        return msg, FAIL_CODE
-    else:
-        (   current_app.config[TASK][uuid][API], 
-            current_app.config[TASK][uuid][RUNTIME], 
-            current_app.config[TASK][uuid][DRAW_TOOLS], 
-            current_app.config[TASK][uuid][PALETTE]  ) = ai_objects
+    current_app.config[TASK][uuid][API] = init_ai_model(temp_config, input_frame)
     
     # send socketio and update current_app.config
     current_app.config[TASK][uuid][STATUS] = RUN

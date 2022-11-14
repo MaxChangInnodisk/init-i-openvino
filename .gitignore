@@ -34,3 +34,5 @@ data
 !docs/images/*
 
 ./docker/inno_verify
+
+model/

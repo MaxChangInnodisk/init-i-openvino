@@ -1,6 +1,6 @@
 {
     "PROJECT": "ivit-i",
-    "VERSION": "v1.0",
+    "VERSION": "v1.0.3",
     "PLATFORM": "intel",
     "FRAMEWORK": "openvino",
     "AF":"openvino",
@@ -10,6 +10,7 @@
     "TASK_ROOT": "./task",
     "DATA": "data",
     "TEMP_PATH": "./temp",
+    "MODEL_DIR": "./model",
     "DEBUG": false,
     "WORKER": 1,
     "THREADING": 30,
