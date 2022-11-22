@@ -30,12 +30,9 @@ def get_app_list():
 def get_tag_app_list():
     dir_path = os.path.dirname(__file__)    
     logging.warning(dir_path)
-    ret = {}
-
+    
     from ivit_i.app import APP_LIST
-    for key, val in APP_LIST.items():
-        APP_LIST[key].append("default")
+    # for key, val in APP_LIST.items():
+    #     APP_LIST[key].append("default")
         
-    ret = APP_LIST
-
-    return ret
+    return APP_LIST

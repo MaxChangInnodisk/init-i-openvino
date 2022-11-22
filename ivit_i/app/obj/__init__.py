@@ -5,6 +5,7 @@
 # from .tracking import Tracking
 
 LIST = [
+    'default',
     'area_detection',
     'counting',
     'heatmap',
