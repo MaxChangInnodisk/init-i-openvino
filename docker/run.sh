@@ -108,11 +108,10 @@ if [[ ${RUN_CLI} = true ]]; then
 	RUN_CMD="${RUN_CMD} ${CLI_CMD}";
 else 
 	RUN_CMD="${RUN_CMD} ${WEB_CMD}"; 
-
-	# Run WebRTC to Web Docker Service
-	run_webrtc_server;
-
 fi
+
+# Run WebRTC to Web Docker Service
+run_webrtc_server;
 
 if [[ ${BG} == true ]]; then RUN_CMD="bash"; fi
 

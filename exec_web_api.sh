@@ -30,7 +30,7 @@ printd "Update available ip address ($IP)"
 
 # Run web api
 printd "Run Web API in background"
-gunicorn --worker-class eventlet \
+gunicorn \
 -w ${WORKER} \
 --threads ${THREADING} \
 --bind 0.0.0.0:${PORT} \

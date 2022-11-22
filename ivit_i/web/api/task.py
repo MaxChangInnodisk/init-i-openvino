@@ -158,7 +158,7 @@ def run_task(uuid):
     temp_config = copy.deepcopy(current_app.config[TASK][uuid][CONFIG]) 
     
     # get ai objects
-    init_ai_model = get_api()[0]
+    init_ai_model = get_api()
     
     # only pose estimation in openvino have to input a frame
     is_openvino = (current_app.config[TASK][uuid][FRAMEWORK]==OV)
@@ -167,7 +167,7 @@ def run_task(uuid):
         
     current_app.config[TASK][uuid][API] = init_ai_model(temp_config, input_frame)
     
-    # send socketio and update current_app.config
+    # send info to web and update current_app.config
     current_app.config[TASK][uuid][STATUS] = RUN
     
     # set initialize time

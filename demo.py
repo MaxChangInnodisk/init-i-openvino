@@ -178,6 +178,9 @@ def main(args):
         
         src.release()
 
+        if args.mode==RTSP:
+            out.release()
+
     except Exception as e:
         logging.error(handle_exception(e))
     
@@ -198,4 +201,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    sys.exit(main(args) or 0)
+    main(args)
