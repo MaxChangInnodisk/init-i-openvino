@@ -34,11 +34,10 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
     * Run container without initialize sample
         ```bash
-        sudo ./docker/run.sh -nc
+        sudo ./docker/run.sh -n -c
 
         # if you need to initialize samples
         ./init_samples.sh
-
         # if you need to launch web api
         ./exec_web_api.sh
         ```
@@ -47,45 +46,36 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
         Here is the [documentation](docs/activate_env_for_developer.md) explaining the workflow of `run docker container`.
 
-    * Terminal Output
-
-        <img src="docs/images/run_script_info.png" width=80%>
-        
-
 # Run Sample
 We use `task.json` to configure each AI tasks and using `<model>.json` to configure each AI models, check [ task configuration ](./docs/task_configuration.md) and [model configuration](./docs/model_configuration.md) to get more detail.
 
 1. Enter docker container
     ```bash
     ./docker/run.sh -c
-
-    TASK_NAME=classification-sample
     ```
 2. Download model and meta data.
     ```bash
-    # Model
-    ./task/${TASK_NAME}/download_model.sh
-
-    # Meta data
-    ./task/${TASK_NAME}/download_data.sh
+    TASK=classification-sample
+    ./task/${TASK}/download_model.sh
+    ./task/${TASK}/download_data.sh
     ```
 3. Run demo script with GUI.
     ``` bash
-    python3 demo.py -c task/${TASK_NAME}/task.json
+    python3 demo.py -c task/${TASK}/task.json
     ```
 4. CLI mode - without GUI, only console output
     ```bash
-    python3 demo.py -c task/${TASK_NAME}/task.json -s
+    python3 demo.py -c task/${TASK}/task.json -s
     ```
 5. RTSP mode
     ```bash
     # rtsp://localhost:8554/mystream
-    python3 demo.py -c task/${TASK_NAME}/task.json -r
+    python3 demo.py -c task/${TASK}/task.json -r
     ```
 6. Custom RTSP
     ```bash
     # rtsp://localhost:8554/test
-    python3 demo.py -c task/${TASK_NAME}/task.json -r \
+    python3 demo.py -c task/${TASK}/task.json -r \
     --name /test
     ```
 7. Usage
@@ -122,14 +112,14 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 
 * classification-sample
     ```bash
+    # Define Task
+    TASK=classification-sample
     # Initialize
-    ivit-launcher --task classification-sample
-
+    ivit-launcher --task ${TASK}
     # Initialize and Run
-    ivit-launcher --task classification-sample --demo 
-
-    # Start with RTSP
-    ivit-launcher --task classification-sample --demo --rtsp
+    ivit-launcher --task ${TASK} --demo 
+    # Initialize and Run with RTSP
+    ivit-launcher --task ${TASK} --demo --rtsp
     ```
 * show available task name
     ```bash
@@ -187,13 +177,13 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
         * Change the model path to `/workspace/model` folder to reduce the task operation time and reduce disk space.
 
 
-* Support Sample
+# Support Sample
 
-    name             | model                            | describe
-    -----------------|-----------------------------------------|--------------
-    Classification   | [Resnet50](https://docs.openvino.ai/latest/omz_models_model_resnet_50_tf.html)                              | Classification samples for OpenVINO
-    Object detection | [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
-    Segmentation     | [Deeplabv3](https://docs.openvino.ai/latest/omz_models_model_deeplabv3.html)                               | Segmentation samples for OpenVINO
-    Pose             | [OpenPose](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python),  [Associative Embedding ](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python)        | Pose samples for OpenVINO
-    Yolov4-tiny    |  [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
+name             | model                            | describe
+-----------------|-----------------------------------------|--------------
+Classification   | [Resnet50](https://docs.openvino.ai/latest/omz_models_model_resnet_50_tf.html)                              | Classification samples for OpenVINO
+Object detection | [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
+Segmentation     | [Deeplabv3](https://docs.openvino.ai/latest/omz_models_model_deeplabv3.html)                               | Segmentation samples for OpenVINO
+Pose             | [OpenPose](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python),  [Associative Embedding ](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python)        | Pose samples for OpenVINO
+Yolov4-tiny    |  [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
 
