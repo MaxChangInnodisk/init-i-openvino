@@ -90,6 +90,7 @@ def main(args):
 
     (src_hei, src_wid), src_fps = src.get_shape(), src.get_fps()
     # Concate RTSP pipeline
+    trg.set_async_mode()
 
     if mode==RTSP:
         gst_pipeline = 'appsrc is-live=true block=true ' + \
@@ -133,6 +134,7 @@ def main(args):
             
             # Get current frame
             success, frame = src.read()
+            draw = frame.copy()
             
             # Check frame
             if not success:
@@ -144,28 +146,28 @@ def main(args):
                     continue
 
             # Do inference
-            temp_info = trg.inference(frame, args.mode)
+            temp_info = trg.inference(frame)
             
             # Drawing result using application
             if(temp_info):
                 cur_info, cur_fps = temp_info, temp_fps
 
             if(cur_info):
-                frame, app_info = application(frame, cur_info)
+                draw, app_info = application(draw, cur_info)
             
             # Draw fps
-            frame = draw_fps( frame, cur_fps )
+            draw = draw_fps( draw, cur_fps )
 
-            # Display Frame
+            # Display draw
             if mode==GUI:
-                exit_win = display(frame, t_wait_key)
+                exit_win = display(draw, t_wait_key)
                 if exit_win: break
 
             elif mode==RTSP:
-                out.write(frame)
+                out.write(draw)
 
             # Log
-            # if(app_info): logging.cur_info(app_info)
+            if(cur_info): logging.info(cur_info['detections'])
 
             # Delay to fix in 30 fps
             t_cost, t_expect = (time.time()-t_start), (1/src.get_fps())
@@ -177,7 +179,7 @@ def main(args):
                 temp_fps = int(1/(time.time()-t_start))
         
         src.release()
-
+        trg.release()
         if args.mode==RTSP:
             out.release()
 
