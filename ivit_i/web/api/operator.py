@@ -51,8 +51,8 @@ DARK_JSON_EXT   = CLS_JSON_EXT  = ".json"       # json is for basic information 
 DARK_MODEL_EXT  = ".weights"    
 DARK_CFG_EXT    = ".cfg"
 CLS_MODEL_EXT   = ".onnx"
-IR_MODEL_EXT    = ".xml"
-IR_MODEL_EXTS   = [ ".bin", ".mapping", ".xml" ]
+IR_MODEL_EXT    = ".xmodel"
+IR_MODEL_EXTS   = [ ".bin", ".mapping", ".xml", ".xmodel" ]
 
 # Return Pattern when ZIP file is extracted
 NAME            = "name"
@@ -139,7 +139,6 @@ def get_conversion_table():
 def check_ir_models(path):
 
     if current_app.config[AF] != "openvino":
-        logging.warning("Not openvino paltform ... ")
         return True
     
     if not os.path.isfile(path):
@@ -182,48 +181,55 @@ def parse_info_from_zip( zip_path ):
         
         fpath = os.path.join(task_path, fname)
         name, ext = os.path.splitext(fpath)
+        logging.debug('Current File: {}'.format(fpath))
 
         if ext in [ DARK_MODEL_EXT, CLS_MODEL_EXT, IR_MODEL_EXT ]:
-            logging.debug("Detected {}: {}".format("Model", fpath))
+            logging.info("Detected {}: {}".format("Model", fpath))
             org_model_path = fpath
 
         elif ext in [ DARK_LABEL_EXT, CLS_LABEL_EXT ]:
-            logging.debug("Detected {}: {}".format("Label", fpath))
+            logging.info("Detected {}: {}".format("Label", fpath))
             trg_label_path = fpath
         
         elif ext in [ DARK_JSON_EXT, CLS_JSON_EXT ]:
-            logging.debug("Detected {}: {}".format("JSON", fpath))
+            logging.info("Detected {}: {}".format("JSON", fpath))
             trg_json_path = fpath
             
             # update tag name via json file name 
             trg_tag = mapping_table[name.split('/')[-1]]
             
         elif ext in [ DARK_CFG_EXT ]:
-            logging.debug("Detected {}: {}".format("Config", fpath))
+            logging.info("Detected {}: {}".format("Config", fpath))
             trg_cfg_path = fpath
 
         else:
-            logging.debug("Detected {}: {}".format("Meta Data", fpath))
+            logging.info("Detected {}: {}".format("Meta Data", fpath))
 
     # Double check model file
     if not check_ir_models(org_model_path):
         shutil.rmtree(task_path)
         raise FileNotFoundError("Checking IR Model Failed, make sure ZIP or URL is for INTEL")
 
+    if not os.path.exists(org_model_path):
+        raise Exception('File not eixst !!!! ({}) '.format(org_model_path))
+
     # It have to convert model if the framework is tensorrt
     convert_proc = None
     if current_app.config[AF]==TRT:
-        logging.warning("It have to convert model if the framework is tensorrt")
+        logging.warning("Converting to TensorRT Engine ...")
         
         # capture model name with path which without the extension
         pure_model_name = os.path.splitext(org_model_path)[0]
         trg_model_path = "{}.trt".format( pure_model_name )
 
         # define command line for convert
-        if trg_tag == CLS:    
-            cmd = [ "trtexec", 
-                    "--onnx={}".format(os.path.realpath(org_model_path)), 
-                    "--saveEngine={}".format(os.path.realpath(trg_model_path)) ]
+        if trg_tag == CLS:
+            pla = current_app.config.get('PLATFORM')    
+            cmd = [ 
+                "trtexec" if pla =='nvidia' else '/usr/src/tensorrt/bin/trtexec', 
+                "--onnx={}".format(os.path.realpath(org_model_path)), 
+                "--saveEngine={}".format(os.path.realpath(trg_model_path)) 
+            ]
         else:         
             cmd = [ "./converter/yolo-converter.sh",
                     pure_model_name ]
@@ -242,6 +248,7 @@ def parse_info_from_zip( zip_path ):
         current_app.config[key].update( { task_name:dict() })
 
     current_app.config[key][task_name][PROC]=convert_proc
+    logging.warning('Updated Convert Process into app.config!!!')
 
     # return information
     ret = {
@@ -353,15 +360,29 @@ def import_process_default_event():
     status  = 200
     message = ""
     
-    try:
-        message = get_pure_jsonify(copy.deepcopy(current_app.config[IMPORT_PROC]))
-    
+    if current_app.config.get(IMPORT_PROC)==None:
+        return jsonify( 'Import process is not created yet' ), 200
+
+    try:        
+        ret = {}
+        for key in list(current_app.config[IMPORT_PROC].keys()):
+            cur_proc = current_app.config[IMPORT_PROC][key].get('proc')
+            cur_proc_mod = None if cur_proc is None else cur_proc.__module__
+            cur_proc_inf = current_app.config[IMPORT_PROC][key].get('info')
+
+            ret.update({ key: {
+                'proc': cur_proc_mod,
+                'info': cur_proc_inf
+            } })
+            
+        message = get_pure_jsonify( ret )    
     except Exception as e:
         status  = 400
         message = handle_exception(e)
 
     return jsonify( message ), status
 
+@bp_operators.route("/import_proc/<task_name>/", methods=["GET"])
 @bp_operators.route("/import_proc/<task_name>/status", methods=["GET"])
 @swag_from("{}/{}".format(YAML_PATH, "import_proc_status.yml"))
 def import_process_event(task_name):
