@@ -38,6 +38,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
         # if you need to initialize samples
         ./init_samples.sh
+
         # if you need to launch web api
         ./exec_web_api.sh
         ```
@@ -51,10 +52,21 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 
 1. Enter docker container
     ```bash
-    ./docker/run.sh -c
+    sudo ./docker/run.sh -c -n
     ```
 2. Download model and meta data.
     ```bash
+    echo \
+    """
+    List Tasks
+        1  classification-sample
+        2  object-detection-sample
+        3  parking-lot-detect
+        4  traffic-flow-detect
+        5  wrong-side-detect
+        6  yolov4-tiny-sample
+    """
+
     TASK=classification-sample
     ./task/${TASK}/download_model.sh
     ./task/${TASK}/download_data.sh
@@ -82,7 +94,7 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
     ```bash
     python3 demo.py --help
     
-    cat <<EOF
+    """
     usage: demo.py [-h] [-c CONFIG] [-s] [-r] [-d] [-m MODE] [-i IP] [-p PORT]
                 [-n NAME]
 
@@ -97,7 +109,7 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
     -i IP, --ip IP        The ip address of RTSP uri
     -p PORT, --port PORT  The port number of RTSP uri
     -n NAME, --name NAME  The name of RTSP uri
-    EOF
+    """
     ```
 
 # Fast Testing
@@ -154,36 +166,6 @@ We use `task.json` to configure each AI tasks and using `<model>.json` to config
 </details>
 <br>
 
-
-# Log
-* r1.0.3
-    1. Add source pipeline to improve the streaming.
-    2. Add async inference pipeline to improve the streaming.
-    3. Add RTSP output: add [rtsp-simple-server](https://github.com/aler9/rtsp-simple-server), gstreamer and rebuild opencv.
-    4. Add WebRTC server: add [rtsp-to-web](https://github.com/deepch/RTSPtoWeb).
-    5. Provide new entrance `ivit-launcher` to test sample quickly. ([check here](#fast-testing)).
-    6. Reset application when source pipeline is restart.
-
-* r1.0.2
-    1. Application with `new condition` and `new algorithm`
-        * Add `Area Event` in Each Application.
-        * Add `Condition Event (Logic)` , `Alerm` in `Counting`.
-        * Add `Alerm`, `Sensitivity` in `Area Detection` and `Moving Direction`.
-        * Add `Direction` in `Moving Direction`.
-    2. New Default Task Sample ( More Realistic Use Case )
-        * Add `parking-lot-detect` ,`wrong-side-detect` , `traffic-flow-detect` 
-        * delete `pose estimation` and `segmentation`  samples.
-    3. New Model and Label Path
-        * Change the model path to `/workspace/model` folder to reduce the task operation time and reduce disk space.
-
-
-# Support Sample
-
-name             | model                            | describe
------------------|-----------------------------------------|--------------
-Classification   | [Resnet50](https://docs.openvino.ai/latest/omz_models_model_resnet_50_tf.html)                              | Classification samples for OpenVINO
-Object detection | [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
-Segmentation     | [Deeplabv3](https://docs.openvino.ai/latest/omz_models_model_deeplabv3.html)                               | Segmentation samples for OpenVINO
-Pose             | [OpenPose](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python),  [Associative Embedding ](https://docs.openvino.ai/latest/omz_demos_human_pose_estimation_demo_python.html#doxid-omz-demos-human-pose-estimation-demo-python)        | Pose samples for OpenVINO
-Yolov4-tiny    |  [YOLOv3](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tf.html), [YOLOv4](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tf.html), [YOLOv3-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v3_tiny_tf.html), [YOLOv4-tiny](https://docs.openvino.ai/latest/omz_models_model_yolo_v4_tiny_tf.html)| Object detection samples for OpenVINO
-
+# Credit
+* Using [aler9/rtsp-simple-server](https://github.com/aler9/rtsp-simple-server) to handle RTSP stream.
+* Conver RTSP to WebRTC by using [deepch/RTSPtoWeb](https://github.com/deepch/RTSPtoWeb).
