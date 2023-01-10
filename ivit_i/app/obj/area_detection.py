@@ -81,8 +81,8 @@ class AeraDetection(App):
         self.alarm          = self.get_param_value(self.app_config, APP_KEY_ALARM)
         self.alarm_time     = self.get_param_value(self.app_config, APP_KEY_T_ALARM)
     
-        self.stay_time      = self.get_param_value(self.app_config, APP_KEY_STAY_TIME, 0)
-        self.stay_thres     = self.get_param_value(self.app_config, APP_KEY_STAY_THRES, 0.9)
+        self.stay_time      = int(self.get_param_value(self.app_config, APP_KEY_STAY_TIME, 0))
+        self.stay_thres     = float(self.get_param_value(self.app_config, APP_KEY_STAY_THRES, 0.9))
         
         self.sensitivity    = self.get_param_value(self.app_config, APP_KEY_SENS, "medium")
 
@@ -95,6 +95,10 @@ class AeraDetection(App):
         self.timer = Timer()
         self.timer.set_thres(self.stay_time)
         self.timer_is_started = False
+
+        self.app_info_pattern = "Total: "
+        self.app_info   = ""
+        self.app_time   = get_time( False )
 
     def get_params(self):
         ret = {
@@ -243,7 +247,8 @@ class AeraDetection(App):
         # define trigger
         sens = self.sensitivity.lower()
         if(sens==SENS_LOW):
-            trigger_num, on_bbox = 1, False
+            return [ ((x1+x2)//2, (y1+y2)//2) ]
+            # trigger_num, on_bbox = 1, False
         elif(sens==SENS_MED):
             trigger_num, on_bbox = 2, False
         elif(sens==SENS_HIGH):
@@ -384,6 +389,7 @@ class AeraDetection(App):
             # )
 
         for area_idx, area_cnt in self.area_cnt.items():
+            
             draw_text(  frame, 
                         str(area_idx), 
                         area_cnt, 
@@ -418,22 +424,13 @@ class AeraDetection(App):
                         cur_time = get_time(fmt='%Y%m%d_%H:%M')
                         img_name = "{}.jpg".format(cur_time)
                         img_path = os.path.join(self.save_folder, img_name)
+                        if not os.path.exists(self.save_folder):
+                            os.makedirs(img_path)
+
                         cv2.imwrite( img_path, frame )
 
                 self.timer_is_started = False
                 self.timer_frame, self.stay_frame = 0, 0
-
-            # frame = draw_text(
-            #     frame       = frame, 
-            #     text        = str(self.timer.get_delta_time()), 
-            #     left_top    = ( self.poly_cx, self.poly_cy ),
-            #     color       = (255, 255, 255),
-            #     size        = self.trg_scale,
-            #     thick       = self.trg_thick,
-            #     outline     = True,
-            #     background  = True,
-            #     background_color = (0, 0, 255)
-            # )
 
         else:
             detect_content = ""
@@ -445,6 +442,7 @@ class AeraDetection(App):
 
         # Draw Application Information
         if draw:
+
             frame = draw_text(
                     frame       = frame, 
                     text        = self.app_info, 
@@ -457,7 +455,5 @@ class AeraDetection(App):
                     background_color = (0, 0, 255)
             )
 
-        ret_app_info = self.app_info if self.at_least_one_in_area else ""
-            
 
-        return frame, ret_app_info
+        return frame, self.app_info

@@ -306,7 +306,6 @@ class Counting(App):
             app_info.append({
                 LABEL           : label,
                 APP_RET_NUM     : self.detect_nums[label],
-                APP_RET_ALARM   : self.text_draw
             })
 
             if draw:
@@ -323,7 +322,12 @@ class Counting(App):
 
             self.text_pos[1] += ( self.padding + self.text_hei + self.text_base )        
 
-        return frame, app_info
+        info = {
+            'log': app_info,
+            'alarm': ""
+        }
+
+        return frame, info
 
     def __call__(self, frame, info, draw=True):
 

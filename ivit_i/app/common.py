@@ -179,8 +179,7 @@ class App(object):
     def init_cv_win(self):
         cv2.namedWindow(CV_WIN,cv2.WINDOW_KEEPRATIO)
         cv2.setWindowProperty(CV_WIN,cv2.WND_PROP_ASPECT_RATIO,cv2.WINDOW_KEEPRATIO)
-
-        cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN )
+        # cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN )
 
     def init_draw_param(self, frame):
 

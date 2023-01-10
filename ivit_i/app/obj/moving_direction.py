@@ -16,6 +16,15 @@ from ivit_i.app.common import (
     APP_ALARM
 )
 
+from ivit_i.app.common import (
+    AREA_COLOR,
+    APP_KEY_DEPEND,
+    APP_KEY_NAME,
+    get_time,
+    format_time, 
+    parse_delta_time, 
+)
+
 from ivit_i.utils import (     PADDING,
     BASE_FONT_SIZE,
     BASE_FONT_THICK,
@@ -65,7 +74,7 @@ class MovingDirection(App):
         self.target_color   = None
 
         # About Tracking
-        self.track_limit    = 30
+        self.track_limit    = 50
         
         self.track_idx      = {}
         self.track_obj      = {}
@@ -94,10 +103,14 @@ class MovingDirection(App):
 
         # Get Config Param
         self.track_buf              = int(self.get_param_value(self.app_config, APP_KEY_BUFFER, 15))
-        self.track_obj_thres        = float(self.get_param_value(self.app_config, APP_KEY_THRES, 5))
+        self.track_obj_thres        = float(self.get_param_value(self.app_config, APP_KEY_THRES, 2))
         (self.vec_pts_idx, self.vec_pts) , (self.area_pts_idx, self.area_pts) = self.init_area_vector()
 
-        self.alarm                  = self.get_param_value(self.app_config, APP_ALARM, "Detected Direction Error ") 
+        self.app_info_pattern = "Total: "
+        self.app_info   = ""
+        self.app_time   = get_time( False )
+
+        # self.alarm                  = self.get_param_value(self.app_config, APP_ALARM, "Detected Direction Error ") 
         
         self.check_area_vector()
 
@@ -566,6 +579,8 @@ class MovingDirection(App):
     
     def track_new_and_draw(self, frame, draw=True):
 
+        result = {}
+
         for label_idx in it.count(0):
             if label_idx >= len(self.detected_labels): break
             
@@ -590,7 +605,6 @@ class MovingDirection(App):
                 # Update direction to calculate average vector
                 if not (track_idx in self.track_obj_rec[label]): self.track_obj_rec[label][track_idx] = list()
                 if not (track_idx in self.track_obj_score[label]): self.track_obj_score[label][track_idx] = 0
-                
 
                 # Setup Shared Color
                 self.target_color = PASS_COLOR
@@ -623,18 +637,25 @@ class MovingDirection(App):
 
                 if self.track_obj_score[label][track_idx] >= self.track_obj_thres:
                     # logging.warning("Really Erro Direction")
+                    
+                    # Update result
+                    if result.get(label) is None:
+                        result.update({label:0})
+                    result[label]+=1
+                    
+                    # Update color
                     self.target_color = ERRO_COLOR
                     
-                    frame = draw_text(
-                            frame       = frame, 
-                            text        = self.alarm, 
-                            left_top    = ( self.padding, self.padding ),
-                            color       = (255, 255, 255),
-                            size        = self.trg_scale,
-                            thick       = self.trg_thick,
-                            outline     = True,
-                            background  = True,
-                            background_color = (0, 0, 255) )
+                    # frame = draw_text(
+                    #         frame       = frame, 
+                    #         text        = self.alarm, 
+                    #         left_top    = ( self.padding, self.padding ),
+                    #         color       = (255, 255, 255),
+                    #         size        = self.trg_scale,
+                    #         thick       = self.trg_thick,
+                    #         outline     = True,
+                    #         background  = True,
+                    #         background_color = (0, 0, 255) )
 
                     # if got_direction:
 
@@ -643,12 +664,47 @@ class MovingDirection(App):
                     #         frame, self.track_obj_vec[track_idx][1], self.track_obj_vec[track_idx][0], 
                     #         self.target_color, arrow_size , tipLength=arrow_size/2)
 
-
                 (x1,x2,y1,y2) = self.track_obj_bbox[label][track_idx]
                 draw_rect( frame, (x1,y1), (x2, y2), self.target_color, self.trg_scale )
                     
             # update the preview information    
             self.pre_pts[label] = self.cur_pts[label].copy()
+
+
+        self.alarm = ', '.join([ f'{label}: {num}' for label, num in result.items() ])
+        
+    def get_app_info(self, frame, draw=True):
+
+        # Get Current Time
+        self.app_cur_time = get_time( False )
+        self.live_time = parse_delta_time((self.app_cur_time-self.app_time))
+        
+        # Live Time for Display
+        ret_live_time = "{}:{}:{}:{}".format(
+            self.live_time["day"], 
+            self.live_time["hour"], 
+            self.live_time["minute"], 
+            self.live_time["second"] )
+
+        # Combine the result
+        self.app_info = {
+            "start"     : format_time(self.app_time),
+            "current"   : format_time(self.app_cur_time),
+            "duration"  : ret_live_time,
+            "alarm"     : self.alarm
+        }
+
+        draw_text(
+            frame       = frame, 
+            text        = "Live Time: {} {}".format(ret_live_time, self.alarm), 
+            left_top    = ( self.padding, self.padding ), 
+            color       = ( 255, 255, 255), 
+            size        = self.trg_scale, 
+            thick       = self.trg_thick, 
+            outline     = True,
+            background  = True,
+            background_color = ( 0, 0, 255)
+        )
 
     # Main
 
@@ -681,4 +737,6 @@ class MovingDirection(App):
         # adding the remaining point to track_obj
         self.track_new_and_draw( frame )
 
-        return frame, None
+        self.get_app_info(frame)
+
+        return frame, self.app_info

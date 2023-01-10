@@ -289,7 +289,9 @@ class Tracking(App):
         for idx in it.count(0):
             
             # Check if interation over the length
+            if info.get(DETS) is None: break
             if idx >= (len(info[DETS])): break
+            
 
             # Get Detection Object
             detection   = info[DETS][idx]
@@ -355,6 +357,7 @@ class Tracking(App):
     def track_new_object_and_draw(self, frame, draw=True):
 
         self.alarm = self.app_info_pattern
+        cur_num = []
 
         overlay = frame.copy()
         for label_idx in it.count(0):
@@ -398,14 +401,18 @@ class Tracking(App):
             # update total number
             self.total_num[label] = cur_total_num[-1] if cur_total_num != [] else self.total_num[label]
                 
-            self.alarm += "{} {}, ".format(
-                self.total_num[label]+1, label )
+            cur_num.append("{} {}".format(
+                self.total_num[label]+1, label ))
 
             # update the preview information
             self.pre_pts[label] = self.cur_pts[label].copy()
 
         frame = cv2.addWeighted( frame, 0.5, overlay, 1-0.5, 0 )    
         # frame = overlay
+
+        # Update return inforamtion
+        self.alarm += ', '.join(cur_num)
+
         return frame
 
     def get_app_info(self, frame, draw=True):
@@ -426,7 +433,7 @@ class Tracking(App):
             "start"     : format_time(self.app_time),
             "current"   : format_time(self.app_cur_time),
             "duration"  : ret_live_time,
-            "alarm"     : self.alarm
+            "log"     : self.alarm
         }
 
         draw_text(

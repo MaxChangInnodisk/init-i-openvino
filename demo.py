@@ -25,7 +25,7 @@ GUI     = 'gui'
 def init_cv_win():
     logging.info('Init Display Window')
     cv2.namedWindow( CV_WIN, cv2.WND_PROP_FULLSCREEN )
-    cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN )
+    # cv2.setWindowProperty( CV_WIN, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN )
 
 def fullscreen_toggle():
     global FULL_SCREEN
@@ -86,6 +86,7 @@ def main(args):
         
     # Check input is camera or image and initial frame id/show id
     src = Pipeline(app_cfg['source'], app_cfg['source_type'])
+    src.set_cam(height=720, width=1280, fps=30)
     src.start()
 
     (src_hei, src_wid), src_fps = src.get_shape(), src.get_fps()
@@ -134,7 +135,6 @@ def main(args):
             
             # Get current frame
             success, frame = src.read()
-            draw = frame.copy()
             
             # Check frame
             if not success:
@@ -143,8 +143,12 @@ def main(args):
                 else:
                     application.reset()
                     src.reload()
+                    time.sleep(1)
                     continue
-
+            
+            # Prepare draw frame
+            draw = frame.copy()
+            
             # Do inference
             temp_info = trg.inference(frame)
             
@@ -153,7 +157,7 @@ def main(args):
                 cur_info, cur_fps = temp_info, temp_fps
 
             if(cur_info):
-                draw, app_info = application(draw, cur_info)
+                draw, cur_info = application(draw, cur_info)
             
             # Draw fps
             draw = draw_fps( draw, cur_fps )
@@ -167,12 +171,12 @@ def main(args):
                 out.write(draw)
 
             # Log
-            if(cur_info): logging.info(cur_info['detections'])
+            logging.info(cur_info)
 
             # Delay to fix in 30 fps
             t_cost, t_expect = (time.time()-t_start), (1/src.get_fps())
-            if(t_cost<t_expect):
-                time.sleep(t_expect-t_cost)
+            
+            time.sleep(t_expect-t_cost if(t_cost<t_expect) else 1e-5)
 
             # Calculate FPS
             if(temp_info):
@@ -202,5 +206,4 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--name', type=str, default = '/mystream', help = "The name of RTSP uri")
 
     args = parser.parse_args()
-
     main(args)
