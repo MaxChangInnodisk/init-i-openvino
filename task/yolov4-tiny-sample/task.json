@@ -128,6 +128,13 @@
         },
         "area_vector": {
             "0": []
+        },
+        "custom_palette": {
+            "car": [
+                0,
+                255,
+                0
+            ]
         }
     },
     "framework": "openvino",

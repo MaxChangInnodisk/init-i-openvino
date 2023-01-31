@@ -124,6 +124,7 @@ def main(args):
     logging.info('Starting inference...')
     cur_info, temp_info    = None, None
     cur_fps , temp_fps     = 30, 30
+    app_info = None
 
     try:    
         # Setup CV Windows
@@ -153,11 +154,11 @@ def main(args):
             temp_info = trg.inference(frame)
             
             # Drawing result using application
-            if(temp_info):
+            if(temp_info is not None):
                 cur_info, cur_fps = temp_info, temp_fps
 
-            if(cur_info):
-                draw, cur_info = application(draw, cur_info)
+            if(cur_info is not None):
+                draw, app_info = application(draw, cur_info)
             
             # Draw fps
             draw = draw_fps( draw, cur_fps )
@@ -171,7 +172,8 @@ def main(args):
                 out.write(draw)
 
             # Log
-            logging.info(cur_info)
+            if (app_info is not None):
+                logging.info(app_info)
 
             # Delay to fix in 30 fps
             t_cost, t_expect = (time.time()-t_start), (1/src.get_fps())
@@ -179,7 +181,7 @@ def main(args):
             time.sleep(t_expect-t_cost if(t_cost<t_expect) else 1e-5)
 
             # Calculate FPS
-            if(temp_info):
+            if(temp_info is not None):
                 temp_fps = int(1/(time.time()-t_start))
         
         src.release()

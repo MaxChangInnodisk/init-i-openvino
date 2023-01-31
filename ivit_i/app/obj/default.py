@@ -11,6 +11,10 @@ class Default(App):
         super().__init__(config)
         self.init_result_params()
         self.init_draw_params()
+        self.update_palette(
+            config['application'].get('custom_palette') 
+        )
+
         logging.info("Get Defualt Application")
 
     def get_params(self) -> dict:
@@ -107,6 +111,24 @@ class Default(App):
 
     # End of General Function
     # --------------------------------------------------------------
+
+    # Lable Color Function Start 
+    # --------------------------------------------------------------
+    def update_palette(self, new_palette:dict):
+        """ update palette via `custom_palette` in configuration file """
+
+        # Checking
+        if new_palette=={} or new_palette is None:
+            return
+
+        # Update label color
+        for label, color in new_palette.items():
+            if self.palette.get(label) is None:
+                logging.warning('Get unexpected label: {}'.format(label))
+                continue
+            self.palette.update({label:color})
+    
+        logging.info('Updated color palette')
 
     def __call__(self, frame, data, draw=True):
         
