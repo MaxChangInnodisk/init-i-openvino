@@ -1,0 +1,30 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:             ivit_service
+# Required-Start:       $docker.init $local_fs $remote_fs $network
+# Required-Stop:        $docker.init $local_fs $remote_fs $network
+# Should-Start:
+# Should-Stop:
+# Default-Start:        1 2 3 4 5
+# Default-Stop:         0 6
+# Short-Description:    starts ivit_service
+# Description:          ivit_service
+### END INIT INFO
+
+case "$1" in
+        start)
+                # /etc/init.d/networking start
+                /etc/init.d/run-ivit-i-intel.sh &
+                /etc/init.d/run-ivit-web-ui.sh
+                ;;
+        stop)
+                echo "stop"
+                pkill -9 -f 'ivit'
+                pkill -9 -f 'exec_web_ui'
+                ;;
+        *)
+                echo "stop"
+                ;;
+esac
+
+exit 0 
