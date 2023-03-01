@@ -34,4 +34,4 @@ sleep $SLEEP_TIME
 
 printd "Launch iVIT-I Web Demo" BCy
 cd "${DEMO}" || exit
-./docker/run.sh -d
+./docker/run.sh
