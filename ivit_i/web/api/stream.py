@@ -172,10 +172,16 @@ def stream_task(task_uuid, src, namespace):
 
     # Set cv2 window
     win_name = f'CV Display: {app.config[TASK][task_uuid][NAME]} ({task_uuid})'
-    cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
-    cv2.setWindowProperty(win_name, cv2.WND_PROP_TOPMOST, 1)
-    cv2.resizeWindow(win_name, src_wid, src_hei) 
-    need_display = True
+    try:
+        cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
+        cv2.setWindowProperty(win_name, cv2.WND_PROP_TOPMOST, 1)
+        cv2.resizeWindow(win_name, src_wid, src_hei) 
+        need_display = True
+
+    except Exception as e:
+        logging.error('Setup Display Error: {}'.format(handle_exception(e)))
+        need_display = False   
+    
 
     try:
 
@@ -224,12 +230,14 @@ def stream_task(task_uuid, src, namespace):
 
             # NOTE: Local Display
             if(need_display):
-                cv2.imshow(win_name, draw)
-                if cv2.waitKey(1) in [ ord('q'), ord('Q'), 27 ]:
-                    cv2.destroyWindow(win_name);cv2.waitKey(1)
-                    need_display = False
-                    logging.info('Destroy CV Windows')
-
+                try:
+                    cv2.imshow(win_name, draw)
+                    if cv2.waitKey(1) in [ ord('q'), ord('Q'), 27 ]:
+                        cv2.destroyWindow(win_name);cv2.waitKey(1)
+                        need_display = False
+                        logging.info('Destroy CV Windows')
+                except Exception as e:
+                    looping.error(handle_exception(e))
             # Send RTSP
             out.write(draw)
 
