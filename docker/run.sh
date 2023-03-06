@@ -210,5 +210,6 @@ bash -c "${DOCKER_CMD}"
 printd "Close Relative Container" BR
 if [[ ${INTERATIVE} = true ]];then
 	docker-compose -f ./docker/docker-compose.yml down
+fi
 
 exit 0;
