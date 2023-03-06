@@ -1,14 +1,16 @@
-import logging, random, time
-from ivit_i.utils import handle_exception
-from ivit_i.utils.draw_tools import TAG
 import logging, random, json, os, math, time, cv2
 from datetime import datetime
 
-from ivit_i.utils.draw_tools import (
-    PADDING,
-    get_scale,
-    get_text_size
-)
+# IVIT
+from ivit_i.utils.err_handler import handle_exception
+from ivit_i.utils.draw_tools import TAG, PADDING, get_scale, get_text_size
+
+# ivitAPP
+import pkgutil, importlib
+from ivit_i.utils.devices import get_framework
+
+# ivitAPP - App Support Type
+SUP_APP_TYPE    = [ 'cls', 'obj' ]
 
 # CV Draw
 FONT            = cv2.LINE_AA
@@ -482,4 +484,234 @@ def parse_delta_time(delta_time):
                 "minute": delta_time.seconds//60%60,
                 "second": delta_time.seconds%60     }
 
+class ivitApp():
 
+    FONT            = cv2.FONT_HERSHEY_SIMPLEX
+    FONT_SCALE      = 1
+    FONT_THICK      = cv2.LINE_AA
+    FONT_THICKNESS  = 1
+
+    @classmethod
+    def get_name(n):
+        return n.__name__
+
+    def __init__(self, params=None, label=None, palette=None, log=True):       
+        
+        # Log
+        self.log_head = "[iVIT APP]"
+        self.log = False if params == None else log
+        
+        # Params
+        self.params = {}    # Let user could modify something in application
+        self.params_info = {}
+        self.app_type = None
+        self.sup_app = SUP_APP_TYPE
+
+        # Update Label information from config
+        self.label = self.get_label(label)
+
+        # Generate Palette
+        self.palette = self.set_palette(self.label, palette)
+        
+        # Setup Parameters and update
+        self.init_params()
+        self.set_dict_params(params=params)
+        
+        # End
+        if (self.log):
+            logging.info('Initialized Application: {}'.format(self.get_name())) 
+
+    def reset(self):
+        logging.warning('Reload Application')
+        self.__init__(self.label)
+
+    def def_param(self, name, type, value, descr=""):
+        """ 
+        Define params with type, default value, describe and it will auto update to `self.params`
+        ---
+        - args:
+            - name       : the key name of the parameters
+            - type      : the type of the input data.
+            - value     : the default value of the input data.
+            - describe  : the describe of the input data.
+        - return:
+            - type      : Dict
+            - example   : { "type": type, "value": value, "describe": descr }
+        """
+        self.params_info.update({
+            name: { "type": type, "value":value, "descr":descr }
+        })
+        self.params.update({ name: value })
+        return self.params
+
+    def set_param(self, name, value):
+        """ Setup single parameters into `self.params`.
+        ---
+        - args
+            - name  : the key of the parameter, you can get the value via `get_param(name)`. 
+            - value : the value of the parameter, you can update it by calling `set_param(name, new_value)`.
+        """
+        ls = list(self.params.keys())
+        assert ((name in ls)), \
+            "Excepted parameter is {}, but get {}".format(ls, name)
+        self.params.update({ name:value })
+        return self.params
+
+    def set_dict_params(self, params:dict=None):
+        """ Setup multiple parameters which will update `self.params` after execute the function.
+        ---
+        - args
+            - `params`
+                - type: `Dict()`
+                - exam: `{ 'depend_on': ['car'], 'area_point': { '0': [ (12,34), (56,78) ] } }`
+        """
+        if params is None: 
+            if self.log: logging.warning('Detected None params, using default value ...')
+            return None
+        assert isinstance(params, dict), "Make sure the params is Dict()"
+        [ self.params.update( { key: val } ) for key, val in params.items() ]
+        return self.params
+
+    def get_param_info(self):
+        """ Get the defined information of each parameters, which defined by user via `def_param` function in `init_params` 
+        """
+        return self.params_info
+
+    def init_params(self):
+        """
+        Update the parameters of the application, make sure the application is already setup.
+        ---
+        - usage:
+            - `self.def_param( name='name', type='str', value=self.get_name() )`
+            - `self.def_param( name='depend_on', type='list', value=['car'] )`
+            - `self.def_param( name='color', type='list', value=[0,0,255] )`
+        """
+        self.def_param( name='name', type='str', value=self.get_name() )
+        pass
+
+    def set_type(self, app_type:str):
+        """ Setup the type of the application """
+        if not (app_type in self.sup_app):
+            raise TypeError('Excepted application type is {}, but got {}'.format(self.sup_app, app_type))
+        self.app_type = app_type
+        
+        if self.log: 
+            logging.info('Setted up application type: {}'.format(self.app_type))
+
+    def get_param(self, key=None) -> dict:
+        """ 
+        Get ivitApp params which could let usr understand how to use it.
+
+        - example: Counting
+        - return:
+            - Type: Dict()
+            - Content: 
+                {
+                    "name": "counting",
+                    "depend_on": [ "car" ],
+                    "logic": "=",
+                    "logic_thres": 3,
+                    "alarm": "Three Car Here",
+                    "alarm_time": 3
+                }
+        """
+        return self.params if key == None else self.params.get(key)
+
+    def get_support_type(self):
+        """ Get the support type of the application """
+        return self.sup_app
+
+    def get_type(self):
+        """ Get the type of the application """
+        return self.app_type
+
+    def run(self, frame, data, draw=True) -> tuple:
+        """
+        Execute ivitApp 
+        ---
+        - args
+            - frame
+                - type: np.array
+            - data
+                - type: dict format with the result of ivit inference
+            - draw
+                - type: bool
+                - desc: the option for draw or not draw in application
+        - return
+            - frame
+                - desc: the frame with application
+            - info
+                - desc: the result of the application, if it is counting then you will get { 'person': 10, 'car': 20 }, etc.
+        """
+        pass
+
+    def __call__(self, frame, data, draw=True) -> tuple:
+        """
+        Execute ivitApp 
+        ---
+        - args
+            - frame
+                - type: np.array
+            - data
+                - type: dict format with the result of ivit inference
+            - draw
+                - type: bool
+                - desc: the option for draw or not draw in application
+        - return
+            - frame
+                - desc: the frame with application
+            - info
+                - desc: the result of the application, if it is counting then you will get { 'person': 10, 'car': 20 }, etc.
+        """
+        return self.run(frame, data, draw)
+
+    def set_palette( self, custom_labels:list=None, custom_palette:dict=None) -> dict:
+        """
+        Setup palette
+        ---
+        - args
+            - custom_labels  : the list of the model labels
+            - custom_palette : the palette with custom color, if not setup will provide the basic one
+        - return 
+            - palette        : the mapping table which could mapping label to color
+        - example:
+            1. palette = set_palette( [ 'cat', 'dog' ], { '1': (0,0,0), '2': (255,255,255) } 
+            2. cat_color = palette['cat'] # ( 0,0,0 )
+
+        """
+        if custom_labels is None:
+            return None
+            
+        if custom_palette is None:
+            try:
+                from ivit_i.app.palette import palette
+                custom_palette = palette
+            except Exception as e:
+                logging.error('Could not import palette in ivit_i.app.palette ... ({})'.format(handle_exception(e)))
+                return None
+        
+        return { label: custom_palette[ str( (idx+1) ) ] \
+            for idx, label in enumerate(custom_labels) }
+
+    def get_palette( self):
+        """ Get palette which is setup via self.set_palette """
+        return self.palette
+
+    def _random_color(self):
+        return ( random.randint(0,255), random.randint(0,255), random.randint(0,255) )
+
+    def get_color(self, label=None):
+        return self.palette.get(label) if label != None else self._random_color()
+
+    def get_label(self, label) -> list:
+        """ Get the label file and capture all category in it """
+
+        if isinstance(label, (list, tuple)):
+            return label
+        else:
+            try:
+                # Open Label File to Get Content
+                with open(label, 'r') as f:
+                    return [ line.strip() for line in f.readlines() ]
+            except Exception as e:
+                return None

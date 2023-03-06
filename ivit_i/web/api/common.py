@@ -2,7 +2,7 @@ from flask import abort, request
 import cv2, time, logging, base64, threading, os, sys, copy, json
 from werkzeug.utils import secure_filename
 
-from ivit_i.web import sock, app
+from .. import sock, app, mqtt
 from ivit_i.common.pipeline import Source, Pipeline
 from ivit_i.utils.err_handler import handle_exception
 
@@ -154,27 +154,27 @@ def get_request_file(save_file=False):
     return file_name
 
 def get_request_data():
-    """ Get data form request and parse content. """
+    """ Get data form request and parse content. It will auto save file if need """
     # Support form data and json
     data = dict(request.form) if bool(request.form) else request.get_json()
     
     # Put framework information into data
-    if FRAMEWORK_KEY not in data.keys(): 
+    if not data.__contains__(FRAMEWORK_KEY):
         data.update( { FRAMEWORK_KEY : app.config[AF] } )
+        logging.debug(' - Auto update AI framework: {}'.format(app.config[AF]))
 
     # Source: If got new source
     if bool(request.files):
         file_path = get_request_file(save_file=True)
         data[SOURCE_KEY] = file_path
-        logging.debug("Get data ({})".format(data[SOURCE_KEY]))
+        logging.debug(" - Auto save file: {}".format(data[SOURCE_KEY]))
         
     # Set the format of thres to float
-    if THRES_KEY in data:
+    if data.__contains__(THRES_KEY):
         data[THRES_KEY]=float( data[THRES_KEY].strip() )
-        logging.debug("Convert data[{}] to float format".format(THRES_KEY))
+        logging.debug(" - Convert data[{}] to float".format(THRES_KEY))
     
     # Print out to check information
-
     print_data(data)
 
     return data
@@ -223,10 +223,16 @@ def frame2btye(frame):
     }
     return ret
 
-def stop_task_thread(task_uuid, err):
+def stop_task_thread(task_uuid, err=''):
+    """ Stop Task Thread Event 
+    ---
+    1. Stop source
+    2. Set status to stop or error if the argument err was setup. 
+    3. Set error message.
+    """
     stop_src( task_uuid, True )
-    app.config[TASK][task_uuid]["status"] = "error"
-    app.config[TASK][task_uuid]["error"] = err
+    app.config[TASK][task_uuid][STATUS] = STOP if err=='' else ERROR
+    app.config[TASK][task_uuid][ERROR] = err
 
 def get_src(task_uuid, reload_src=False):
     """ 
@@ -248,10 +254,7 @@ def get_src(task_uuid, reload_src=False):
     src_name = app.config[TASK][task_uuid][SOURCE]
     
     # if source is None or reload_src==True then create a new source
-    try:
-        src_obj = app.config[SRC][src_name][OBJECT]
-    except Exception as e:
-        raise (handle_exception(e))
+    src_obj = app.config[SRC][src_name][OBJECT]
 
     if ( src_obj == None ) or reload_src:
         logging.info('Initialize a new source.')
@@ -266,7 +269,11 @@ def get_src(task_uuid, reload_src=False):
     
     # setup status and error message in source config
     status, err = app.config[SRC][src_name][OBJECT].get_status()
-    app.config[SRC][src_name][STATUS], app.config[SRC][src_name][ERROR] = RUN if status else ERROR, err
+    if not status:
+        raise RuntimeError(f'Init source error !!! ({err})')
+    app.config[SRC][src_name][STATUS] = RUN
+    app.config[SRC][src_name][ERROR] = err
+
     
     # return object
     return app.config[SRC][src_name][OBJECT]
@@ -317,4 +324,10 @@ def stop_src(task_uuid, release=False):
         logging.warning("Stop failed, source ({}) accessed by {} ".format(src_name, access_proc))
 
 def check_uuid_in_config(uuid):
-    return app.config[TASK].get(uuid) is not None
+    """ Check UUID is in config """
+    if app.config[TASK].__contains__(uuid):
+        return
+    
+    raise KeyError("Expected UUID is {}, but got {}".format(
+        ', '.join(app.config[TASK].keys()), uuid
+    ))

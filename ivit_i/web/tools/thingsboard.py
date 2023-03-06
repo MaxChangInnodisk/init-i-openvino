@@ -1,106 +1,76 @@
 import requests, json, logging, os, sys
+
+# NOTE: before v1.1, we have to 
 sys.path.append(os.getcwd())
-from ivit_i.web.tools.common import get_address
-
-TB_KEY_NAME     = "name" 
-TB_KEY_TYPE     = "type" 
-TB_KEY_ALIAS    = "alias"
-
-TB_KEY_TIME_CREATE  = "createdTime"
-TB_KEY_TOKEN_TYPE   = "credentialsType"
-TB_KEY_ID           = "id"
-TB_KEY_TOKEN        = "accessToken"
-
-TB_TYPE         = "iCAP-Client"
-TB_NAME         = "ivit-{}".format(get_address())
-TB_ALIAS        = TB_NAME
+from ivit_i.utils.err_handler import handle_exception
 
 HEAD_MAP = {
     "json": {'Content-type': 'application/json'}
 }
 
-def post_api(tb_url, data, h_type='json', timeout=10, stderr=True):
-    headers     = HEAD_MAP[h_type]
-    ret = False
-    try:
-        resp = requests.post(tb_url, data=json.dumps(data), headers=headers, timeout=timeout)
-        try: resp = json.loads(resp.text)
-        except: resp = { "data": resp.text }
-        ret = True
-    except requests.Timeout: resp = "Request Time Out !!! ({})".format(tb_url)
-    except requests.ConnectionError: resp = "Connect Error !!! ({})".format(tb_url)
-    
-    if(not ret and stderr): logging.error(resp)
-    return ret, resp
+KEY_RESP_DATA = "data"
+KEY_RESP_CODE = "status_code"
 
-def get_api(tb_url, h_type='json', timeout=10):
-    headers     = HEAD_MAP[h_type]
-    ret = False
-    try:
-        resp = requests.get(tb_url, headers=headers, timeout=10)
-        try: resp = json.loads(resp.text)
-        except Exception as e: resp = { "data": resp.text }
-        ret = True
-    except Exception as e: resp = e
+def response_status(code):
+    """ Return the response is success or not """
+    return (str(code)[0] not in [ '4', '5' ])
 
-    if(not ret): logging.error(resp)
-    return ret, resp
-    
-def register_tb_device(tb_url):
-    """
-    Register Thingsboard Device
-    ---
-    - Web API: http://10.204.16.110:3000/api/v1/devices
-    - Method: POST
-    - Data:
-        - Type: JSON
-        - Content: {
-                "name"  : "ivit-i-{IP}",
-                "type"  : "iCAP-Client",
-                "alias" : "ivit-i-{IP}"
-            }
-    - Response:
-        - Type: JSON
-        - Content: {
-                "data": {
-                    "createdTime": 1662976363031,
-                    "credentialsType": "ACCESS_TOKEN",
-                    "id": "a5636270-3280-11ed-a9c6-9146c0c923c4",
-                    "accessToken": "auWZ5o6exyX9eWEmm7p3"
-                }
-            }
-    """
+def request_exception(exception, calling_api):
+    """ Handle exception from sending request """
 
-    
-    create_time, device_id, device_token = "", "", ""
-
-    data = { 
-        TB_KEY_NAME  : TB_NAME,
-        TB_KEY_TYPE  : TB_TYPE,
-        TB_KEY_ALIAS : TB_ALIAS
+    RESP_EXCEPTION_MAP = {
+        Exception: {
+            KEY_RESP_DATA: f"Unxepected Error !!! ({handle_exception(exception)})",
+            KEY_RESP_CODE: 400        
+        },
+        requests.Timeout: { 
+            KEY_RESP_DATA: f"Request Time Out !!! ({calling_api})",
+            KEY_RESP_CODE: 400 
+        },
+        requests.ConnectionError: { 
+            KEY_RESP_DATA: f"Connect Error !!! ({calling_api})",
+            KEY_RESP_CODE: 400 
+        }
     }
 
-    header = "http://"
-    if ( not header in tb_url ): tb_url = header + tb_url
-
-    timeout = 3
-    logging.warning("[ iCAP ] Register Thingsboard Device ... ( Time Out: {}s ) \n{}".format(timeout, data))
-    print('')
+    return ( False, RESP_EXCEPTION_MAP.get(type(exception)) )
     
-    ret, data    = post_api(tb_url, data, timeout=timeout, stderr=False)
+def resp_to_json(resp):
+    """ Parsing response and combine to JSON format """
 
-    if(ret):
-        logging.warning("[ iCAP ] Register Thingsboard Device ... Pass ! \n{}".format(data))
-        logging.warning("Get Response: {}".format(data))
+    code = resp.status_code
+    data = { KEY_RESP_CODE: code }
 
-        data            = data["data"]
-        create_time     = data[TB_KEY_TIME_CREATE]
-        device_id       = data[TB_KEY_ID]
-        device_token    = data[TB_KEY_TOKEN]
-    else:
-        logging.warning("[ iCAP ] Register Thingsboard Device ... Failed !")
+    # Parse from string
+    try: 
+        resp_data = json.loads(resp.text)
+    except Exception as e: 
+        resp_data = resp.text
 
-    return ret, (create_time, device_id, device_token)
+    if type(resp_data) == str:
+        logging.debug('Convert string response to json with key `data`')
+        resp_data = { KEY_RESP_DATA: resp_data }
+    
+    # Merge data  
+    data.update(resp_data)
+    return response_status(code), data
 
-if __name__ == "__main__":
-    register_tb_device("http://10.204.16.110:3000/api/v1/devices")
+def send_post_api(trg_url, data, h_type='json', timeout=10, stderr=True):
+    """ Using request to simulate POST method """
+    
+    try:
+        resp = requests.post(trg_url, data=json.dumps(data), headers=HEAD_MAP[h_type], timeout=timeout)
+        return resp_to_json(resp)
+
+    except Exception as e:
+        return request_exception(exception=e, calling_api=trg_url) 
+
+def send_get_api(trg_url, h_type='json', timeout=10):
+    """ Using request to simulate GET method """
+
+    try:
+        resp = requests.get(trg_url, headers=HEAD_MAP[h_type], timeout=10)
+        return resp_to_json(resp)
+    
+    except Exception as e:
+        return request_exception(exception=e, calling_api=trg_url) 

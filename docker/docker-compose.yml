@@ -1,0 +1,34 @@
+# YAML
+version: '1.1'
+services:
+  rtsp:
+    image: aler9/rtsp-simple-server
+    network_mode: host
+    volumes: 
+      - ./rtsp-config.yml:/rtsp-simple-server.yml
+  webrtc:
+    image: ghcr.io/deepch/rtsptoweb:latest
+    network_mode: host
+    volumes:
+      - ./webrtc-config.json:/config/config.json
+    depends_on:
+      - rtsp
+  ivit-web-ui:
+    image: maxchanginnodisk/ivit-i-web-ui:v1.0.3.1
+    network_mode: host
+    depends_on:
+      - rtsp
+      - webrtc
+    command: "launch-demo-site"
+    volumes:
+      - ./ivit-i-web-ui.json:/workspace/ivit-i.json
+  nginx:
+    image: nginx
+    network_mode: host
+    volumes:
+      - ./nginx-config.template:/etc/nginx/templates/default.conf.template
+    environment:
+      - NGINX_PORT=6532
+      - API_PORT=819
+      - RTC_PORT=8083
+      - WEB_PORT=4999

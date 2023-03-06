@@ -1,19 +1,21 @@
-import cv2, time, logging, os, sys, copy, json
+import cv2, time, logging, os, sys, copy, json, threading
 from flask import jsonify, request
 
 # ivit_i 
 sys.path.append(os.getcwd())
-from ivit_i.web.api.system import bp_system
-from ivit_i.web.api.task import bp_tasks
-from ivit_i.web.api.operator import bp_operators
-from ivit_i.web.api.application import bp_application
-from ivit_i.web.api.stream import bp_stream
-
 from ivit_i.utils import handle_exception
+from ivit_i.app.handler import ivitAppHandler
+# web api
+from .api.system import bp_system
+from .api.task import bp_tasks
+from .api.operator import bp_operators
+from .api.application import bp_application
+from .api.stream import bp_stream
+from .api.icap import bp_icap, init_for_icap, register_mqtt_event
+from .api.model import bp_model
 
-from ivit_i.web.tools.parser import get_pure_jsonify
-from ivit_i.web.tools.handler import get_tasks
-from ivit_i.web.tools.thingsboard import get_api, post_api
+from .tools.parser import get_pure_jsonify
+from .tools.handler import get_tasks
 
 DIV         = "*" * 20
 TASK        = "TASK"
@@ -22,9 +24,14 @@ TASK_LIST   = "TASK_LIST"
 APPLICATION = "APPLICATION"
 ICO         = "favicon.ico"
 
+IVIT_WS_POOL = "IVIT_WS_POOL"
+
+APP_CTRL    = "APP_CTRL"
+APP_DIR     = "APP_DIR"
+
 def create_app():
     
-    from ivit_i.web import app, sock, mqtt
+    from . import app, sock, mqtt
 
     # create basic folder
     for path in ["TEMP_PATH", "DATA"]:
@@ -39,25 +46,21 @@ def create_app():
     app.register_blueprint(bp_system)        # some utils, like 'v4l2', 'device' ... etc
     app.register_blueprint(bp_application)
     app.register_blueprint(bp_stream)
-
+    app.register_blueprint(bp_icap)
+    app.register_blueprint(bp_model)
+    
     # define the web api
-    @app.before_first_request
-    @app.route("/reset/")
+    # @app.before_first_request
+    @app.route("/reset")
     def first_time():
-        # """ loading the tasks at first time or need to reset, the uuid and relatived information will be generated at same time."""
-        logging.info("Start to initialize task and generate uuid for each task ... ")
-        
-        for key in [ TASK, UUID, TASK_LIST, APPLICATION ]:
-            if key in app.config:
-                app.config[key].clear()
-                
-        try:
+        # Init Task
+        with app.app_context():
+            for key in [ TASK, UUID, TASK_LIST, APPLICATION ]:
+                if key in app.config:
+                    app.config[key].clear()    
             app.config[TASK_LIST]=get_tasks(need_reset=True)
-            return app.config[TASK_LIST], 200
-        except Exception as e:
-            handle_exception(e)
-            return "Initialize Failed ({})".format(e), 400
-
+        return "Reset ... Done", 200
+        
     @app.before_request
     def before_request():
         # request.remote_addr, request.method, request.scheme, request.full_path, response.status
@@ -80,61 +83,65 @@ def create_app():
         routes.pop("/static/<path:filename>")
         return jsonify(routes)
 
-    @app.route("/<key>/", methods=["GET"])
-    def return_config(key):
-        key_lower, key_upper = key.lower(), key.upper()
-        ret = None
-        if key_lower in app.config.keys():
-            ret = app.config[key_lower]
-        elif key_upper in app.config.keys():
-            ret = app.config[key_upper]
-        else:
-            return f"Unexcepted Route ({key}), Please check /routes.", 400
-        return jsonify( get_pure_jsonify(ret) ), 200
+    # @app.route("/<key>", methods=["GET"])
+    # def return_config(key):
+    #     key_lower, key_upper = key.lower(), key.upper()
+    #     ret = None
+    #     if key_lower in app.config.keys():
+    #         ret = app.config[key_lower]
+    #     elif key_upper in app.config.keys():
+    #         ret = app.config[key_upper]
+    #     else:
+    #         return f"Unexcepted Route ({key}), Please check /routes.", 400
+    #     return jsonify( get_pure_jsonify(ret) ), 200
 
-    if(mqtt!=None):
-        @mqtt.on_connect()
-        def handle_mqtt_connect(client, userdata, flags, rc):
-            logging.info("Connecting to Thingsboard")
-            if rc == 0:
-                logging.info('Connected successfully')
-                _topic = app.config['TB_TOPIC_REC_RPC']+'+'
-                mqtt.subscribe(_topic)
-            else:
-                logging.error('Bad connection. Code:', rc)
+    # Init Task
+    with app.app_context():
+        for key in [ TASK, UUID, TASK_LIST, APPLICATION ]:
+            if key in app.config:
+                app.config[key].clear()    
+        app.config[TASK_LIST]=get_tasks(need_reset=True)
+    
+    # For iCAP
+    try:
+        init_for_icap()
+        
+        register_mqtt_event()
+        
+    except Exception as e:
+        handle_exception(e)
+        pass
 
-        @mqtt.on_message()
-        def handle_mqtt_message(client, userdata, message):
+    # For ivitApp
+    app.config[APP_CTRL] = ivitAppHandler()
+    
+    # Clear path, the ivitAppHandler must to pure address
+    app.config[APP_CTRL].register_from_folder( app.config[APP_DIR] )
+
+    # Init WebSocket Event
+    @sock.route("/ivit")
+    def ivit_mesg(sock):
+        """ 
+        Define iVIT System Message
+        ---
+        'error': {
+            'type' : '',
+            'status_code': 0,
+            'message': 'xxx',
+            'uuid': 'xxx',
+            'stop_task': True
+        },
+        """
+        while(True):
             
-            topic = message.topic
-            payload = message.payload.decode()
-            data = json.loads(payload)
+            if app.config[IVIT_WS_POOL]=={}:
+                # Send daat
+                sock.send(app.config[IVIT_WS_POOL])
+                # Clear data
+                app.config[IVIT_WS_POOL].clear()
 
-            logging.warning("Receive Data from Thingsboard \n  - Topic : {} \n  - Data: {}".format(topic, data))
-            request_idx = topic.split('/')[-1]
+            time.sleep(33e-3)
             
-            method  = data["method"].upper()
-            params  = data["params"]
-            web_api = params["api"]
-            data    = params["data"] if "data" in params else None
-
-            trg_url = "http://{}:{}{}".format(app.config['HOST'], app.config['PORT'], web_api)
-
-            # send_data = json.dumps({ "data": "test" })
-            ret, resp = get_api(trg_url) if method.upper() == "GET" else post_api(trg_url, data)
-            
-            if(ret):
-                send_data = json.dumps(resp)
-                send_topic  = app.config['TB_TOPIC_SND_RPC']+f"{request_idx}"
-
-                logging.warning("Send Data from iVIT-I \n  - Topic : {} \n  - Data: {}".format(
-                    send_topic, 
-                    send_data
-                ))
-                
-                mqtt.publish(send_topic, send_data)
-            else:
-                logging.error("Got error: {}".format(resp))
 
     logging.info("Finish Initializing.")
     return app, sock

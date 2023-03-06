@@ -103,3 +103,19 @@ function run_webrtc_server(){
 function stop_webrtc_server(){
 	docker stop ivit-webrtc-server
 }
+
+function update_compose_env() {
+	local args=("$@")
+	local file=$1
+
+	if [[ $# -lt 2 ]]; then usage; fi
+	
+	for ((i=1; i<${#args[@]}; i++)); do
+		
+		local pair=(${args[i]//=/ })
+		pair[1]="${pair[1]//\//\\/}"
+		sed -Ei "s/(.*${pair[0]}=).*/\1${pair[1]}/g" $file
+		echo "Replacing: ${pair[0]} with ${pair[1]}" 
+
+	done
+}

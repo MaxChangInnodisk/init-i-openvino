@@ -1,0 +1,8 @@
+{
+  "project": "ivit-i-web-ui",
+  "version": "v1.1",
+  "workers": 1,
+  "threads": 10,
+  "web_port": "4999",
+  "nginx_port": "6532"
+}
