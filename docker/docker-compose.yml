@@ -1,5 +1,5 @@
 # YAML
-version: '1.1'
+version: '2.2'
 services:
   rtsp:
     image: aler9/rtsp-simple-server
