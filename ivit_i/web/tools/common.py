@@ -1,10 +1,53 @@
 import logging, os
-import uuid, sys, traceback
+import uuid, sys, traceback, json
 import subprocess as sp
 import socket
+from flask import jsonify
+from ivit_i.utils.err_handler import handle_exception, simple_exception
 
-from ivit_i.utils.err_handler import handle_exception
+K_MESG  = "message"
+K_CODE  = "status_code"
+K_DATA  = "data"
+K_TYPE  = "type"
 
+def json_exception(content):
+    err_type, err_detail = simple_exception(content)
+    
+    # if not err_type in [ "ImageOpenError", "VideoOpenError", "RtspOpenError", "UsbCamOpenError" ]:
+    #     err_type = "RuntimeError"
+    
+    return { 
+        K_MESG: json.dumps(err_detail),
+        K_TYPE: err_type 
+    }
+
+def http_msg(content, status_code):
+
+    # Checking Input Type
+    if not isinstance(status_code, int):
+        raise TypeError(f"Status Code should be integer, but got {type(status_code)}")
+
+    # Define Basic Format
+    ret = {
+        K_CODE: status_code,
+        K_DATA: {},
+        K_MESG: "",
+        K_TYPE: ""
+    }
+
+    # If is Exception
+    if isinstance(content, Exception):
+        ret.update(json_exception(content=content))
+        
+    # If not Exception, check input content is String or Object
+    elif isinstance(content, str):
+        ret[K_MESG] = content
+
+    else:
+        ret[K_DATA] = content
+    
+    return jsonify(ret), status_code
+    
 def get_devcie_info():
     ret  = {}
     try:
@@ -15,88 +58,10 @@ def get_devcie_info():
 
     return ret 
 
-def get_nv_info():
-    ret  = {
-        "GPU": {
-            "id": -1,
-            "name": "GPU",
-            "uuid": "", 
-            "load": 0, 
-            "memoryUtil": 0, 
-            "temperature": 0
-        }
-    }
-    try:
-        import GPUtil
-        gpus = GPUtil.getGPUs()
-        ret = dict()
-        for gpu in gpus:
-            ret.update({ gpu.name: {
-                    "id": gpu.id,
-                    "name": gpu.name, 
-                    "uuid": gpu.uuid, 
-                    "load": round(gpu.load*100, 3), 
-                    "memoryUtil": round(gpu.memoryUtil*100, 3), 
-                    "temperature": gpu.temperature
-            }})
-    except Exception as e:
-        handle_exception(e, "Get temperature error")
-    
-    return ret
+def get_mac_address():
+    macaddr = uuid.UUID(int = uuid.getnode()).hex[-12:]
+    return ":".join([macaddr[i:i+2] for i in range(0,11,2)])
 
-def get_intel_info():
-    avg = 0
-    ret = {}
-    try:
-        import psutil
-        KEY  ="coretemp"
-        res  = psutil.sensors_temperatures() 
-        temp = [ float(core.current) for core in res[KEY] ]
-        avg  = sum(temp)/len(temp)
-    except Exception as e:
-        handle_exception(e, "Get temperature error")
-        avg = 0
-
-    cpu_info  = {
-        "id": 0,
-        "name": "CPU",
-        "uuid": "", 
-        "load": 0, 
-        "memoryUtil": 0, 
-        "temperature": avg
-    }
-    
-    # Copy CPU infor to GPU
-    gpu_info = cpu_info.copy()
-    gpu_info['name'] = 'GPU'
-
-    # Update information
-    ret.update( { "CPU": cpu_info, "GPU": gpu_info } )    
-    return ret
-
-def get_xlnx_info():
-    avg = 0
-    try:
-        cmd  = "xmutil platformstats -p | grep temperature | awk -F: {'print $2'} | awk {'print $1'}"
-        temp = sp.run(cmd, shell=True, stdout=sp.PIPE, encoding='utf8').stdout.strip().split('\n')
-        temp = [ float(val) for val in temp ]
-        avg  = sum(temp)/len(temp)
-    except Exception as e:
-        handle_exception(e, "Get temperature error")
-        avg = 0
-        
-    ret  = {
-        "DPU": {
-            "id": 0,
-            "name": "DPU",
-            "uuid": "", 
-            "load": 0, 
-            "memoryUtil": 0, 
-            "temperature": avg
-        }
-    }
-    return ret
-    
 def get_address():
     st = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:       

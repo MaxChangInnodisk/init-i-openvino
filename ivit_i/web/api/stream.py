@@ -6,6 +6,9 @@ from flasgger import swag_from
 # Load Module from `web/api`
 from .common import frame2btye, get_src, stop_src, stop_task_thread, check_uuid_in_config
 from .common import sock, app
+from .icap import KEY_TB_STATS, send_basic_attr
+
+from ..tools.common import handle_exception, simple_exception, http_msg, json_exception
 from ..tools.handler import get_tasks
 from ..tools.parser import get_pure_jsonify
 from ..ai.get_api import get_api
@@ -13,14 +16,19 @@ from ..ai.get_api import get_api
 # Get Application Module From iVIT-I
 sys.path.append(os.getcwd())
 from ivit_i.common.pipeline import Source, Pipeline
-from ivit_i.utils.err_handler import handle_exception
+from ivit_i.utils.err_handler import InferenceError, ApplicationError
+
+# Legacy
 from ivit_i.app.handler import get_application
+
+# New
+from ivit_i.app.handler import ivitAppHandler
 
 # Define API Docs yaml
 YAML_PATH   = ""
 BP_NAME     = "stream"
 DIV         = "-" * 20
-YAML_PATH   = "/workspace/ivit_i/web/docs/stream"
+YAML_PATH   = "../docs/stream"
 bp_stream   = Blueprint(BP_NAME, __name__)
 
 # Define Status
@@ -33,6 +41,8 @@ STATUS      = "status"
 TASK        = "TASK"
 TASK_LIST   = "TASK_LIST"
 UUID        = "UUID"
+APP_DIR     = "APP_DIR"
+
 TAG         = "tag"
 
 # Define Key which declared in app.config[SRC]
@@ -66,9 +76,13 @@ FRAME_IDX   = "frame_index"
 STREAM      = "stream"
 
 # Define Socket Event
-SOCK_POOL   = "SOCK_POOL"
+INFER_WS_POOL   = "INFER_WS_POOL"
+IVIT_WS_POOL    = "IVIT_WS_POOL"
+
+SYS_POOL    = "SYS_POOL"
 IMG_EVENT   = "images"
 RES_EVENT   = "results"
+IVIT_EVENT   = "ivit"
 
 # Define SocketIO Parameters
 IDX         = "idx"
@@ -95,7 +109,7 @@ VIDEO       = 'video'
 BASE64_EXT  = '.jpg'
 BASE64_DEC  = "utf-8"
 PASS_CODE   = 200
-FAIL_CODE   = 400
+FAIL_CODE   = 500
 
 # Brand & Framework Info
 PLATFORM    = "PLATFORM"
@@ -138,6 +152,9 @@ def define_gst_pipeline(src_wid, src_hei, src_fps, rtsp_url, platform='intel'):
     logging.info(f'Parse {platform} Gstreamer Pipeline ')
     return maps.get(platform)
 
+# AI Inference Thread
+# -----------------------------------------------
+
 def stream_task(task_uuid, src, namespace):
     '''
     Stream event: sending 'image' and 'result' to '/app/<uuid>/stream' via socketio
@@ -147,20 +164,48 @@ def stream_task(task_uuid, src, namespace):
         - src
         - namespace
     '''
-    
     # Prepare Parameters
     ret_info, info  = dict(), None
     model_conf      = app.config[TASK][task_uuid][CONFIG]
     trg             = app.config[TASK][task_uuid][API]
-    runtime         = app.config[TASK][task_uuid][RUNTIME]
-    draw            = app.config[TASK][task_uuid][DRAW_TOOLS]
     platform        = app.config[PLATFORM]
-    
+    app_dir         = app.config[APP_DIR]
     temp_model_conf = copy.deepcopy(model_conf)
 
-    # Get application executable function if has application
-    application = get_application(temp_model_conf)
+    # Setup Application
+    try:
 
+        #NOTE: r1.1 still keep the legacy application usage
+        
+        # Custom Application using ivitAppHandler
+        app_handler = ivitAppHandler()
+        app_handler.register_from_folder(app_dir.replace('./', ''))
+        if temp_model_conf['application']['name'] in app_handler.get_all_apps():
+            app_object  = app_handler.get_app(temp_model_conf['application']['name'])
+            application = app_object(
+                params  = temp_model_conf,
+                label   = temp_model_conf[ temp_model_conf['framework'] ]['label_path'] )
+        
+        # Defualt application
+        else:
+            application = get_application(temp_model_conf)
+
+    # If setup application failed
+    except Exception as e: 
+        
+        err_mesg = handle_exception(e)
+        stop_task_thread(task_uuid, json_exception(e))
+        
+        # Runtime Error Message
+        err_mesg.update({
+            'uuid': task_uuid,
+            'stop_task': True
+        })
+        app.config[IVIT_WS_POOL].update({
+            "error": err_mesg
+        })
+        raise RuntimeError( err_mesg )
+    
     # Async Mode
     trg.set_async_mode()
 
@@ -182,12 +227,10 @@ def stream_task(task_uuid, src, namespace):
     #     raise Exception("can't open video writer")
 
     # start looping
+    cur_info, temp_info, app_info = None, None, None
+    cur_fps, fps_pool = 30, []
+    temp_socket_time = 0
     try:
-        
-        cv_show = True
-        cur_info, temp_info, app_info = None, None, None
-        cur_fps, fps_pool = 30, []
-        temp_socket_time = 0
 
         while(app.config[SRC][src_name][STATUS]==RUN):
             
@@ -244,7 +287,7 @@ def stream_task(task_uuid, src, namespace):
             }
             # Send Information
             if(time.time() - temp_socket_time >= 1):                
-                app.config[SOCK_POOL].update({ task_uuid: json.dumps(get_pure_jsonify(ret_info)) })
+                app.config[INFER_WS_POOL].update({ task_uuid: json.dumps(get_pure_jsonify(ret_info)) })
                 temp_socket_time = time.time()
 
             # Delay to fix in 30 fps
@@ -259,24 +302,39 @@ def stream_task(task_uuid, src, namespace):
                 fps_pool.append(int(1/(time.time()-t1)))
                 cur_fps = sum(fps_pool)//len(fps_pool) if len(fps_pool)>10 else cur_fps
                  
-
         logging.info('Stop streaming')
 
     except Exception as e:
-        app.config[TASK][task_uuid][ERROR] = \
-            err = handle_exception(e, "Stream Error")
-        stop_task_thread(task_uuid, err)
-        raise Exception(err)
+        err_mesg = handle_exception(e)
+        stop_task_thread(task_uuid, err_mesg)
+        raise RuntimeError(err_mesg)
     
     finally:
         trg.release()
+        app.config[TASK_LIST]=get_tasks()
+        if app.config[KEY_TB_STATS]:
+            logging.debug("Update basic attribute")
+            send_basic_attr()
 
+# -----------------------------------------------
+# Define Threading Hook
+# def thread_custom_hook(args):
+    
+
+# -----------------------------------------------
 # Define Sock Event
-@sock.route(f'/{RES_EVENT}')
-def message(sock):
+@sock.route(f'/{IVIT_EVENT}')
+def ivit_message(sock):
+    """ 
+    Send websocket every 0.01 second, 
+    the websocket content parsing from `app.config[INFER_WS_POOL]`
+    
+    To avoid inference data duplicated, 
+    we will check the preview data and current data is the same
+    """
     temp_data = None
     while(True):
-        cur_data = json.dumps(app.config[SOCK_POOL])
+        cur_data = json.dumps(app.config[IVIT_WS_POOL])
         if temp_data != cur_data:
             sock.send( cur_data )
             temp_data = cur_data
@@ -284,14 +342,35 @@ def message(sock):
 
         time.sleep(0.01)
 
-@bp_stream.route("/update_src/", methods=["POST"])
+# Define Sock Event
+@sock.route(f'/{RES_EVENT}')
+def message(sock):
+    """ 
+    Send websocket every 0.01 second, 
+    the websocket content parsing from `app.config[INFER_WS_POOL]`
+    
+    To avoid inference data duplicated, 
+    we will check the preview data and current data is the same
+    """
+    temp_data = None
+    while(True):
+        cur_data = json.dumps(app.config[INFER_WS_POOL])
+        if temp_data != cur_data:
+            sock.send( cur_data )
+
+            temp_data = cur_data
+            time.sleep(33e-3)
+
+        time.sleep(0.01)
+
+@bp_stream.route("/update_src", methods=["POST"])
 @swag_from("{}/{}".format(YAML_PATH, "update_src.yml"))
 def update_src():
     """ Get the first frame when upload a new file """
 
     # Get data: support form data and json
     data = dict(request.form) if bool(request.form) else request.get_json()
-
+    
     # Source: If got new file
     if bool(request.files):
         # Saving file
@@ -323,89 +402,119 @@ def update_src():
 
             # Return Frame
             if ret:
-                return jsonify( frame2btye(ret) )
+                return frame2btye(ret), PASS_CODE
 
     # If not exist then create a new Source
     src = Pipeline( data[SOURCE], data[SOURCE_TYPE] )
-    src.start()
-    ret = src.get_first_frame()
-    src.release()
-    return jsonify( frame2btye(ret) )
+    src.set_cam(height=720, width=1280, fps=30)
+    try:
+        src.start()
+        
+        ret = src.get_first_frame()
+        src.release()
+        return frame2btye(ret), PASS_CODE
+    except Exception as e:
+        return http_msg(e, FAIL_CODE)
 
 @bp_stream.route("/task/<uuid>/get_frame")
 @swag_from("{}/{}".format(YAML_PATH, "get_frame.yml"))
 def get_first_frame(uuid):
     """ Get target task first frame via web api """
 
-    if not check_uuid_in_config(uuid):
-        return 'Support Task UUID is ({}) , but got {}.'.format(
-            ', '.join(app.config[UUID].keys()), uuid ), FAIL_CODE
-        
+    # ----------------------------------------------------------
+    # Checking UUID
+    try:
+        check_uuid_in_config(uuid)
+    except Exception as e:
+        return http_msg(e, FAIL_CODE)
+    
     src = get_src(uuid)
     ret = frame2btye(src.get_first_frame())
     # return '<img src="data:image/jpeg;base64,{}">'.format(frame_base64)
-    return jsonify( ret )
+    return http_msg( ret, PASS_CODE )
     
-@bp_stream.route("/task/<uuid>/stream/start/", methods=["GET"])
+@bp_stream.route("/task/<uuid>/stream/start", methods=["GET"])
 @swag_from("{}/{}".format(YAML_PATH, "stream_start.yml"))
 def start_stream(uuid):      
 
-    if not check_uuid_in_config(uuid):
-        return 'Support Task UUID is ({}) , but got {}.'.format(
-            ', '.join(app.config[UUID].keys()), uuid ), FAIL_CODE
-
-    [ logging.info(cnt) for cnt in [DIV, f'Start stream ... destination of socket event: "/task/{uuid}/stream"', DIV] ]
-
-    # create stream object
-    if app.config[TASK][uuid][STREAM] is None:
-        app.config[TASK][uuid][STREAM] = threading.Thread(
-            target  = stream_task, 
-            args    = (uuid, get_src(uuid), f'/task/{uuid}/stream', ), 
-            name    = f"{uuid}",
-            daemon  = True
-        )
-        logging.info('Created a new stream thread ( {} )'.format(app.config[TASK][uuid][STREAM]))
-    
-    # check if thread is alive
-    if app.config[TASK][uuid][STREAM].is_alive():
-        logging.info('Stream is running')
-        return jsonify('Stream is running, Stream (WebRTC): /task/{}/stream , Log (WebSocket): "/task/results" '), PASS_CODE
-    
-    # trying to start the stream
+    title_msg = lambda title: f'{title}, Stream (WebRTC): {app.config["HOST"]}:{app.config["NGINX_PORT"]}/task/{uuid}/stream , Log (WebSocket): "/task/results", RTSP: rtsp://{app.config["HOST"]}:8554/{uuid}.'
     try:
-        # wait for thread
-        while(app.config[TASK][uuid][STREAM] is None):
-            time.sleep(1)
+        app.config[TASK][uuid][STATUS] = RUN
+        # ----------------------------------------------------------
         
-        # start the thread
+        # Checking UUID
+        check_uuid_in_config(uuid)
+    
+        [ logging.info(cnt) for cnt in [DIV, f'Start stream ... destination of socket event: "/task/{uuid}/stream"', DIV] ]
+        
+        # ----------------------------------------------------------
+        # Create New Stream Thread
+        if app.config[TASK][uuid][STREAM] is None:
+
+            app.config[TASK][uuid][STREAM] = threading.Thread(
+                target  = stream_task, 
+                args    = (uuid, get_src(uuid), f'/task/{uuid}/stream', ), 
+                name    = f"{uuid}",
+                daemon  = True
+            )
+            
+            while(app.config[TASK][uuid][STREAM] is None):
+                print('waitting ...')
+                time.sleep(1) # wait for thread
+            
+            logging.info('Created a new stream thread ( {} )'.format(app.config[TASK][uuid][STREAM]))
+        
+        # ----------------------------------------------------------
+        # Or No Need to Create  
+        if app.config[TASK][uuid][STREAM].is_alive():
+            msg = title_msg("Stream is running")
+            logging.info(msg)
+            return http_msg(msg, PASS_CODE)
+        
+        # ----------------------------------------------------------
+        # Start a stream thread
         app.config[TASK][uuid][STREAM].start()
-        msg = 'Stream is running, Stream (WebRTC): /task/{}/stream , Log (WebSocket): "/task/results" '
+        msg = title_msg("Stream is started")
         logging.info(msg)
-        return jsonify(msg), PASS_CODE
+
+        return http_msg(msg, PASS_CODE)
 
     except Exception as e:
-        
+        # ----------------------------------------------------------
+        # Clear Thread
+        msg = "Something wrong when starting stream thread ... ({}) ".format(
+                    handle_exception(e)
+        )
         if app.config[TASK][uuid][STREAM] is not None:  
             if app.config[TASK][uuid][STREAM].is_alive():
                 os.kill(app.config[TASK][uuid][STREAM])
         
-        app.config[TASK][uuid][ERROR] = msg = handle_exception(e)
-        app.config[TASK][uuid]["status"] = STOP
-        return jsonify(msg), FAIL_CODE
-
-@bp_stream.route("/task/<uuid>/stream/stop/", methods=["GET"])
+        app.config[TASK][uuid][STATUS] = ERROR
+        app.config[TASK][uuid][ERROR] = json_exception(e)
+        
+        
+        logging.warning(msg)
+        return http_msg(e, FAIL_CODE)
+    
+@bp_stream.route("/task/<uuid>/stream/stop", methods=["GET"])
 @swag_from("{}/{}".format(YAML_PATH, "stream_stop.yml"))
 def stop_stream(uuid):
 
-    if not check_uuid_in_config(uuid):
-        return 'Support Task UUID is ({}) , but got {}.'.format(
-            ', '.join(app.config[UUID].keys()), uuid ), FAIL_CODE
+    # ----------------------------------------------------------
+    # Checking UUID
+    try:
+        check_uuid_in_config(uuid)
+    except Exception as e:
+        return http_msg(e, FAIL_CODE)
 
     if app.config[TASK][uuid][STATUS]==ERROR:
-        return jsonify('Stream Error ! '), 400
+        return http_msg('Stream Error ! ', FAIL_CODE)
         
     if app.config[TASK][uuid][STREAM]!=None:
-        try:        
+        try:
+            src_name = app.config[TASK][uuid][SOURCE]
+            app.config[SRC][src_name][STATUS] = STOP
+            
             app.config[TASK][uuid][STREAM].join()
             logging.warning('Stopped stream !')
         except Exception as e:
@@ -413,4 +522,4 @@ def stop_stream(uuid):
 
     app.config[TASK][uuid][STREAM]=None
     logging.warning('Clear Stream ...')
-    return jsonify('Stop stream success ! '), 200
+    return http_msg('Stop stream success ! ', 200)

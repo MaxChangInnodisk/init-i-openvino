@@ -157,7 +157,7 @@ def main(args):
                 cur_info, cur_fps = temp_info, temp_fps
 
             if(cur_info):
-                draw, cur_info = application(draw, cur_info)
+                draw, app_info = application(draw, cur_info)
             
             # Draw fps
             draw = draw_fps( draw, cur_fps )
@@ -171,7 +171,8 @@ def main(args):
                 out.write(draw)
 
             # Log
-            logging.info(cur_info)
+            if (cur_info):
+                logging.info(app_info)
 
             # Delay to fix in 30 fps
             t_cost, t_expect = (time.time()-t_start), (1/src.get_fps())
