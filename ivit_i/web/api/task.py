@@ -246,7 +246,7 @@ def run_task(uuid):
     
     # ------------------------------------
     # Update running status and 
-    current_app.config[TASK][uuid][STATUS] = RUN
+    # current_app.config[TASK][uuid][STATUS] = RUN
     
     current_app.config[TASK][uuid][START_TIME]  = time.time()
     current_app.config[TASK][uuid][LIVE_TIME]   = 0
