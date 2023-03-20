@@ -28,7 +28,7 @@ services:
     volumes:
       - ./nginx-config.template:/etc/nginx/templates/default.conf.template
     environment:
-      - NGINX_PORT=6532
+      - NGINX_PORT=6632
       - API_PORT=819
       - RTC_PORT=8083
       - WEB_PORT=4999

@@ -201,7 +201,7 @@ if [[ ${QUICK} = false ]];then waitTime 5; fi
 # Execution
 
 printd "Launch Relative Container" BR
-docker-compose -f ./docker/docker-compose.yml up -d 
+docker compose -f ./docker/docker-compose.yml up -d 
 
 # Run docker command 
 printd "Launch iVIT-I Container" BR
@@ -209,7 +209,7 @@ bash -c "${DOCKER_CMD}"
 
 printd "Close Relative Container" BR
 if [[ ${INTERATIVE} = true ]];then
-	docker-compose -f ./docker/docker-compose.yml down
+	docker compose -f ./docker/docker-compose.yml down
 fi
 
 exit 0;

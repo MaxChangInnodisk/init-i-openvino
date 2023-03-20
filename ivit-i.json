@@ -5,7 +5,7 @@
     "VERSION": "v1.0.3.1",
     "PORT": 819,
     "WEB_PORT": 4999,
-    "NGINX_PORT": 6532,
+    "NGINX_PORT": 6632,
     "LOGGER": "./ivit-i.log",
     "TASK_ROOT": "./task",
     "DATA": "data",
