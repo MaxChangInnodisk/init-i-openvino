@@ -11,9 +11,7 @@ iNIT-I is an AI inference tool which could support multiple AI framework and thi
 
 # Pre-requirements
 * Install [Docker](https://docs.docker.com/engine/install/ubuntu/)
-* Install [Docker-Compose](https://docs.docker.com/compose/install/linux/#install-the-plugin-manually)
-    * docker compose v1 is a separate install. To install v1 follow instructions here.
-    * docker compose v2 is currently a separate install but will be integrated into docker at some point, when it's ready.
+* Install [Docker-Compose](https://docs.docker.com/compose/install/linux/)
 
 # Prepare Environment
 
