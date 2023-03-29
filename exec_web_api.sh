@@ -1,6 +1,6 @@
 #!/bin/bash
 WID=80
-source /opt/intel/openvino/bin/setupvars.sh
+source /opt/intel/openvino/setupvars.sh
 source /workspace/tools/utils.sh
 
 # Variable
