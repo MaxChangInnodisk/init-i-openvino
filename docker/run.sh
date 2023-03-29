@@ -207,8 +207,9 @@ docker compose -f ./docker/docker-compose.yml up -d
 printd "Launch iVIT-I Container" BR
 bash -c "${DOCKER_CMD}"
 
-printd "Close Relative Container" BR
+
 if [[ ${INTERATIVE} = true ]];then
+	printd "Close Relative Container" BR
 	docker compose -f ./docker/docker-compose.yml down
 fi
 

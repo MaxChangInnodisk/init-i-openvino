@@ -1,7 +1,7 @@
 {
     "tag": "obj",
     "openvino": {
-        "model_path": "./model/yolo-v3-tf/FP32/yolo-v3-tf.xml",
+        "model_path": "./model/yolo-v3-tf/yolo-v3-tf.xml",
         "label_path": "./model/yolo-v3-tf/coco.names",
         "anchors": [
             10,

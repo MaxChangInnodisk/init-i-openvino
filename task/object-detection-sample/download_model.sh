@@ -30,7 +30,7 @@ fi
 
 # ------------------------------------------------------------------------------
 
-# Model: https://drive.google.com/file/d/1LaoLBNAh07fCCfF98KeFMs0kzg9KYP8J/view?usp=sharing
+# Model: https://drive.google.com/file/d/1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z/view?usp=share_link
 NAME="yolo-v3-tf"
 ZIP="${NAME}.zip"
 if [[ -d ${NAME} ]];then
@@ -38,6 +38,6 @@ if [[ -d ${NAME} ]];then
 	exit 1
 fi
 
-GID="1LaoLBNAh07fCCfF98KeFMs0kzg9KYP8J"
+GID="1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z"
 download $GID ${ZIP}
 unzip $ZIP && rm "${ZIP}"
