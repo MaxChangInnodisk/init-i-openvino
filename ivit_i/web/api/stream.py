@@ -171,20 +171,19 @@ def stream_task(task_uuid, src, namespace):
     #     raise Exception("can't open video writer")
 
     # Set cv2 window
+    # NOTE: Local Display
+    need_display = False
     win_name = f'CV Display: {app.config[TASK][task_uuid][NAME]} ({task_uuid})'
-    try:
-        cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
-        cv2.setWindowProperty(win_name, cv2.WND_PROP_TOPMOST, 1)
-        cv2.resizeWindow(win_name, src_wid, src_hei) 
-        need_display = True
-
-    except Exception as e:
-        logging.error('Setup Display Error: {}'.format(handle_exception(e)))
-        need_display = False   
-    
+    if app.config.get("CV_DISPLAY", False):
+        try:
+            cv2.namedWindow(win_name, cv2.WINDOW_NORMAL)
+            cv2.setWindowProperty(win_name, cv2.WND_PROP_TOPMOST, 1)
+            cv2.resizeWindow(win_name, src_wid, src_hei) 
+            need_display = True
+        except Exception as e:
+            logging.error('Setup Display Error: {}'.format(handle_exception(e)))        
 
     try:
-
         # Setup Parameters
         cur_info, temp_info, app_info = None, None, None
         cur_fps, fps_pool = 30, []
@@ -229,7 +228,7 @@ def stream_task(task_uuid, src, namespace):
                 draw, app_info = application(draw, temp_info)
 
             # NOTE: Local Display
-            if(need_display):
+            if need_display:
                 try:
                     cv2.imshow(win_name, draw)
                     if cv2.waitKey(1) in [ ord('q'), ord('Q'), 27 ]:
@@ -238,6 +237,7 @@ def stream_task(task_uuid, src, namespace):
                         logging.info('Destroy CV Windows')
                 except Exception as e:
                     looping.error(handle_exception(e))
+
             # Send RTSP
             out.write(draw)
 
