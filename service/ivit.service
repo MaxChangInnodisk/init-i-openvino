@@ -1,0 +1,16 @@
+[Unit]
+Description=ivit
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+Environment="DISPLAY=:0.0"
+Environment="XAUTHORITY=/home/innodisk/.Xauthority"
+User=innodisk
+ExecStart=/home/innodisk/workspace/ivit-i-intel/service/run-ivit-i-intel.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=graphical.target

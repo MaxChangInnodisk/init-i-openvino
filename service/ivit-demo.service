@@ -1,0 +1,13 @@
+[Unit]
+Description=ivit-demo
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStart=/home/innodisk/workspace/ivit-i-intel/service/run-ivit-web-ui.sh
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=graphical.target

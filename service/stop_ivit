@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker stop ivit-i-web-ui-v1.0 ivit-i-intel-v1.0.3

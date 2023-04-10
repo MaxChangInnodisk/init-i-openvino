@@ -29,12 +29,10 @@ function printd(){
     echo -e "$(date +"%y:%m:%d %T") ${COLOR}$1${REST}"
 }
 
-
-
-
-SLEEP_TIME=3
-sleep $SLEEP_TIME
+# SLEEP_TIME=10
+# sleep $SLEEP_TIME
 
 printd "Launch iVIT-I" BR
 cd "${IVIT}" || exit
+
 ./docker/run.sh
