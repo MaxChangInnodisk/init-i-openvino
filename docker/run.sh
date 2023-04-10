@@ -113,18 +113,19 @@ fi
 # Run WebRTC to Web Docker Service
 run_webrtc_server;
 
-if [[ ${BG} == true ]]; then RUN_CMD="bash"; fi
+# if [[ ${BG} == true ]]; then RUN_CMD="bash"; fi
 
 # If is desktop mode
 if [[ ${SERVER} = false ]];then
 	MODE="DESKTOP"
-	SET_VISION="-v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=unix${DISPLAY}"
+	SET_VISION="-v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=${DISPLAY}"
 	xhost + > /dev/null 2>&1
+	export DISPLAY=:0.0
 fi
 
 # Docker Container Mode
-SET_CONTAINER_MODE="-it"
-if [[ ${BG} = true ]]; then SET_CONTAINER_MODE="-dt"; fi
+SET_CONTAINER_MODE="-i"
+if [[ ${BG} = true ]]; then SET_CONTAINER_MODE="-d"; fi
 
 # Setup docker name
 SET_NAME="--name ${DOCKER_NAME}"

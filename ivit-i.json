@@ -18,5 +18,6 @@
     "MQTT_KEEPALIVE": 5,
     "MQTT_REFRESH_TIME": 1.0,
     "TB": "10.204.16.110",
-    "TB_PORT": 3000
+    "TB_PORT": 3000,
+    "CV_DISPLAY": false
 }   
