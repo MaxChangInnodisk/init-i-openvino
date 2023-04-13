@@ -1,13 +1,11 @@
 #!/bin/bash
 
 function download(){
-	ID=$1
-	NAME=$2
 
 	if [[ ! -z $(ls model 2>/dev/null )  ]];then
 		echo "$(date +"%F %T") the model folder has already exist !"
 	else
-		gdown --id $ID -O $NAME
+		gdown --id $1 -O $2
 	fi
 }
 
@@ -30,14 +28,14 @@ fi
 
 # ------------------------------------------------------------------------------
 
-# Model: https://drive.google.com/file/d/1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z/view?usp=share_link
-NAME="yolo-v3-tf"
+# Model: https://drive.google.com/file/d/1VZy_7pgLISdHTH1hh7CZ2zuFlSAbkKGH/view?usp=share_link
+NAME="yolo-v4-tiny-tf"
 ZIP="${NAME}.zip"
 if [[ -d ${NAME} ]];then
 	echo "$(date +"%F %T") Model already exist"
 	exit 1
 fi
 
-GID="1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z"
+GID="1VZy_7pgLISdHTH1hh7CZ2zuFlSAbkKGH"
 download $GID ${ZIP}
-unzip $ZIP && rm "${ZIP}"
+unzip $ZIP -d ${NAME} && rm "${ZIP}"

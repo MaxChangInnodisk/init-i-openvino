@@ -1,13 +1,10 @@
 #!/bin/bash
 
 function download(){
-	ID=$1
-	NAME=$2
-
 	if [[ ! -z $(ls model 2>/dev/null )  ]];then
 		echo "$(date +"%F %T") the model folder has already exist !"
 	else
-		gdown --id $ID -O $NAME
+		gdown --id $1 -O $2
 	fi
 }
 
@@ -30,14 +27,14 @@ fi
 
 # ------------------------------------------------------------------------------
 
-# Model: https://drive.google.com/file/d/1wzWTBpuq6zAgDgdWjfvpOCdAnGDW_bl7/view?usp=sharing
+# Model: https://drive.google.com/file/d/1H2PAciA9V0FxWkduNUo4Am7gRFoKsB15/view?usp=share_link
 NAME="resnet-v1"
+echo ${NAME}
 ZIP="${NAME}.zip"
 if [[ -d ${NAME} ]];then
 	echo "$(date +"%F %T") Model already exist"
 	exit 1
 fi
-
-GID="1wzWTBpuq6zAgDgdWjfvpOCdAnGDW_bl7"
+GID="1H2PAciA9V0FxWkduNUo4Am7gRFoKsB15"
 download $GID ${ZIP}
-unzip $ZIP && rm "${ZIP}"
+unzip $ZIP -d ${NAME} && rm "${ZIP}"
