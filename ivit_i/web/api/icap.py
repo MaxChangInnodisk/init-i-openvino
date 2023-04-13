@@ -4,14 +4,12 @@ import numpy as np
 from flask import Blueprint, abort, request
 from flasgger import swag_from
 
-from ivit_i.utils.err_handler import handle_exception
-
 from ..tools.thingsboard import send_get_api, send_post_api
 
 from .common import sock, app, mqtt
-from ..tools.common import get_address, get_mac_address, http_msg, simple_exception
+from ..tools.common import get_address, get_mac_address, http_msg, simple_exception, handle_exception
 from .task import get_simple_task
-from .operator import parse_info_from_zip
+from .operator import parse_info_from_zip, convert_model
 from ..tools.handler import init_model
 
 YAML_PATH   = "../docs/icap"
@@ -77,15 +75,12 @@ TB_KEY_ID           = "id"
 TB_KEY_TOKEN        = "accessToken"
 
 # Define TELEMETRY STATE
-S_ERRO = "ERROR"
-S_FAIL = "FAILED"
-S_PASS = "PASS"
-S_INIT = "INITIALIZED"
-S_DOWN = "DOWNLOADING"
-S_DOWN_END = "DOWNLOADED"
-S_PARS = "PARSED"
-S_CONV = "CONVERTED"
-S_FINISH = "FINISHED"
+S_FAIL = "Failure"
+S_INIT = "Waiting"
+S_DOWN = "Downloading"      # Downloading ({N}%)
+S_PARS = "Verifying"
+S_CONV = "Converting"       # Converting ({N}%)
+S_FINISH = "Success"
 
 class ICAP_DEPLOY:
 
@@ -114,7 +109,9 @@ class ICAP_DEPLOY:
                 }'
             }
         """
-
+        for k, d in data.items():
+            print("{}: {}".format(k, d))
+        
         # Need Convert List
         self.convert_platform = [ NVIDIA, JETSON ]
         self.parsed_info = None
@@ -130,7 +127,8 @@ class ICAP_DEPLOY:
         self.url            = data["sw_url"]
         self.checksum       = data["sw_checksum"]
         self.checksum_type  = data["sw_checksum_algorithm"]
-        self.descr          = data["sw_description"]        
+        self.descr          = data["sw_description"]    
+        self.package_id     = data.get("sw_package_id", "None")    
         
         # Get Description Data
         self.platform = self.descr.get("applyProductionModel")
@@ -139,12 +137,16 @@ class ICAP_DEPLOY:
         self.file_size      = self.descr["file_size"]
         self.model_type     = self.descr["model_type"]
         self.model_classes  = self.descr["model_classes"]
+        
+        # Status
+        self.is_finish = False
+        self.deploy_status = None
 
         # Check platform
         self.check_platform()
 
         # Combine Save and Target Path
-        self.save_path = os.path.join(self.temp_root, self.file_name )
+        self.save_path = os.path.join(self.temp_root, f'{self.project_name}.zip' )
         self.target_path = os.path.join(self.model_root, self.project_name )
         
         # Removing Exist Path
@@ -153,28 +155,33 @@ class ICAP_DEPLOY:
         # Update Download Parameters
         self.tmp_proc_rate = 0  # avoid keeping send the same proc_rate
         self.push_rate = 10
+        self.push_buf = None
 
         # Create Thread
         self.t = threading.Thread(target=self.deploy_event, daemon=True)
 
+        self.push_to_icap(state=S_INIT)
+
     def check_platform(self):
-        if not self.platform:
-            return
+        """ Checking Platform is correct or not,
+        The Jetson and Nvidia model is compatible
+        """ 
+
+        if not self.platform: return
 
         pla_error = False
         ivit_pla = app.config["PLATFORM"].lower()
         model_pla = self.platform.lower()
+        logging.info('Checking platform ... IVIT:{}, MODEL: {}'.format(ivit_pla, model_pla))
         
         # Check Platform Value is Correct
         if ( ivit_pla != model_pla ):
             pla_error = True
 
         # NVIDIA and Jetson Platform is shared
-        if ivit_pla in [ JETSON, NVIDIA ]:
-            pla_matrix = np.array([ ivit_pla, model_pla ] ).reshape(1, -1)
-            pla_matrix_rev = np.array( [ NVIDIA, JETSON ] ).reshape(-1, 1)
-            if ( True in (pla_matrix == pla_matrix_rev) ):
-                pla_error = False
+        nv_plat = [ JETSON, NVIDIA ]
+        if ivit_pla in nv_plat and model_pla in nv_plat:
+            pla_error = False
 
         # Platform Error        
         if pla_error:
@@ -186,7 +193,9 @@ class ICAP_DEPLOY:
         """ Checking checksum by MD5 """
         checksum = hashlib.md5(open(self.save_path,'rb').read()).hexdigest()
         if checksum != self.checksum:
-            raise TypeError("Checksum Error !!!!")
+            raise TypeError("Checksum Error !!!! SRC: {}, ICAP: {}".format(
+                checksum, self.checksum
+            ))
         logging.warning("Checked By Checksum ( MD5 )")
         
     def clear_exist_data(self):
@@ -199,7 +208,7 @@ class ICAP_DEPLOY:
                     os.remove(path)
             logging.warning('Clear exist path: {}'.format(path))
 
-    def bar_progress(self, current, total, width=80):
+    def download_progress_event(self, current, total, width=80):
         """ Custom progress bar for iCAP deployment, which will push the progress to icap """
         proc_rate = int(current / total * 100)
         proc_mesg = f"{S_DOWN} ( {proc_rate}% )"
@@ -238,93 +247,124 @@ class ICAP_DEPLOY:
             self.finished_event()
 
         except Exception as e:
-            handle_exception(e)
             self.clear_exist_data()
-            self.push_to_icap(state=S_ERRO)
-
+            logging.error(simple_exception(e))
+            self.push_to_icap(state=S_FAIL, error=simple_exception(e)[1])
 
     def download_event(self):
         """ Download Event in python thread """
         logging.info('Start to download file ....')
         self.print_info()
-        self.push_to_icap(state=S_INIT)
 
         t_start = time.time()
         wget.download( 
             self.url, 
             self.save_path, 
-            bar=self.bar_progress )
-        logging.info("Downloaded File from iCAP")
-
+            bar=self.download_progress_event )
+        logging.info("Downloaded File from iCAP ({})".format(self.save_path))
+        
         # Checksum
         self.check_md5()
 
         logging.info('Download Finished  ... {}s'.format(int(time.time()-t_start)) )
-        self.push_to_icap(state=S_DOWN_END)
 
     def parse_event(self):
         """ Parsing data from ZIP File update self.parsed_info """
-        
+        logging.info('Start Parsing File ...')
         # Parse information
         with app.app_context():
-            
             self.parsed_info = parse_info_from_zip( zip_path = self.save_path )
-            if self.parsed_info is None:
-                raise RuntimeError("Parsed data is empty")
+        
+        if self.parsed_info is None:
+            raise RuntimeError("Parsed data is empty")
 
-            [ print(key, val) for key, val in self.parsed_info.items() ]
-            
-            # NOTE: The new workflow for iCAP
-            # Copy to model path and update to app.config
-            sb.run(f"mv -f {self.save_path.replace('.zip', '')} {self.target_path}", shell=True)
-            
-            logging.info('Moved Folder from {} to {}'.format(
-                self.save_path, self.target_path ))
+        [ print(f'\t- {key}: {val}') for key, val in self.parsed_info.items() ]
+        
+        assert os.path.exists(self.target_path), "Move folder failed!"
 
-            init_model()
+        self.push_to_icap(state=S_PARS)
 
-            self.push_to_icap(state=S_PARS)
+        logging.info('Parsed File ...')
         
     def convert_event(self):
         """  Convert file base on self.parsed_info """
 
-        if ( self.platform in self.convert_platform ):
-            logging.warning('Start Convertion ...')
-            # update self.converted_info
 
-            # if ( self.converted_info is None ):
-            #     raise RuntimeError('Convert data is empty') 
-            
-        else:
-            logging.warning(f'No need convertion, only {self.convert_platform} have to convert but current is {self.platform}')            
-                
+        # Check the paltform
+        if not ( self.platform in self.convert_platform ):
+            self.push_to_icap(state=S_CONV)
+            return
+
+        logging.info('Converting File ...')
+
+        # Start convert in background       
+        with app.app_context():
+            new_model_path, proc_name = convert_model(
+                model_tag = self.parsed_info['tag'],
+                model_path = self.parsed_info['model_path'],
+                model_name = self.parsed_info['name'],
+            )
+            self.parsed_info['model_path'] = new_model_path
+
+        # Capture Convert Message
+        send_cnt, send_buf = None, None
+        model_name = self.parsed_info['name']
+
+        while(True):
+            if app.config["IMPORT_PROC"][model_name]["proc"].poll() != None:
+                break
+
+            send_cnt = app.config["IMPORT_PROC"][model_name].get('status')
+
+            if send_cnt and (send_buf != send_cnt):
+                if send_cnt.lower() == "error":
+                    raise RuntimeError(app.config["IMPORT_PROC"][model_name].get('detail'))
+                self.push_to_icap(state=send_cnt)
+                send_buf = send_cnt
+
+        # Finished
         self.push_to_icap(state=S_CONV)
 
-    def finished_event(self):
-        """  Update app.config """
+        logging.info('Convert File Finished !')
 
-        time.sleep(1)
-        self.push_to_icap(state=S_FINISH)
+    def finished_event(self):
+        """  Update app.config and initialize model """
+        
+        with app.app_context():
+            init_model()
+            
+        self.push_to_icap(state=S_FINISH, finish=True)
 
     def start(self):
         self.t.start()
 
-    def push_to_icap(self, state=S_INIT, error=""):
+    def push_to_icap(self, state=S_INIT, error="", finish=False):
+
         if not ( self.title and self.ver ):
             logging.error('Empty title and version ...')
             return None
-        
-        mqtt.publish(app.config[TB_TOPIC_SND_TEL], json.dumps({
-            "current_sw_title": self.title,
-            "current_sw_version": self.ver,
+
+        self.is_finish = True if state == S_FINISH else False
+        self.deploy_status = state
+
+        ret = {
             "sw_state": state,
-            "sw_error": error
-        }) )
+            "sw_error": error,
+            "sw_package_id": self.package_id
+        }
+
+        if finish:
+            ret.update({
+                "current_sw_title": self.title,
+                "current_sw_version": self.ver,
+            })
+        
+        mqtt.publish(app.config[TB_TOPIC_SND_TEL], json.dumps(ret) )
 
     def error(self, content="Unknown Error ..."):
-        print("\nError: ", content)
-        self.push_to_icap(state=S_ERRO, error=content)
-            
+        logging.error("\nError: ", content)
+        self.push_to_icap(state=S_FAIL, error=content)            
+
 
 def register_tb_device(tb_url):
     """ Register Thingsboard Device
@@ -350,11 +390,16 @@ def register_tb_device(tb_url):
             }
     """
 
+    platform = app.config.get("PLATFORM")
+    if platform == JETSON:
+        # Jetson device have to mapping to nvidia
+        platform = NVIDIA
+        
     send_data = { 
         TB_KEY_NAME  : DEVICE_NAME,
         TB_KEY_TYPE  : DEVICE_TYPE,
         TB_KEY_ALIAS : DEVICE_ALIAS,
-        TB_KEY_MODEL : app.config.get("PLATFORM")
+        TB_KEY_MODEL : platform 
     }
 
     header = "http://"
@@ -480,10 +525,22 @@ def rpc_event(request_idx, data):
 def attr_event(data):
 
     if 'sw_description' in data.keys():
-        logging.warning('Detected url, start to deploy')
+
+        logging.warning('Detected url from iCAP, start to deploy ...')
 
         deploy_event = ICAP_DEPLOY( data = data)
         deploy_event.start()
+
+        # Append to app.config
+        if not ("deploy" in app.config):
+            app.config.update({ "deploy": [] })
+
+        app.config['deploy'].append(deploy_event)
+
+        logging.warning('Current Deploying Event: ')
+        for event in app.config['deploy']:
+            logging.warning('{}: {}: {}'.format(event, event.is_finish, event.deploy_status))
+
 
 def register_mqtt_event():
 

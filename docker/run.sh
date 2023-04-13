@@ -60,7 +60,7 @@ WEB_CONFIG=${ROOT}/ivit-i-web-ui.json
 jq --arg WEB_PORT "${WEB_PORT}" \
 --arg NGINX_PORT "${NGINX_PORT}" \
 '(.web_port = $WEB_PORT | .nginx_port=$NGINX_PORT)' ${WEB_CONFIG} > file.tmp
-mv file.tmp ${WEB_CONFIG}
+mv -f file.tmp ${WEB_CONFIG}
 
 # ========================================================
 # Help

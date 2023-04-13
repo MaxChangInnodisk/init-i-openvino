@@ -240,32 +240,32 @@ def get_model_config(tag, arch=None):
     tag = tag.lower()
     ret_config = None
     if tag == 'cls':
-        ret_config = cls_pattern
+        ret_config = copy.deepcopy(cls_pattern)
     
     elif tag == 'obj':
         
         assert arch, "Get Model Conifg Error, if you want to get obj config you have to provide arch ( [ yolo, yolov4 ] )"
 
         if 'yolov4' in arch:
-            ret_config = obj_yolov4_pattern
+            ret_config = copy.deepcopy(obj_yolov4_pattern)
         else:
-            ret_config = obj_yolo_pattern
+            ret_config = copy.deepcopy(obj_yolo_pattern)
         
     else:
         raise KeyError('Get unkown tag: {}, support tag is [ cls, obj ]')
 
     # Change Framework
     framework = current_app.config.get('AF')
-    
     temp = ret_config["framework"]
     ret_config.pop("framework", None)
     ret_config.update({framework: temp})
-    
     return ret_config
 
 def get_model_tag_from_arch(arch):
     """ Get tag ( [ resnet, yolo ] ) from training configuration """
     if "resnet" in arch:
+        return 'cls'
+    if "vgg" in arch:
         return 'cls'
     elif "yolo" in arch:
         return 'obj'
@@ -301,13 +301,19 @@ def gen_task_model_config(form:dict):
     # -------------------------------------------------------------------------------------
     # Generate a Model Configuration
     model_data = current_app.config["MODEL"][task_model]
-    model_conf = get_model_config( tag = model_data['tag'], arch = model_data['arch']  )
 
+    #  HWC -> [320,448,3] -> "3,320,448" CHW
+    input_shape = [ model_data['input_size'][2], model_data['input_size'][0], model_data['input_size'][1] ]
+    model_input_size = ','.join([ str(i) for i in input_shape ])  
+
+    model_conf = get_model_config( tag = model_data['tag'], arch = model_data['arch']  )
     model_conf["tag"] = model_data['tag']
     model_conf[framework]["model_path"]   = model_data['model_path']
     model_conf[framework]["label_path"]   = model_data['label_path']
     model_conf[framework]["anchors"]   = model_data['anchors']
-
+    model_conf[framework]["input_size"]   = model_input_size
+    model_conf[framework]["preprocess"]   = model_data['preprocess']
+    
     # -------------------------------------------------------------------------------------
     # Generate & Modify Task Configuration
     task_conf = get_task_json_pattern()
