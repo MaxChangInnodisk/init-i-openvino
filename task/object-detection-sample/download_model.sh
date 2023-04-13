@@ -28,14 +28,14 @@ fi
 
 # ------------------------------------------------------------------------------
 
-# Model: https://drive.google.com/file/d/1VZy_7pgLISdHTH1hh7CZ2zuFlSAbkKGH/view?usp=share_link
-NAME="yolo-v4-tiny-tf"
+# Model: https://drive.google.com/file/d/1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z/view?usp=share_link
+NAME="yolo-v3-tf"
 ZIP="${NAME}.zip"
 if [[ -d ${NAME} ]];then
 	echo "$(date +"%F %T") Model already exist"
 	exit 1
 fi
 
-GID="1VZy_7pgLISdHTH1hh7CZ2zuFlSAbkKGH"
+GID="1Ii8GBLEdUIC8I5e1P7YbQ6oc9dqizD0z"
 download $GID ${ZIP}
 unzip $ZIP -d ${NAME} && rm "${ZIP}"
