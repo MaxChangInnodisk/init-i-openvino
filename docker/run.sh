@@ -1,18 +1,16 @@
 #!/bin/bash
+# Copyright (c) 2023 Innodisk Corporation
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
 
-function waitTime(){
-	TIME_FLAG=$1
-	while [ $TIME_FLAG -gt 0 ]; do
-		printf "\rWait ... (${TIME_FLAG}) "; sleep 1
-		(( TIME_FLAG-- ))
-	done
-	printf "\r                 \n"
-}
 
 # ========================================================
 # Basic Parameters
-CONF="ivit-i.json"
 DOCKER_USER="maxchanginnodisk"
+VERSION="v1.1"
+TAG="runtime"
+DOCKER_COMPOSE="./docker/docker-compose.yml"
 
 # ========================================================
 # Store the utilities
@@ -21,93 +19,43 @@ ROOT=$(dirname "${FILE}")
 source "${ROOT}/utils.sh"
 
 # ========================================================
-# Check configuration is exit
-FLAG=$(ls ${CONF} 2>/dev/null)
-if [[ -z $FLAG ]];then 
-	printd "Couldn't find configuration (${CONF})" Cy; 
-	exit
-else 
-	printd "Detected configuration (${CONF})" Cy; 
-fi
-
-# ========================================================
 # Set the default value of the getopts variable 
 INTERATIVE=true
-RUN_WEB=true
-RUN_CLI=false
-MAGIC=true
-INIT=true
 QUICK=false
-
-# ========================================================
-# Install pre-requirement
-check_jq
-
-# ========================================================
-# Parse information from configuration
-PROJECT=$(cat ${CONF} | jq -r '.PROJECT')
-VERSION=$(cat ${CONF} | jq -r '.VERSION')
-PLATFORM=$(cat ${CONF} | jq -r '.PLATFORM')
-PORT=$(cat ${CONF} | jq -r '.PORT')
-WEB_PORT=$(cat ${CONF} | jq -r '.WEB_PORT')
-NGINX_PORT=$(cat ${CONF} | jq -r '.NGINX_PORT')
-
-# Update docker-compose value
-update_compose_env ${ROOT}/docker-compose.yml API_PORT=${PORT} NGINX_PORT=${NGINX_PORT} WEB_PORT=${WEB_PORT}
-
-# Update ivit-i-web-ui
-WEB_CONFIG=${ROOT}/ivit-i-web-ui.json
-jq --arg WEB_PORT "${WEB_PORT}" \
---arg NGINX_PORT "${NGINX_PORT}" \
-'(.web_port = $WEB_PORT | .nginx_port=$NGINX_PORT)' ${WEB_CONFIG} > file.tmp
-mv -f file.tmp ${WEB_CONFIG}
+RUN_SERVICE=false
 
 # ========================================================
 # Help
 function help(){
 	echo "Run the iVIT-I environment."
 	echo
-	echo "Syntax: scriptTemplate [-g|bcmqnh]"
+	echo "Syntax: scriptTemplate [-bqh]"
 	echo "options:"
 	echo "b		run in background"
-	echo "c		Run with command line interface mode"
-	echo "m		Print information with MAGIC."
 	echo "q		Qucik launch iVIT-I"
-	echo "n		Not to initialize samples."
 	echo "h		help."
 }
 
 # Get information from argument
-while getopts "g:bcmnqh:" option; do
+while getopts "bqh:" option; do
 	case $option in
 		b )
 			INTERATIVE=false ;;
-		c )
-			RUN_CLI=true ;;
-		m )
-			MAGIC=false ;;
 		q )
 			QUICK=true ;;
-		n )
-			INIT=false ;;
 		h )
 			help; exit ;;
 		\? )
 			help; exit ;;
-		* )
-			help; exit ;;
 	esac
 done
-
-# Setup Masgic package
-if [[ ${MAGIC} = true ]];then check_boxes; fi
 
 # ========================================================
 # Initialize Docker Command Option
 
 # [NAME]
-DOCKER_IMAGE="${DOCKER_USER}/${PROJECT}-${PLATFORM}:${VERSION}"
-DOCKER_NAME="${PROJECT}-${PLATFORM}-${VERSION}"
+DOCKER_IMAGE="${DOCKER_USER}/${PROJECT}-${PLATFORM}:${VERSION}-${TAG}"
+DOCKER_NAME="${PROJECT}-${PLATFORM}-${VERSION}-${TAG}"
 
 # [BASIC]
 WS="/workspace"
@@ -118,8 +66,6 @@ SET_NETS="--net=host"
 
 # [DEFINE COMMAND]
 RUN_CMD=""
-INIT_CMD="/${WS}/init_samples.sh"
-WEB_CMD="/${WS}/exec_web_api.sh"
 CLI_CMD="bash"
 
 # [DEFINE OPTION]
@@ -143,19 +89,13 @@ MOUNT_ACCELERATOR="--device /dev/dri --device-cgroup-rule='c 189:* rmw'"
 # ========================================================
 # [COMMAND] Checking Docker Command
 
-# If need initialize samples
-if [[ ${INIT} = true ]]; then 	
-	RUN_CMD=${INIT_CMD}
-	printd " * Need Initialize Samples" R
-fi
-
 # Checking Run CLI or Web
-if [[ ${RUN_CLI} = true ]]; then 
-	RUN_CMD="${RUN_CMD} ${CLI_CMD}"
-	printd " * Run Command Line Interface" R
-else 
+if [[ ${RUN_SERVICE} = true ]]; then 
 	RUN_CMD="${RUN_CMD} ${WEB_CMD}"
 	printd " * Run Web API Directly" R
+else 
+	RUN_CMD="${RUN_CMD} ${CLI_CMD}"
+	printd " * Run Command Line Interface" R
 fi
 
 # ========================================================
@@ -163,17 +103,17 @@ fi
 if [[ ! -z $(echo ${DISPLAY}) ]];then
 	SET_VISION="-v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=unix${DISPLAY}"
 	xhost + > /dev/null 2>&1
-	printd " * Detected monitor" R
+	printd " * Detected monitor"
 fi
 
 # ========================================================
 # [Basckground] Update background option
 if [[ ${INTERATIVE} = true ]]; then 
 	SET_CONTAINER_MODE="-it"
-	printd " * Run Interative Terminal Mode" R
+	printd " * Run Interative Terminal Mode"
 else
 	SET_CONTAINER_MODE="-dt"; 
-	printd " * Run Background Mode" R
+	printd " * Run Background Mode"
 fi
 
 # Conbine docker command line
@@ -200,17 +140,19 @@ if [[ ${QUICK} = false ]];then waitTime 5; fi
 # ========================================================
 # Execution
 
-printd "Launch Relative Container" BR
-docker compose -f ./docker/docker-compose.yml up -d 
+# Rund Docker Compose
+printd "Launch Relative Container" G
+docker compose --file ${DOCKER_COMPOSE} up -d 
 
 # Run docker command 
-printd "Launch iVIT-I Container" BR
+printd "Launch iVIT-I Container" G
+docker rm -f ${DOCKER_NAME} &> /dev/null
+
 bash -c "${DOCKER_CMD}"
 
-
 if [[ ${INTERATIVE} = true ]];then
-	printd "Close Relative Container" BR
-	docker compose -f ./docker/docker-compose.yml down
+	printd "Close Relative Container" R
+	docker compose -f ${DOCKER_COMPOSE} down
 fi
 
 exit 0;

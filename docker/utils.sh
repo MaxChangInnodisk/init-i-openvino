@@ -1,4 +1,9 @@
 #!/bin/bash
+# Copyright (c) 2023 Innodisk Corporation
+# 
+# This software is released under the MIT License.
+# https://opensource.org/licenses/MIT
+
 
 # Dear Developer
 # this script is link from `tools/utils.sh` to `docker/utils.sh`
@@ -118,4 +123,20 @@ function update_compose_env() {
 		echo "Replacing: ${pair[0]} with ${pair[1]}" 
 
 	done
+}
+
+function waitTime(){
+	TIME_FLAG=$1
+	while [ $TIME_FLAG -gt 0 ]; do
+		printf "\rWait ... (${TIME_FLAG}) "; sleep 1
+		(( TIME_FLAG-- ))
+	done
+	printf "\r                 \n"
+}
+
+function check_folder(){
+	TRG_PATH=$1
+	if [[ ! -d ${TRG_PATH} ]];then
+		mkdir ${TRG_PATH}	
+	fi
 }
