@@ -8,6 +8,8 @@
 # ========================================================
 # Basic Parameters
 DOCKER_USER="maxchanginnodisk"
+PROJECT="ivit-i"
+PLATFORM="intel"
 VERSION="v1.1"
 TAG="runtime"
 DOCKER_COMPOSE="./docker/docker-compose.yml"
@@ -142,7 +144,7 @@ if [[ ${QUICK} = false ]];then waitTime 5; fi
 
 # Rund Docker Compose
 printd "Launch Relative Container" G
-docker compose --file ${DOCKER_COMPOSE} up -d 
+docker compose --file ${DOCKER_COMPOSE} -p ${TAG} up -d 
 
 # Run docker command 
 printd "Launch iVIT-I Container" G
@@ -152,7 +154,7 @@ bash -c "${DOCKER_CMD}"
 
 if [[ ${INTERATIVE} = true ]];then
 	printd "Close Relative Container" R
-	docker compose -f ${DOCKER_COMPOSE} down
+	docker compose -f ${DOCKER_COMPOSE} -p ${TAG} down 
 fi
 
 exit 0;
