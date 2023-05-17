@@ -46,7 +46,7 @@ iVIT-I is an AI inference tool which could support multiple AI framework and thi
     * [iDevice Sample](samples/ivit_device_sample/README.md)
 
 # Python Library Documentation
-[iVIT-I-Intel API Docs](https://github.com/InnoIPA/ivit-i-intel.io)
+[iVIT-I-Intel API Docs](https://innoipa.github.io/ivit-i-intel/)
 
 # Compare with OpenVINO
 
