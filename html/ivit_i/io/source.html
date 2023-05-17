@@ -1,0 +1,686 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>ivit_i.io.source API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>ivit_i.io.source</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="ivit_i.io.source.check_format"><code class="name flex">
+<span>def <span class="ident">check_format</span></span>(<span>path, format)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.get_format"><code class="name flex">
+<span>def <span class="ident">get_format</span></span>(<span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.get_source_object"><code class="name flex">
+<span>def <span class="ident">get_source_object</span></span>(<span>input, camera_resolution=(1280, 720), fps=30)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Trying to instance the source object</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="ivit_i.io.source.DirImageWrapper"><code class="flex name class">
+<span>class <span class="ident">DirImageWrapper</span></span>
+<span>(</span><span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.ImageWrapper" href="#ivit_i.io.source.ImageWrapper">ImageWrapper</a></li>
+<li><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.DirImageWrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.DirImageWrapper.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.ImageOpenError"><code class="flex name class">
+<span>class <span class="ident">ImageOpenError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.ImageWrapper"><code class="flex name class">
+<span>class <span class="ident">ImageWrapper</span></span>
+<span>(</span><span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.DirImageWrapper" href="#ivit_i.io.source.DirImageWrapper">DirImageWrapper</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.ImageWrapper.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.ImageWrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.ImageWrapper.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.InvalidInput"><code class="flex name class">
+<span>class <span class="ident">InvalidInput</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.OpenError"><code class="flex name class">
+<span>class <span class="ident">OpenError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.RtspOpenError"><code class="flex name class">
+<span>class <span class="ident">RtspOpenError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.RtspWrapper"><code class="flex name class">
+<span>class <span class="ident">RtspWrapper</span></span>
+<span>(</span><span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.VideoWrapper" href="#ivit_i.io.source.VideoWrapper">VideoWrapper</a></li>
+<li><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.RtspWrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.RtspWrapper.reset_cap"><code class="name flex">
+<span>def <span class="ident">reset_cap</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.RtspWrapper.set_cap"><code class="name flex">
+<span>def <span class="ident">set_cap</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.Source"><code class="flex name class">
+<span>class <span class="ident">Source</span></span>
+<span>(</span><span>input: unicode, resolution: tuple = None, fps: int = None)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="ivit-source-object">Ivit Source Object</h2>
+<ol>
+<li>Keep update the newest frame</li>
+<li>Keep loop in background</li>
+<li>Auto reload source</li>
+</ol>
+<p>Args
+- input
+- the input data, supported image path, image folder,
+video path, rtsp uri and usb camera
+- resolution
+- A tuple value with width and height,
+you will get target size of the frame after setting up.
+The default value is None.
+- fps
+- This option is only for camera.
+- start
+- Start the source piepline after instance.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.Source.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.Source.get_shape"><code class="name flex">
+<span>def <span class="ident">get_shape</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return Tuple ( <code>height</code>, <code>width</code> )</p></div>
+</dd>
+<dt id="ivit_i.io.source.Source.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.Source.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return the OpenCV::Mat</p></div>
+</dd>
+<dt id="ivit_i.io.source.Source.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.Source.set_cam"><code class="name flex">
+<span>def <span class="ident">set_cam</span></span>(<span>self, width=1280, height=720, fps=30, mjpeg=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Setup camera resolution and reload source object</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="ivit_i.io.source.SourceV2"><code class="flex name class">
+<span>class <span class="ident">SourceV2</span></span>
+<span>(</span><span>input: unicode, resolution: tuple = None, fps: int = None, start: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><h2 id="ivit-source-object">Ivit Source Object</h2>
+<ol>
+<li>Keep update the newest frame</li>
+<li>Keep loop in background</li>
+<li>Auto reload source</li>
+</ol>
+<p>Args
+- input
+- the input data, supported image path, image folder,
+video path, rtsp uri and usb camera
+- resolution
+- A tuple value with width and height,
+you will get target size of the frame after setting up.
+The default value is None.
+- fps
+- This option is only for camera.
+- start
+- Start the source piepline after instance.</p></div>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.SourceV2.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.get_shape"><code class="name flex">
+<span>def <span class="ident">get_shape</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return Tuple ( <code>height</code>, <code>width</code> )</p></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.get_thread_id"><code class="name flex">
+<span>def <span class="ident">get_thread_id</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get threading.Thrad pid</p></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self) ‑> Tuple[bool, numpy.ndarray]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get source status and current frame</p></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Close Thread and release Capture Object</p></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.set_cam"><code class="name flex">
+<span>def <span class="ident">set_cam</span></span>(<span>self, width=1280, height=720, fps=30, mjpeg=True)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Setup camera resolution and reload source object</p></div>
+</dd>
+<dt id="ivit_i.io.source.SourceV2.start"><code class="name flex">
+<span>def <span class="ident">start</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Start the source thread</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="ivit_i.io.source.UsbCamOpenError"><code class="flex name class">
+<span>class <span class="ident">UsbCamOpenError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.UsbCameraWrapper"><code class="flex name class">
+<span>class <span class="ident">UsbCameraWrapper</span></span>
+<span>(</span><span>path, resolution, fps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.VideoWrapper" href="#ivit_i.io.source.VideoWrapper">VideoWrapper</a></li>
+<li><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.UsbCameraWrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.UsbCameraWrapper.reset_cap"><code class="name flex">
+<span>def <span class="ident">reset_cap</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.UsbCameraWrapper.set_cap"><code class="name flex">
+<span>def <span class="ident">set_cap</span></span>(<span>self, resolution, fps)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Setup camera
+- Args
+- resolution: A tuple with width and height, e.g.( <width>, <height> )
+- fps: The fps</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.VideoOpenError"><code class="flex name class">
+<span>class <span class="ident">VideoOpenError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper"><code class="flex name class">
+<span>class <span class="ident">VideoWrapper</span></span>
+<span>(</span><span>path)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.RtspWrapper" href="#ivit_i.io.source.RtspWrapper">RtspWrapper</a></li>
+<li><a title="ivit_i.io.source.UsbCameraWrapper" href="#ivit_i.io.source.UsbCameraWrapper">UsbCameraWrapper</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.io.source.VideoWrapper.get_delay_time"><code class="name flex">
+<span>def <span class="ident">get_delay_time</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper.reset_cap"><code class="name flex">
+<span>def <span class="ident">reset_cap</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.VideoWrapper.set_cap"><code class="name flex">
+<span>def <span class="ident">set_cap</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></b></code>:
+<ul class="hlist">
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="ivit_i.io.source.Wrapper"><code class="flex name class">
+<span>class <span class="ident">Wrapper</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Helper class that provides a standard way to create an ABC using
+inheritance.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="ivit_i.io.source.ImageWrapper" href="#ivit_i.io.source.ImageWrapper">ImageWrapper</a></li>
+<li><a title="ivit_i.io.source.VideoWrapper" href="#ivit_i.io.source.VideoWrapper">VideoWrapper</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="ivit_i.io.source.Wrapper.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.Wrapper.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get source type</p></div>
+</dd>
+<dt id="ivit_i.io.source.Wrapper.read"><code class="name flex">
+<span>def <span class="ident">read</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.io.source.Wrapper.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>...)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="ivit_i.io.source.ivitSourceError"><code class="flex name class">
+<span>class <span class="ident">ivitSourceError</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="ivit_i.io" href="index.html">ivit_i.io</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="ivit_i.io.source.check_format" href="#ivit_i.io.source.check_format">check_format</a></code></li>
+<li><code><a title="ivit_i.io.source.get_format" href="#ivit_i.io.source.get_format">get_format</a></code></li>
+<li><code><a title="ivit_i.io.source.get_source_object" href="#ivit_i.io.source.get_source_object">get_source_object</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="ivit_i.io.source.DirImageWrapper" href="#ivit_i.io.source.DirImageWrapper">DirImageWrapper</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.io.source.DirImageWrapper.read" href="#ivit_i.io.source.DirImageWrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.DirImageWrapper.release" href="#ivit_i.io.source.DirImageWrapper.release">release</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.ImageOpenError" href="#ivit_i.io.source.ImageOpenError">ImageOpenError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.ImageWrapper" href="#ivit_i.io.source.ImageWrapper">ImageWrapper</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.io.source.ImageWrapper.get_fps" href="#ivit_i.io.source.ImageWrapper.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.io.source.ImageWrapper.read" href="#ivit_i.io.source.ImageWrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.ImageWrapper.release" href="#ivit_i.io.source.ImageWrapper.release">release</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.InvalidInput" href="#ivit_i.io.source.InvalidInput">InvalidInput</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.OpenError" href="#ivit_i.io.source.OpenError">OpenError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.RtspOpenError" href="#ivit_i.io.source.RtspOpenError">RtspOpenError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.RtspWrapper" href="#ivit_i.io.source.RtspWrapper">RtspWrapper</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.io.source.RtspWrapper.read" href="#ivit_i.io.source.RtspWrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.RtspWrapper.reset_cap" href="#ivit_i.io.source.RtspWrapper.reset_cap">reset_cap</a></code></li>
+<li><code><a title="ivit_i.io.source.RtspWrapper.set_cap" href="#ivit_i.io.source.RtspWrapper.set_cap">set_cap</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.Source" href="#ivit_i.io.source.Source">Source</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ivit_i.io.source.Source.get_fps" href="#ivit_i.io.source.Source.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.io.source.Source.get_shape" href="#ivit_i.io.source.Source.get_shape">get_shape</a></code></li>
+<li><code><a title="ivit_i.io.source.Source.get_type" href="#ivit_i.io.source.Source.get_type">get_type</a></code></li>
+<li><code><a title="ivit_i.io.source.Source.read" href="#ivit_i.io.source.Source.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.Source.release" href="#ivit_i.io.source.Source.release">release</a></code></li>
+<li><code><a title="ivit_i.io.source.Source.set_cam" href="#ivit_i.io.source.Source.set_cam">set_cam</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.SourceV2" href="#ivit_i.io.source.SourceV2">SourceV2</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ivit_i.io.source.SourceV2.get_fps" href="#ivit_i.io.source.SourceV2.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.get_shape" href="#ivit_i.io.source.SourceV2.get_shape">get_shape</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.get_thread_id" href="#ivit_i.io.source.SourceV2.get_thread_id">get_thread_id</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.get_type" href="#ivit_i.io.source.SourceV2.get_type">get_type</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.read" href="#ivit_i.io.source.SourceV2.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.release" href="#ivit_i.io.source.SourceV2.release">release</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.set_cam" href="#ivit_i.io.source.SourceV2.set_cam">set_cam</a></code></li>
+<li><code><a title="ivit_i.io.source.SourceV2.start" href="#ivit_i.io.source.SourceV2.start">start</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.UsbCamOpenError" href="#ivit_i.io.source.UsbCamOpenError">UsbCamOpenError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.UsbCameraWrapper" href="#ivit_i.io.source.UsbCameraWrapper">UsbCameraWrapper</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.io.source.UsbCameraWrapper.read" href="#ivit_i.io.source.UsbCameraWrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.UsbCameraWrapper.reset_cap" href="#ivit_i.io.source.UsbCameraWrapper.reset_cap">reset_cap</a></code></li>
+<li><code><a title="ivit_i.io.source.UsbCameraWrapper.set_cap" href="#ivit_i.io.source.UsbCameraWrapper.set_cap">set_cap</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.VideoOpenError" href="#ivit_i.io.source.VideoOpenError">VideoOpenError</a></code></h4>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.VideoWrapper" href="#ivit_i.io.source.VideoWrapper">VideoWrapper</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ivit_i.io.source.VideoWrapper.get_delay_time" href="#ivit_i.io.source.VideoWrapper.get_delay_time">get_delay_time</a></code></li>
+<li><code><a title="ivit_i.io.source.VideoWrapper.get_fps" href="#ivit_i.io.source.VideoWrapper.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.io.source.VideoWrapper.read" href="#ivit_i.io.source.VideoWrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.VideoWrapper.release" href="#ivit_i.io.source.VideoWrapper.release">release</a></code></li>
+<li><code><a title="ivit_i.io.source.VideoWrapper.reset_cap" href="#ivit_i.io.source.VideoWrapper.reset_cap">reset_cap</a></code></li>
+<li><code><a title="ivit_i.io.source.VideoWrapper.set_cap" href="#ivit_i.io.source.VideoWrapper.set_cap">set_cap</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.Wrapper" href="#ivit_i.io.source.Wrapper">Wrapper</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.io.source.Wrapper.get_fps" href="#ivit_i.io.source.Wrapper.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.io.source.Wrapper.get_type" href="#ivit_i.io.source.Wrapper.get_type">get_type</a></code></li>
+<li><code><a title="ivit_i.io.source.Wrapper.read" href="#ivit_i.io.source.Wrapper.read">read</a></code></li>
+<li><code><a title="ivit_i.io.source.Wrapper.release" href="#ivit_i.io.source.Wrapper.release">release</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.io.source.ivitSourceError" href="#ivit_i.io.source.ivitSourceError">ivitSourceError</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

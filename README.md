@@ -45,6 +45,9 @@ iVIT-I is an AI inference tool which could support multiple AI framework and thi
     * [Object Detection Sample](samples/object_detection_sample/README.md)
     * [iDevice Sample](samples/ivit_device_sample/README.md)
 
+# Python Library Documentation
+[ivit_i](./html/ivit_i)
+
 # Compare with OpenVINO
 
 * iVIT ( r1.1 )
