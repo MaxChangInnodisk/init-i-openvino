@@ -25,14 +25,13 @@ __pycahe__
 **/*/*_colormap.txt
 *.log
 **/*/*.log
-temp
-data
+temp/*
+data/*
+model/*
 # --------------------------------------
 # Sample Tasks
 # ---------------------------------------
 !docs
 !docs/images/*
 
-./docker/inno_verify
-
-model/
+!**/.gitkeep
