@@ -4,16 +4,6 @@
 # This software is released under the MIT License.
 # https://opensource.org/licenses/MIT
 
-
-# ========================================================
-# Basic Parameters
-DOCKER_USER="maxchanginnodisk"
-PROJECT="ivit-i"
-PLATFORM="intel"
-VERSION="v1.1"
-TAG="runtime"
-DOCKER_COMPOSE="./docker/docker-compose.yml"
-
 # ========================================================
 # Store the utilities
 FILE=$(realpath "$0")
@@ -21,19 +11,36 @@ ROOT=$(dirname "${FILE}")
 source "${ROOT}/utils.sh"
 
 # ========================================================
-# Set the default value of the getopts variable 
-INTERATIVE=true
-QUICK=false
-RUN_SERVICE=false
+# Basic Parameters
+CONF="ivit-i.json"
+DOCKER_USER="maxchanginnodisk"
+DOCKER_COMPOSE="./docker/docker-compose.yml"
 
 # ========================================================
+# Check configuration is exit
+check_config ${CONF}
+
+# ========================================================
+# Parse information from configuration
+check_jq
+PROJECT=$(cat ${CONF} | jq -r '.PROJECT')
+VERSION=$(cat ${CONF} | jq -r '.VERSION')
+PLATFORM=$(cat ${CONF} | jq -r '.PLATFORM')
+TAG=$(cat "${CONF}" | jq -r '.TAG')
+
+# ========================================================
+# Get Option
+
+INTERATIVE=true
+QUICK=false
+
 # Help
 function help(){
 	echo "Run the iVIT-I environment."
 	echo
 	echo "Syntax: scriptTemplate [-bqh]"
 	echo "options:"
-	echo "b		run in background"
+	echo "b		Run in background"
 	echo "q		Qucik launch iVIT-I"
 	echo "h		help."
 }
@@ -49,11 +56,13 @@ while getopts "bqh:" option; do
 			help; exit ;;
 		\? )
 			help; exit ;;
+		* )
+			help; exit ;;
 	esac
 done
 
 # ========================================================
-# Initialize Docker Command Option
+# Initialize Docker Command Variables
 
 # [NAME]
 DOCKER_IMAGE="${DOCKER_USER}/${PROJECT}-${PLATFORM}:${VERSION}-${TAG}"
@@ -67,57 +76,38 @@ SET_TIME="-v /etc/localtime:/etc/localtime:ro"
 SET_NETS="--net=host"
 
 # [DEFINE COMMAND]
-RUN_CMD=""
-CLI_CMD="bash"
+RUN_CMD="bash"
 
-# [DEFINE OPTION]
-SET_CONTAINER_MODE=""
+# [PLACEHOLDER]
+SET_CONTAINER_MODE="-it"
 SET_VISION=""
-SET_PRIVILEG=""
-SET_MEM=""
-MOUNT_ACCELERATOR=""
+SET_PRIVILEG="--privileged"
+MOUNT_CAM="-v /dev:/dev"
+SET_MEM="--ipc=host"
 
-##############################################################################
-#																			 #
-# !!!  Important, Please modify [ACCELERATOR] to fit your platform need  !!! #
-#																			 #
-##############################################################################
+# ========================================================
 
 # [ACCELERATOR]
-SET_PRIVILEG="--privileged -v /dev:/dev"
-SET_MEM="--ipc=host"
 MOUNT_ACCELERATOR="--device /dev/dri --device-cgroup-rule='c 189:* rmw'"
 
-# ========================================================
-# [COMMAND] Checking Docker Command
-
-# Checking Run CLI or Web
-if [[ ${RUN_SERVICE} = true ]]; then 
-	RUN_CMD="${RUN_CMD} ${WEB_CMD}"
-	printd " * Run Web API Directly" R
-else 
-	RUN_CMD="${RUN_CMD} ${CLI_CMD}"
-	printd " * Run Command Line Interface" R
-fi
-
-# ========================================================
 # [VISION] Set up Vision option for docker if need
 if [[ ! -z $(echo ${DISPLAY}) ]];then
 	SET_VISION="-v /tmp/.x11-unix:/tmp/.x11-unix:rw -e DISPLAY=unix${DISPLAY}"
 	xhost + > /dev/null 2>&1
 	printd " * Detected monitor"
+else
+	printd " * Can not detect monitor"
 fi
 
-# ========================================================
 # [Basckground] Update background option
 if [[ ${INTERATIVE} = true ]]; then 
-	SET_CONTAINER_MODE="-it"
 	printd " * Run Interative Terminal Mode"
 else
 	SET_CONTAINER_MODE="-dt"; 
 	printd " * Run Background Mode"
 fi
 
+# ========================================================
 # Conbine docker command line
 DOCKER_CMD="docker run \
 --rm \
@@ -125,18 +115,17 @@ ${SET_CONTAINER_MODE} \
 ${SET_NAME} \
 ${SET_PRIVILEG} \
 ${MOUNT_ACCELERATOR} \
+${MOUNT_CAM} \
 ${SET_NETS} \
 ${SET_MEM} \
 ${SET_TIME} \
 ${MOUNT_WS} \
 ${SET_VISION} \
--e \"IVIT_DEBUG=True\" \
 ${DOCKER_IMAGE} ${RUN_CMD}"
 
 # ========================================================
 # Logout and wait
-echo -ne "\n${DOCKER_CMD}\n"
-echo ""
+echo -ne "\n${DOCKER_CMD}\n\n"
 if [[ ${QUICK} = false ]];then waitTime 5; fi
 
 # ========================================================
@@ -154,7 +143,7 @@ bash -c "${DOCKER_CMD}"
 
 if [[ ${INTERATIVE} = true ]];then
 	printd "Close Relative Container" R
-	docker compose -f ${DOCKER_COMPOSE} -p ${TAG} down 
+	docker compose -f ${DOCKER_COMPOSE} -p ${TAG} down
 fi
 
 exit 0;
