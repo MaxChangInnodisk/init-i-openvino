@@ -32,6 +32,4 @@ model/*
 # Sample Tasks
 # ---------------------------------------
 !docs
-!docs/images/*
-
 !**/.gitkeep
