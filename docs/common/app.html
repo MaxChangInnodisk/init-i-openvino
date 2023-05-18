@@ -113,7 +113,7 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 <h3>Methods</h3>
 <dl>
 <dt id="ivit_i.common.app.iAPP_HANDLER.add_new_app"><code class="name flex">
-<span>def <span class="ident">add_new_app</span></span>(<span>self, app_key: unicode, app_obj: <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a>)</span>
+<span>def <span class="ident">add_new_app</span></span>(<span>self, app_key: str, app_obj: <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a new application</p>
@@ -132,7 +132,7 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 <div class="desc"><p>Get all application</p></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.get_app"><code class="name flex">
-<span>def <span class="ident">get_app</span></span>(<span>self, app_key: unicode) ‑> <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></span>
+<span>def <span class="ident">get_app</span></span>(<span>self, app_key: str) ‑> <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get application via key ( name )</p>
@@ -184,7 +184,7 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 </ul></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.register_from_folder"><code class="name flex">
-<span>def <span class="ident">register_from_folder</span></span>(<span>self, app_folder: unicode) ‑> dict</span>
+<span>def <span class="ident">register_from_folder</span></span>(<span>self, app_folder: str) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Searching all application in custom folder,

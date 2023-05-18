@@ -58,7 +58,20 @@ Untimed returns the value of the decorated function; timed out returns None</p>
 <div class="desc"><p>A class that represents a thread of control.</p>
 <p>This class can be safely subclassed in a limited fashion. There are two ways
 to specify the activity: by passing a callable object to the constructor, or
-by overriding the run() method in a subclass.</p></div>
+by overriding the run() method in a subclass.</p>
+<p>This constructor should always be called with keyword arguments. Arguments are:</p>
+<p><em>group</em> should be None; reserved for future extension when a ThreadGroup
+class is implemented.</p>
+<p><em>target</em> is the callable object to be invoked by the run()
+method. Defaults to None, meaning nothing is called.</p>
+<p><em>name</em> is the thread name. By default, a unique name is constructed of
+the form "Thread-N" where N is a small decimal number.</p>
+<p><em>args</em> is the argument tuple for the target invocation. Defaults to ().</p>
+<p><em>kwargs</em> is a dictionary of keyword arguments for the target
+invocation. Defaults to {}.</p>
+<p>If a subclass overrides the constructor, it must make sure to invoke
+the base class constructor (Thread.<strong>init</strong>()) before doing anything
+else to the thread.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>threading.Thread</li>
@@ -75,7 +88,11 @@ by overriding the run() method in a subclass.</p></div>
 <span>def <span class="ident">run</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Method representing the thread's activity.</p>
+<p>You may override this method in a subclass. The standard run() method
+invokes the callable object passed to the object's constructor as the
+target argument, if any, with sequential and keyword arguments taken
+from the args and kwargs arguments, respectively.</p></div>
 </dd>
 </dl>
 </dd>
