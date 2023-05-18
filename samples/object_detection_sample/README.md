@@ -60,11 +60,12 @@ iVIT Object Detection Sample, this sample demonstrates how to do inference of im
     ${EXEC_PY} -m ${MODEL} -l ${LABEL} -i ${INPUT} -at ${ARCHT} -d GPU
 
 ## Format of output 
-*  The format of result after model predict like below.
+The format of result after model predict like below.
 
 | Type | Description |
 | --- | --- |
-|object|Object's properties : xmin ,ymin ,xmax ,ymax ,score ,id ,label |
+|list|[ detection1 ,detection2 ,detection3 ,...]|
+
 * Example:
     ```bash
         detection        # (type object)                   
@@ -73,19 +74,19 @@ iVIT Object Detection Sample, this sample demonstrates how to do inference of im
         detection.xmin   # (type int)           value : 1        
         detection.ymin   # (type int)           value : 78       
         detection.xmax   # (type int)           value : 438      
+        detection.ymax   # (type int)           value : 50 
     ```
 
 # Advance
-
-* Custom Model with custom anchors
+Custom Model with custom anchors
     
-    ```bash
-    MODEL=${ROOT}/model/safety_helmet/safety_helmet.xml
-    LABEL=${ROOT}/model/safety_helmet/classes.txt
-    ARCHT=yolov4
-    INPUT=/dev/video0
-    ANCHOR="20.0 24.0 46.0 18.0 31.0 38.0 45.0 54.0 86.0 38.0 41.0 106.0 67.0 77.0 111.0 110.0 170.0 196.0"
+```bash
+MODEL=${ROOT}/model/safety_helmet/safety_helmet.xml
+LABEL=${ROOT}/model/safety_helmet/classes.txt
+ARCHT=yolov4
+INPUT=/dev/video0
+ANCHOR="20.0 24.0 46.0 18.0 31.0 38.0 45.0 54.0 86.0 38.0 41.0 106.0 67.0 77.0 111.0 110.0 170.0 196.0"
 
-    ${EXEC_PY} -m ${MODEL} -l ${LABEL} -i ${INPUT} -at ${ARCHT} --anchors ${ANCHOR} 
+${EXEC_PY} -m ${MODEL} -l ${LABEL} -i ${INPUT} -at ${ARCHT} --anchors ${ANCHOR} 
 
-    ```
+```
