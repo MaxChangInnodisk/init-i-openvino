@@ -31,10 +31,24 @@
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="ivit_i.common.logger.ivit_logger"><code class="name flex">
-<span>def <span class="ident">ivit_logger</span></span>(<span>log_name: Optional[str] = None, write_mode: str = 'a', level: str = 'debug', clear_log: bool = False) ‑> logging.Logger</span>
+<span>def <span class="ident">ivit_logger</span></span>(<span>log_name: Optional[str] = None, write_mode: Literal['w', 'a'] = 'a', level: Literal['debug', 'info', 'warning', 'error'] = 'debug', clear_log: bool = False) ‑> logging.Logger</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Initialize iVIT-I Logger</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>log_name</code></strong> :&ensp;<code>Union[str, None]</code>, optional</dt>
+<dd>it will generate a log file if define it. Defaults to None.</dd>
+<dt>write_mode (Literal[&#39;w&#39;, &#39;a&#39;], optional): write mode. Defaults to 'a'.</dt>
+<dt>level (Literal[&#39;debug&#39;, &#39;info&#39;, &#39;warning&#39;, &#39;error&#39;], optional): logger level. Defaults to 'debug'.</dt>
+<dt><strong><code>clear_log</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>if need clear log file. Defaults to False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>logging.Logger</code></dt>
+<dd>return logger object</dd>
+</dl></div>
 </dd>
 </dl>
 </section>

@@ -32,226 +32,92 @@
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="ivit_i.io.display.CVWrapper"><code class="flex name class">
-<span>class <span class="ident">CVWrapper</span></span>
-<span>(</span><span>name='iVIT Windows', width=None, height=None)</span>
-</code></dt>
-<dd>
-<div class="desc"><h2 id="ivit-opencv-windows-displayer">Ivit Opencv Windows Displayer</h2>
-<ul>
-<li>Args<ul>
-<li>name<ul>
-<li>opencv windows name</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>Setup OpenCV Windows Name and select mode
-- name: the window name</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="ivit_i.io.display.Wrapper" href="#ivit_i.io.display.Wrapper">Wrapper</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="ivit_i.io.display.CVWrapper.default_mode"><code class="name flex">
-<span>def <span class="ident">default_mode</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.fullscreen_mode"><code class="name flex">
-<span>def <span class="ident">fullscreen_mode</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.fullscreen_toggle"><code class="name flex">
-<span>def <span class="ident">fullscreen_toggle</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.get_name"><code class="name flex">
-<span>def <span class="ident">get_name</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.key_close"><code class="name flex">
-<span>def <span class="ident">key_close</span></span>(<span>self, key, keys: list = [])</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Define the key could close opencv window</p></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.key_fullscreen"><code class="name flex">
-<span>def <span class="ident">key_fullscreen</span></span>(<span>self, key, keys: list = [])</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Define the key could toggle opencv window to fullscreen and toggle back</p></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.release"><code class="name flex">
-<span>def <span class="ident">release</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Destroy target opencv window</p></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.resize_window"><code class="name flex">
-<span>def <span class="ident">resize_window</span></span>(<span>self, width, height)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.CVWrapper.show"><code class="name flex">
-<span>def <span class="ident">show</span></span>(<span>self, frame, wait_time: int = 1)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Show image via OpenCV Window
-- Argument
-- <code>wait_time</code>: the waitting time to detect key
-- Return
-- <code>cv2.waitKey(wait_time)</code></p></div>
-</dd>
-</dl>
-</dd>
 <dt id="ivit_i.io.display.Displayer"><code class="flex name class">
 <span>class <span class="ident">Displayer</span></span>
-<span>(</span><span>cv=False, rtsp=False, height=None, width=None, fps=None, name: str = 'test', server: str = 'rtsp://127.0.0.1:8554', platform: str = 'intel')</span>
+<span>(</span><span>cv: bool = False, rtsp: bool = False, height: Optional[int] = None, width: Optional[int] = None, fps: Optional[int] = None, name: str = 'test', server: str = 'rtsp://127.0.0.1:8554', platform: str = 'intel')</span>
 </code></dt>
 <dd>
-<div class="desc"><ol>
-<li>Instance Display object, select CV, RTSP or DP ( opt )</li>
-</ol></div>
+<div class="desc"><p>iVIT Displayer
+a easy way to handle display,
+you can display opencv window and send rtsp at the same time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>cv</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>need display cv window. Defaults to False.</dd>
+<dt><strong><code>rtsp</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>need send rtsp stream. Defaults to False.</dd>
+<dt><strong><code>height</code></strong> :&ensp;<code>Union[int, None]</code>, optional</dt>
+<dd>for rtsp user, setup output stream height. Defaults to None.</dd>
+<dt><strong><code>width</code></strong> :&ensp;<code>Union[int, None]</code>, optional</dt>
+<dd>for rtsp user, setup output stream width. Defaults to None.</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>Union[int, None]</code>, optional</dt>
+<dd>for rtsp user, setup output stream fps. Defaults to None.</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>setup window name or rtsp name. Defaults to "test".</dd>
+<dt><strong><code>server</code></strong> :&ensp;<code>_type_</code>, optional</dt>
+<dd>setup simple-rtsp-server ip and address. Defaults to "rtsp://127.0.0.1:8554".</dd>
+<dt><strong><code>platform</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>setup platform to get optimize gstreamer pipeline for rtsp. Defaults to 'intel'.</dd>
+</dl></div>
 <h3>Methods</h3>
 <dl>
 <dt id="ivit_i.io.display.Displayer.get_displayer"><code class="name flex">
-<span>def <span class="ident">get_displayer</span></span>(<span>self, key)</span>
+<span>def <span class="ident">get_displayer</span></span>(<span>self, key: Literal['CV', 'RTSP']) ‑> Optional[ivit_i.io.display.Wrapper]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get displayer by name</p></div>
+<div class="desc"><p>Get displayer by name</p>
+<h2 id="args">Args</h2>
+<p>key (Literal[&quot;CV&quot;, &quot;RTSP&quot;]): <em>description</em></p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Union[Wrapper, None]</code></dt>
+<dd>Return Target Displayer</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.io.display.Displayer.get_press_key"><code class="name flex">
-<span>def <span class="ident">get_press_key</span></span>(<span>self)</span>
+<span>def <span class="ident">get_press_key</span></span>(<span>self) ‑> int</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get displayer result by name
-1. CV Displayer: return press key</p></div>
+<div class="desc"><p>Get the key press ( ASCII Number ) from CV Displayer</p></div>
 </dd>
 <dt id="ivit_i.io.display.Displayer.get_rtsp_url"><code class="name flex">
-<span>def <span class="ident">get_rtsp_url</span></span>(<span>self)</span>
+<span>def <span class="ident">get_rtsp_url</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get RTSP URL</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>KeyError</code></dt>
+<dd>not set up rtsp displayer</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>the rtsp url</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.io.display.Displayer.get_support_type"><code class="name flex">
-<span>def <span class="ident">get_support_type</span></span>(<span>self)</span>
+<span>def <span class="ident">get_support_type</span></span>(<span>self) ‑> List[str]</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Return support displayer type</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[ str ]</code></dt>
+<dd>a list include support type name</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.io.display.Displayer.release"><code class="name flex">
-<span>def <span class="ident">release</span></span>(<span>self)</span>
+<span>def <span class="ident">release</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Release all displayer</p></div>
 </dd>
 <dt id="ivit_i.io.display.Displayer.show"><code class="name flex">
-<span>def <span class="ident">show</span></span>(<span>self, frame)</span>
+<span>def <span class="ident">show</span></span>(<span>self, frame: numpy.ndarray) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Display image via each displayer with async way</p></div>
-</dd>
-</dl>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper"><code class="flex name class">
-<span>class <span class="ident">RtspWrapper</span></span>
-<span>(</span><span>name: str, server: str, platform: str, width: int, height: int, fps: Union[int, float] = 30.0)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="ivit_i.io.display.Wrapper" href="#ivit_i.io.display.Wrapper">Wrapper</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="ivit_i.io.display.RtspWrapper.cpu_pipeline"><code class="name flex">
-<span>def <span class="ident">cpu_pipeline</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper.get_pipeline"><code class="name flex">
-<span>def <span class="ident">get_pipeline</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper.get_platform"><code class="name flex">
-<span>def <span class="ident">get_platform</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper.get_rtsp_url"><code class="name flex">
-<span>def <span class="ident">get_rtsp_url</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper.get_server_address"><code class="name flex">
-<span>def <span class="ident">get_server_address</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.io.display.RtspWrapper.xlnx_pipeline"><code class="name flex">
-<span>def <span class="ident">xlnx_pipeline</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="ivit_i.io.display.Wrapper" href="#ivit_i.io.display.Wrapper">Wrapper</a></b></code>:
-<ul class="hlist">
-<li><code><a title="ivit_i.io.display.Wrapper.release" href="#ivit_i.io.display.Wrapper.release">release</a></code></li>
-<li><code><a title="ivit_i.io.display.Wrapper.show" href="#ivit_i.io.display.Wrapper.show">show</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="ivit_i.io.display.Wrapper"><code class="flex name class">
-<span>class <span class="ident">Wrapper</span></span>
-</code></dt>
-<dd>
-<div class="desc"><p>Helper class that provides a standard way to create an ABC using
-inheritance.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>abc.ABC</li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="ivit_i.io.display.CVWrapper" href="#ivit_i.io.display.CVWrapper">CVWrapper</a></li>
-<li><a title="ivit_i.io.display.RtspWrapper" href="#ivit_i.io.display.RtspWrapper">RtspWrapper</a></li>
-</ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="ivit_i.io.display.Wrapper.release"><code class="name">var <span class="ident">release</span></code></dt>
-<dd>
-<div class="desc"><p>A decorator indicating abstract classmethods.</p>
-<p>Deprecated, use 'classmethod' with 'abstractmethod' instead.</p></div>
-</dd>
-<dt id="ivit_i.io.display.Wrapper.show"><code class="name">var <span class="ident">show</span></code></dt>
-<dd>
-<div class="desc"><p>A decorator indicating abstract classmethods.</p>
-<p>Deprecated, use 'classmethod' with 'abstractmethod' instead.</p></div>
 </dd>
 </dl>
 </dd>
@@ -272,20 +138,6 @@ inheritance.</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="ivit_i.io.display.CVWrapper" href="#ivit_i.io.display.CVWrapper">CVWrapper</a></code></h4>
-<ul class="two-column">
-<li><code><a title="ivit_i.io.display.CVWrapper.default_mode" href="#ivit_i.io.display.CVWrapper.default_mode">default_mode</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.fullscreen_mode" href="#ivit_i.io.display.CVWrapper.fullscreen_mode">fullscreen_mode</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.fullscreen_toggle" href="#ivit_i.io.display.CVWrapper.fullscreen_toggle">fullscreen_toggle</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.get_name" href="#ivit_i.io.display.CVWrapper.get_name">get_name</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.key_close" href="#ivit_i.io.display.CVWrapper.key_close">key_close</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.key_fullscreen" href="#ivit_i.io.display.CVWrapper.key_fullscreen">key_fullscreen</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.release" href="#ivit_i.io.display.CVWrapper.release">release</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.resize_window" href="#ivit_i.io.display.CVWrapper.resize_window">resize_window</a></code></li>
-<li><code><a title="ivit_i.io.display.CVWrapper.show" href="#ivit_i.io.display.CVWrapper.show">show</a></code></li>
-</ul>
-</li>
-<li>
 <h4><code><a title="ivit_i.io.display.Displayer" href="#ivit_i.io.display.Displayer">Displayer</a></code></h4>
 <ul class="two-column">
 <li><code><a title="ivit_i.io.display.Displayer.get_displayer" href="#ivit_i.io.display.Displayer.get_displayer">get_displayer</a></code></li>
@@ -294,24 +146,6 @@ inheritance.</p></div>
 <li><code><a title="ivit_i.io.display.Displayer.get_support_type" href="#ivit_i.io.display.Displayer.get_support_type">get_support_type</a></code></li>
 <li><code><a title="ivit_i.io.display.Displayer.release" href="#ivit_i.io.display.Displayer.release">release</a></code></li>
 <li><code><a title="ivit_i.io.display.Displayer.show" href="#ivit_i.io.display.Displayer.show">show</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="ivit_i.io.display.RtspWrapper" href="#ivit_i.io.display.RtspWrapper">RtspWrapper</a></code></h4>
-<ul class="two-column">
-<li><code><a title="ivit_i.io.display.RtspWrapper.cpu_pipeline" href="#ivit_i.io.display.RtspWrapper.cpu_pipeline">cpu_pipeline</a></code></li>
-<li><code><a title="ivit_i.io.display.RtspWrapper.get_pipeline" href="#ivit_i.io.display.RtspWrapper.get_pipeline">get_pipeline</a></code></li>
-<li><code><a title="ivit_i.io.display.RtspWrapper.get_platform" href="#ivit_i.io.display.RtspWrapper.get_platform">get_platform</a></code></li>
-<li><code><a title="ivit_i.io.display.RtspWrapper.get_rtsp_url" href="#ivit_i.io.display.RtspWrapper.get_rtsp_url">get_rtsp_url</a></code></li>
-<li><code><a title="ivit_i.io.display.RtspWrapper.get_server_address" href="#ivit_i.io.display.RtspWrapper.get_server_address">get_server_address</a></code></li>
-<li><code><a title="ivit_i.io.display.RtspWrapper.xlnx_pipeline" href="#ivit_i.io.display.RtspWrapper.xlnx_pipeline">xlnx_pipeline</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="ivit_i.io.display.Wrapper" href="#ivit_i.io.display.Wrapper">Wrapper</a></code></h4>
-<ul class="">
-<li><code><a title="ivit_i.io.display.Wrapper.release" href="#ivit_i.io.display.Wrapper.release">release</a></code></li>
-<li><code><a title="ivit_i.io.display.Wrapper.show" href="#ivit_i.io.display.Wrapper.show">show</a></code></li>
 </ul>
 </li>
 </ul>

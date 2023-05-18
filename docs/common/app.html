@@ -32,88 +32,58 @@
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="ivit_i.common.app.iAPP"><code class="flex name class">
-<span>class <span class="ident">iAPP</span></span>
-</code></dt>
-<dd>
-<div class="desc"><p>iAPP is a wrapper for iAPP_CLS, _OBJ, _SEG &hellip;</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>abc.ABC</li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="ivit_i.common.app.iAPP_CLS" href="#ivit_i.common.app.iAPP_CLS">iAPP_CLS</a></li>
-<li><a title="ivit_i.common.app.iAPP_OBJ" href="#ivit_i.common.app.iAPP_OBJ">iAPP_OBJ</a></li>
-<li><a title="ivit_i.common.app.iAPP_SEG" href="#ivit_i.common.app.iAPP_SEG">iAPP_SEG</a></li>
-</ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="ivit_i.common.app.iAPP.get_name"><code class="name flex">
-<span>def <span class="ident">get_name</span></span>(<span>)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Get iAPP Name</p></div>
-</dd>
-</dl>
-<h3>Methods</h3>
-<dl>
-<dt id="ivit_i.common.app.iAPP.get_type"><code class="name flex">
-<span>def <span class="ident">get_type</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Get iAPP Type</p></div>
-</dd>
-<dt id="ivit_i.common.app.iAPP.verify_params"><code class="name flex">
-<span>def <span class="ident">verify_params</span></span>(<span>self, params: Optional[dict]) ‑> bool</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Verify the parameters is available or not.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>params</code></strong> :&ensp;<code>Union[dict, None]</code></dt>
-<dd>params of custom application</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>bool</code></dt>
-<dd>is parameters is available or not</dd>
-</dl></div>
-</dd>
-</dl>
-</dd>
 <dt id="ivit_i.common.app.iAPP_CLS"><code class="flex name class">
 <span>class <span class="ident">iAPP_CLS</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>iVIT-I Application for Classification</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></b></code>:
-<ul class="hlist">
-<li><code><a title="ivit_i.common.app.iAPP.get_name" href="#ivit_i.common.app.iAPP.get_name">get_name</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.get_type" href="#ivit_i.common.app.iAPP.get_type">get_type</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.verify_params" href="#ivit_i.common.app.iAPP.verify_params">verify_params</a></code></li>
+<div class="desc"><p><code>iVIT-I</code> Application Object for <code>Classification</code> Model,
+if you want to use <code>iVIT-I-{platform}-Web-Api-Fast</code> and run your own custom application
+then you have to inherit this object and follow the rule.</p>
+<h2 id="usage">Usage</h2>
+<ol>
+<li>Initialize Application (*):<ul>
+<li>you must re-define <code>__init__</code> function for your own situation.</li>
 </ul>
 </li>
+<li>Run Application (*):<ul>
+<li>you must re-define <code>__call__</code> function for your own situation.</li>
 </ul>
+</li>
+<li>Check Parameters (Optional):<ul>
+<li>we will use <code>verify_params(self, params: dict) -&gt; bool</code> to check the parameters is available or not,
+so you can re-define it for checking parameters in <code>iVIT-I-{platform}-Web-Api-Fast</code>.</li>
+</ul>
+</li>
+</ol></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ivit_i.common.app.iAPP</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="ivit_i.common.app.iAPP_CLS.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Retrun <code>CLS</code></p></div>
+</dd>
+</dl>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER"><code class="flex name class">
 <span>class <span class="ident">iAPP_HANDLER</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>iAPP_HANDLER can handle each iAPP_<TYPE> application,
-you can use <code>register</code> or <code>register_from_folder</code> to register all application</p>
-<p>Initialize iAPP Handler</p></div>
+<div class="desc"><p><code><a title="ivit_i.common.app.iAPP_HANDLER" href="#ivit_i.common.app.iAPP_HANDLER">iAPP_HANDLER</a></code> can handle each <code>iAPP_{TYPE}</code> application, </p>
+<h2 id="usage">Usage</h2>
+<ol>
+<li>Using <code>register</code> to reigster one application or using <code>register_from_folder</code> to register all application.</li>
+<li>Using <code>get_app</code> to get the target application via key name.</li>
+</ol></div>
 <h3>Methods</h3>
 <dl>
 <dt id="ivit_i.common.app.iAPP_HANDLER.add_new_app"><code class="name flex">
-<span>def <span class="ident">add_new_app</span></span>(<span>self, app_key: str, app_obj: <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a>) ‑> None</span>
+<span>def <span class="ident">add_new_app</span></span>(<span>self, app_key: str, app_obj: ivit_i.common.app.iAPP) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Add a new application</p>
@@ -121,18 +91,18 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 <dl>
 <dt><strong><code>app_key</code></strong> :&ensp;<code>str</code></dt>
 <dd>the application name ( key )</dd>
-<dt><strong><code>app_obj</code></strong> :&ensp;<code><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></code></dt>
+<dt><strong><code>app_obj</code></strong> :&ensp;<code>iAPP</code></dt>
 <dd>the application object ( address )</dd>
 </dl></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.get_all_apps"><code class="name flex">
-<span>def <span class="ident">get_all_apps</span></span>(<span>self)</span>
+<span>def <span class="ident">get_all_apps</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get all application</p></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.get_app"><code class="name flex">
-<span>def <span class="ident">get_app</span></span>(<span>self, app_key: str) ‑> <a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></span>
+<span>def <span class="ident">get_app</span></span>(<span>self, app_key: str) ‑> ivit_i.common.app.iAPP</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get application via key ( name )</p>
@@ -148,12 +118,12 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></code></dt>
+<dt><code>iAPP</code></dt>
 <dd>iAPP Object</dd>
 </dl></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.get_sort_apps"><code class="name flex">
-<span>def <span class="ident">get_sort_apps</span></span>(<span>self)</span>
+<span>def <span class="ident">get_sort_apps</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get all application which sort by type</p></div>
@@ -165,29 +135,34 @@ you can use <code>register</code> or <code>register_from_folder</code> to regist
 <div class="desc"><p>Get the support type of the ivitAppHandler</p></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.get_type_app"><code class="name flex">
-<span>def <span class="ident">get_type_app</span></span>(<span>self, app_type) ‑> list</span>
+<span>def <span class="ident">get_type_app</span></span>(<span>self, app_type: str) ‑> list</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Get the applications which is target type</p></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.register"><code class="name flex">
-<span>def <span class="ident">register</span></span>(<span>self, app_key, app_obj)</span>
+<span>def <span class="ident">register</span></span>(<span>self, app_key: str, app_obj: ivit_i.common.app.iAPP) ‑> bool</span>
 </code></dt>
 <dd>
-<div class="desc"><h2 id="register-each-custom-application">Register Each Custom Application</h2>
-<ul>
-<li>args<ul>
-<li>app_key: the key of the application which is the keyword when user want to get the application.</li>
-<li>app_obj: the module of the application, we will double check is the subclasss of the iAPP or not.</li>
-</ul>
-</li>
-</ul></div>
+<div class="desc"><p>Register each custom application</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>app_key</code></strong> :&ensp;<code>str</code></dt>
+<dd>the key of the application which is the keyword when user want to get the application.</dd>
+<dt><strong><code>app_obj</code></strong> :&ensp;<code>iAPP</code></dt>
+<dd>the module of the application, we will double check is the subclasss of the iAPP or not.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>register success or failure</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.common.app.iAPP_HANDLER.register_from_folder"><code class="name flex">
 <span>def <span class="ident">register_from_folder</span></span>(<span>self, app_folder: str) ‑> dict</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Searching all application in custom folder,
+<div class="desc"><p>Search and import all applications that already inherit with iAPP moduel in custom folder,
 It will recursive all path in folder</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -206,43 +181,77 @@ It will recursive all path in folder</p>
 <span>class <span class="ident">iAPP_OBJ</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>iVIT-I Application for Object Detection</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></b></code>:
-<ul class="hlist">
-<li><code><a title="ivit_i.common.app.iAPP.get_name" href="#ivit_i.common.app.iAPP.get_name">get_name</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.get_type" href="#ivit_i.common.app.iAPP.get_type">get_type</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.verify_params" href="#ivit_i.common.app.iAPP.verify_params">verify_params</a></code></li>
+<div class="desc"><p><code>iVIT-I</code> Application Object for <code>Object Detection</code> Model,
+if you want to use <code>iVIT-I-{platform}-Web-Api-Fast</code> and run your own custom application
+then you have to inherit this object and follow the rule.</p>
+<h2 id="usage">Usage</h2>
+<ol>
+<li>Initialize Application (*):<ul>
+<li>you must re-define <code>__init__</code> function for your own situation.</li>
 </ul>
 </li>
+<li>Run Application (*):<ul>
+<li>you must re-define <code>__call__</code> function for your own situation.</li>
 </ul>
+</li>
+<li>Check Parameters (Optional):<ul>
+<li>we will use <code>verify_params(self, params: dict) -&gt; bool</code> to check the parameters is available or not,
+so you can re-define it for checking parameters in <code>iVIT-I-{platform}-Web-Api-Fast</code>.</li>
+</ul>
+</li>
+</ol></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ivit_i.common.app.iAPP</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="ivit_i.common.app.iAPP_OBJ.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return <code>OBJ</code></p></div>
+</dd>
+</dl>
 </dd>
 <dt id="ivit_i.common.app.iAPP_SEG"><code class="flex name class">
 <span>class <span class="ident">iAPP_SEG</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>iVIT-I Application for Semantic Segmentation</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></b></code>:
-<ul class="hlist">
-<li><code><a title="ivit_i.common.app.iAPP.get_name" href="#ivit_i.common.app.iAPP.get_name">get_name</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.get_type" href="#ivit_i.common.app.iAPP.get_type">get_type</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.verify_params" href="#ivit_i.common.app.iAPP.verify_params">verify_params</a></code></li>
+<div class="desc"><p><code>iVIT-I</code> Application Object for <code>Semantic Segmentation</code> Model,
+if you want to use <code>iVIT-I-{platform}-Web-Api-Fast</code> and run your own custom application
+then you have to inherit this object and follow the rule.</p>
+<h2 id="usage">Usage</h2>
+<ol>
+<li>Initialize Application (*):<ul>
+<li>you must re-define <code>__init__</code> function for your own situation.</li>
 </ul>
 </li>
+<li>Run Application (*):<ul>
+<li>you must re-define <code>__call__</code> function for your own situation.</li>
 </ul>
+</li>
+<li>Check Parameters (Optional):<ul>
+<li>we will use <code>verify_params(self, params: dict) -&gt; bool</code> to check the parameters is available or not,
+so you can re-define it for checking parameters in <code>iVIT-I-{platform}-Web-Api-Fast</code>.</li>
+</ul>
+</li>
+</ol></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>ivit_i.common.app.iAPP</li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="ivit_i.common.app.iAPP_SEG.get_type"><code class="name flex">
+<span>def <span class="ident">get_type</span></span>(<span>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Return <code>SEG</code></p></div>
+</dd>
+</dl>
 </dd>
 </dl>
 </section>
@@ -261,15 +270,10 @@ It will recursive all path in folder</p>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="ivit_i.common.app.iAPP" href="#ivit_i.common.app.iAPP">iAPP</a></code></h4>
-<ul class="">
-<li><code><a title="ivit_i.common.app.iAPP.get_name" href="#ivit_i.common.app.iAPP.get_name">get_name</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.get_type" href="#ivit_i.common.app.iAPP.get_type">get_type</a></code></li>
-<li><code><a title="ivit_i.common.app.iAPP.verify_params" href="#ivit_i.common.app.iAPP.verify_params">verify_params</a></code></li>
-</ul>
-</li>
-<li>
 <h4><code><a title="ivit_i.common.app.iAPP_CLS" href="#ivit_i.common.app.iAPP_CLS">iAPP_CLS</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.common.app.iAPP_CLS.get_type" href="#ivit_i.common.app.iAPP_CLS.get_type">get_type</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="ivit_i.common.app.iAPP_HANDLER" href="#ivit_i.common.app.iAPP_HANDLER">iAPP_HANDLER</a></code></h4>
@@ -286,9 +290,15 @@ It will recursive all path in folder</p>
 </li>
 <li>
 <h4><code><a title="ivit_i.common.app.iAPP_OBJ" href="#ivit_i.common.app.iAPP_OBJ">iAPP_OBJ</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.common.app.iAPP_OBJ.get_type" href="#ivit_i.common.app.iAPP_OBJ.get_type">get_type</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="ivit_i.common.app.iAPP_SEG" href="#ivit_i.common.app.iAPP_SEG">iAPP_SEG</a></code></h4>
+<ul class="">
+<li><code><a title="ivit_i.common.app.iAPP_SEG.get_type" href="#ivit_i.common.app.iAPP_SEG.get_type">get_type</a></code></li>
+</ul>
 </li>
 </ul>
 </li>
