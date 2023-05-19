@@ -54,17 +54,15 @@ iVIT Classification Sample, this sample demonstrates how to do inference of imag
     --async_mode \
     -d GPU
     ```
-
 ## Format of output 
 *  The format of result after model predict like below.
 
-    | Name |Type | Description |
-    |--- |--- | --- |
-    | Input|list|[ turple ( id:int , label:str, score:float ) , ... ]|
-
-* Item Description  
-    |Name|Example|Description|
-    |---|---| --- |
-    |id|0|The sort index of the labels|
-    |label|cat|The name of the predict label|
-    |score|0.59221|The confidence of the prediction|
+| Type | Description |
+| --- | --- |
+|tuple|( id, label, score )|
+* Example:
+    ```bash
+        id      # (type int)           value : 0   
+        label   # (type str)           value : cat   
+        score   # (type numpy.float32) value : 0.5921569      
+    ```

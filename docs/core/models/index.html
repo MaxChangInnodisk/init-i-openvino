@@ -41,22 +41,23 @@
 <dl>
 <dt id="ivit_i.core.models.iClassification"><code class="flex name class">
 <span>class <span class="ident">iClassification</span></span>
-<span>(</span><span>model_path, label_path, device, **kwargs)</span>
+<span>(</span><span>model_path: str, label_path: str, device: Literal['CPU', 'GPU', None] = 'CPU', topk: int = 3, mean_values: Optional[List[float]] = None, scale_values: Optional[List[float]] = None, reverse_input_channels: Optional[bool] = False, confidence_threshold: Union[int, float] = 0.9, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>Initialize ivit model
-Args
-- model_path: path to model file ( xml )
-- label_path: path to label file
-- device: supported [ 'CPU', 'GPU' ]
-- async_mode: need async mode
-- custom ( ** kwargs ): each model custom option</p>
-<p>Initialize
-1. Model Adaptor
-2. Model Wrapper
-3.</p></div>
+<p>iVIT Classification</p>
+<h2 id="args">Args</h2>
+<ul>
+<li>model_path (str): path to model file ( xml )</li>
+<li>label_path (str): path to label file</li>
+<li>device (Literal[&#39;CPU&#39;, &#39;GPU&#39;, None], optional): device type. Defaults to 'CPU'.</li>
+<li>topk (int, optional): get k outputs. Defaults to 3.</li>
+<li>confidence_threshold (Union[float, int], optional): define the threshold of the confidence. Defaults to 0.9.</li>
+<li>mean_values (Optional[List[float]], optional): custom mean value. Defaults to None.</li>
+<li>scale_values (Optional[List[float]], optional): custom scale value. Defaults to None.</li>
+<li>reverse_input_channels (Optional[bool], optional): if need reverse channels. Defaults to False.</li>
+</ul></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="ivit_i.core.models.model.iModel" href="model.html#ivit_i.core.models.model.iModel">iModel</a></li>
@@ -66,30 +67,39 @@ Args
 <ul class="hlist">
 <li><code><b><a title="ivit_i.core.models.model.iModel" href="model.html#ivit_i.core.models.model.iModel">iModel</a></b></code>:
 <ul class="hlist">
+<li><code><a title="ivit_i.core.models.model.iModel.get_fps" href="model.html#ivit_i.core.models.model.iModel.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.get_labels" href="model.html#ivit_i.core.models.model.iModel.get_labels">get_labels</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.get_thres" href="model.html#ivit_i.core.models.model.iModel.get_thres">get_thres</a></code></li>
 <li><code><a title="ivit_i.core.models.model.iModel.inference" href="model.html#ivit_i.core.models.model.iModel.inference">inference</a></code></li>
-<li><code><a title="ivit_i.core.models.model.iModel.set_inference" href="model.html#ivit_i.core.models.model.iModel.set_inference">set_inference</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.postprocess" href="model.html#ivit_i.core.models.model.iModel.postprocess">postprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.preprocess" href="model.html#ivit_i.core.models.model.iModel.preprocess">preprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.release" href="model.html#ivit_i.core.models.model.iModel.release">release</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.set_thres" href="model.html#ivit_i.core.models.model.iModel.set_thres">set_thres</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
 <dt id="ivit_i.core.models.iDetection"><code class="flex name class">
 <span>class <span class="ident">iDetection</span></span>
-<span>(</span><span>model_path, label_path, device, architecture_type, **kwargs)</span>
+<span>(</span><span>model_path: str, label_path: str, architecture_type: Literal['yolo', 'yolov4'], device: Literal['CPU', 'GPU', None] = 'CPU', confidence_threshold: Union[int, float] = 0.9, anchors: Optional[str] = None, resize_type: Optional[str] = None, mean_values: Optional[List[float]] = None, scale_values: Optional[List[float]] = None, reverse_input_channels: Optional[bool] = False, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>Initialize ivit model
-Args
-- model_path: path to model file ( xml )
-- label_path: path to label file
-- device: supported [ 'CPU', 'GPU' ]
-- async_mode: need async mode
-- custom ( ** kwargs ): each model custom option</p>
-<p>Initialize
-1. Model Adaptor
-2. Model Wrapper
-3.</p></div>
+<p>iVIT Object Detection</p>
+<h2 id="args">Args</h2>
+<ul>
+<li>model_path (str): path to model file ( xml )</li>
+<li>label_path (str): path to label file</li>
+<li>device (Literal[&#39;CPU&#39;, &#39;GPU&#39;, None], optional): device type. Defaults to 'CPU'.</li>
+<li>architecture_type (str): architecture type</li>
+<li>confidence_threshold (Union[float, int], optional): define the threshold of the confidence. Defaults to 0.9.</li>
+<li>anchors (Optional[str], optional): <em>description</em>. Defaults to None.</li>
+<li>resize_type (Optional[str], optional): resize type for openvino function. Defaults to None.</li>
+<li>mean_values (Optional[List[float]], optional): custom mean value. Defaults to None.</li>
+<li>scale_values (Optional[List[float]], optional): custom scale value. Defaults to None.</li>
+<li>reverse_input_channels (Optional[bool], optional): if need reverse channels. Defaults to False.</li>
+</ul></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="ivit_i.core.models.model.iModel" href="model.html#ivit_i.core.models.model.iModel">iModel</a></li>
@@ -108,30 +118,35 @@ Args
 <ul class="hlist">
 <li><code><b><a title="ivit_i.core.models.model.iModel" href="model.html#ivit_i.core.models.model.iModel">iModel</a></b></code>:
 <ul class="hlist">
+<li><code><a title="ivit_i.core.models.model.iModel.get_fps" href="model.html#ivit_i.core.models.model.iModel.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.get_labels" href="model.html#ivit_i.core.models.model.iModel.get_labels">get_labels</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.get_thres" href="model.html#ivit_i.core.models.model.iModel.get_thres">get_thres</a></code></li>
 <li><code><a title="ivit_i.core.models.model.iModel.inference" href="model.html#ivit_i.core.models.model.iModel.inference">inference</a></code></li>
-<li><code><a title="ivit_i.core.models.model.iModel.set_inference" href="model.html#ivit_i.core.models.model.iModel.set_inference">set_inference</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.postprocess" href="model.html#ivit_i.core.models.model.iModel.postprocess">postprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.preprocess" href="model.html#ivit_i.core.models.model.iModel.preprocess">preprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.release" href="model.html#ivit_i.core.models.model.iModel.release">release</a></code></li>
+<li><code><a title="ivit_i.core.models.model.iModel.set_thres" href="model.html#ivit_i.core.models.model.iModel.set_thres">set_thres</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
 <dt id="ivit_i.core.models.iModel"><code class="flex name class">
 <span>class <span class="ident">iModel</span></span>
-<span>(</span><span>model_path: str, label_path: str, device: str, **kwargs)</span>
+<span>(</span><span>model_path: str, label_path: str, device: str = 'CPU', num_streams: str = '', num_threads=None, num_infer_requests=0, layout=None, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
 inheritance.</p>
-<p>Initialize ivit model
-Args
-- model_path: path to model file ( xml )
-- label_path: path to label file
-- device: supported [ 'CPU', 'GPU' ]
-- async_mode: need async mode
-- custom ( ** kwargs ): each model custom option</p>
-<p>Initialize
-1. Model Adaptor
-2. Model Wrapper
-3.</p></div>
+<p>iVIT Model Wrapper: self.model_adapter will be generate after <code>__init__</code></p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to model file ( xml )</dd>
+<dt><strong><code>label_path</code></strong> :&ensp;<code>str</code></dt>
+<dd>path to label file</dd>
+<dt><strong><code>device</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>supported [ 'CPU', 'GPU' ]. Defaults to 'CPU'.</dd>
+</dl></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>abc.ABC</li>
@@ -144,52 +159,112 @@ Args
 <h3>Methods</h3>
 <dl>
 <dt id="ivit_i.core.models.iModel.get_fps"><code class="name flex">
-<span>def <span class="ident">get_fps</span></span>(<span>self)</span>
+<span>def <span class="ident">get_fps</span></span>(<span>self) ‑> int</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get inference FPS</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>the fps value</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.core.models.iModel.get_labels"><code class="name flex">
-<span>def <span class="ident">get_labels</span></span>(<span>self)</span>
+<span>def <span class="ident">get_labels</span></span>(<span>self) ‑> list</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get labels</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>a list include all labels</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.core.models.iModel.get_thres"><code class="name flex">
-<span>def <span class="ident">get_thres</span></span>(<span>self)</span>
+<span>def <span class="ident">get_thres</span></span>(<span>self) ‑> float</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get threshold</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>threshold</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.core.models.iModel.inference"><code class="name flex">
-<span>def <span class="ident">inference</span></span>(<span>self, frame)</span>
+<span>def <span class="ident">inference</span></span>(<span>self, frame: numpy.ndarray) ‑> list</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Do inference</p></div>
+<div class="desc"><p>Do inference</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>frame</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>the input image data</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>detections</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<p>preprocess_metrics
+: the preprocess metric
+inference_metrics
+: the inference metric
+postprocess_metrics : the postprocess metric</p></div>
+</dd>
+<dt id="ivit_i.core.models.iModel.postprocess"><code class="name flex">
+<span>def <span class="ident">postprocess</span></span>(<span>self, raw_result: dict, preprocess_meta: dict) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Postprocess</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>raw_result</code></strong> :&ensp;<code>dict</code></dt>
+<dd>the inference raw data </dd>
+<dt><strong><code>preprocess_meta</code></strong> :&ensp;<code>dict</code></dt>
+<dd>the meta data which generated by preprocess function</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>detections</dd>
+</dl></div>
+</dd>
+<dt id="ivit_i.core.models.iModel.preprocess"><code class="name flex">
+<span>def <span class="ident">preprocess</span></span>(<span>self, frame: numpy.ndarray) ‑> tuple</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Preprocess</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>frame</code></strong> :&ensp;<code>np.ndarray</code></dt>
+<dd>input frame</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>inputs, preprocess_meta</dd>
+</dl></div>
 </dd>
 <dt id="ivit_i.core.models.iModel.release"><code class="name flex">
 <span>def <span class="ident">release</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.core.models.iModel.set_inference"><code class="name flex">
-<span>def <span class="ident">set_inference</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Get Inference Pipeline</p></div>
+<div class="desc"><p>Release iModel</p></div>
 </dd>
 <dt id="ivit_i.core.models.iModel.set_thres"><code class="name flex">
-<span>def <span class="ident">set_thres</span></span>(<span>self, thres_value)</span>
+<span>def <span class="ident">set_thres</span></span>(<span>self, thres_value: float)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
-</dd>
-<dt id="ivit_i.core.models.iModel.sync_infer"><code class="name flex">
-<span>def <span class="ident">sync_infer</span></span>(<span>self, frame)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
+<div class="desc"><p>Setup threshold value</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>thres_value</code></strong> :&ensp;<code>float</code></dt>
+<dd>threshold</dd>
+</dl>
+<p>Attributes
+model.confidence_threshold</p></div>
 </dd>
 </dl>
 </dd>
@@ -230,10 +305,10 @@ Args
 <li><code><a title="ivit_i.core.models.iModel.get_labels" href="#ivit_i.core.models.iModel.get_labels">get_labels</a></code></li>
 <li><code><a title="ivit_i.core.models.iModel.get_thres" href="#ivit_i.core.models.iModel.get_thres">get_thres</a></code></li>
 <li><code><a title="ivit_i.core.models.iModel.inference" href="#ivit_i.core.models.iModel.inference">inference</a></code></li>
+<li><code><a title="ivit_i.core.models.iModel.postprocess" href="#ivit_i.core.models.iModel.postprocess">postprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.iModel.preprocess" href="#ivit_i.core.models.iModel.preprocess">preprocess</a></code></li>
 <li><code><a title="ivit_i.core.models.iModel.release" href="#ivit_i.core.models.iModel.release">release</a></code></li>
-<li><code><a title="ivit_i.core.models.iModel.set_inference" href="#ivit_i.core.models.iModel.set_inference">set_inference</a></code></li>
 <li><code><a title="ivit_i.core.models.iModel.set_thres" href="#ivit_i.core.models.iModel.set_thres">set_thres</a></code></li>
-<li><code><a title="ivit_i.core.models.iModel.sync_infer" href="#ivit_i.core.models.iModel.sync_infer">sync_infer</a></code></li>
 </ul>
 </li>
 </ul>
