@@ -179,6 +179,7 @@ def main():
         dpr = Displayer( cv = True )
     
     # 6. Start Inference
+    frame_idx = 0
     try:
         while(True):
             # Get frame & Do infernece
@@ -187,9 +188,9 @@ def main():
 
             if args.no_show:
                 # Just logout
-                frame_idx += 1             
+                frame_idx += 1
                 print_results(
-                    detections, model.current_frame_id, 
+                    detections, frame_idx, 
                     infer_metrx.get_fps() )
             else:
                 # Draw results
