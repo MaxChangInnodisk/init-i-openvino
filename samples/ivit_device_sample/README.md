@@ -11,7 +11,7 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
 
     ```
 * Another useful function.  
-    1. Use idev.get_all_device() can get all device information, and the format of return like below.  
+    1. Use `idev.get_device_info()` can get all device information, and the format of return like below.  
 
     
 
@@ -45,28 +45,18 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
 
 
         ```
-    2. Use idev.get_device_info('CPU') can get target device information,and the format of return like below.
+    2. Use `idev.get_device_info('CPU')` can get target device information,and the format of return like below.
 
         ```bash
 
         
         {
-            'id': 0,                            # the idex wget from device.
-            'uuid': 'CPU',                      # the name get from device. 
-            'load': 0,                          # loading capacity get from device.
-            'memoryUtil': 0,                    # amount of memory usage get from device.
-            'temperature': 30.857142857142858   # temperature get from device
+            "CPU":{
+                'id': 0,                            # the idex wget from device.
+                'uuid': 'CPU',                      # the name get from device. 
+                'load': 0,                          # loading capacity get from device.
+                'memoryUtil': 0,                    # amount of memory usage get from device.
+                'temperature': 30.857142857142858   # temperature get from device
+            }
         }
-
-
-        ```
-    3. Use idev.get_device_id('CPU') can get device index,and the format of return like below.
-
-        ```bash
-
-        (True, 0)   # True means we get currect idex.
-                    # 0 means device idex.
-
-        ```
-
     
