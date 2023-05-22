@@ -20,7 +20,7 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ```
 * Setting Varaible
     ```bash
-    EXEC_PY="python3 ./ivit-source-usage.py"
+    EXEC_PY="python3 ./ivit-rource-usage.py"
 
     ROOT=/workspace
     INPUT=${ROOT}/data/4-corner-downtown.mp4
@@ -30,8 +30,23 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ```bash
     ${EXEC_PY} -i ${INPUT}  # Press Q or Esc to leave
     ```
+  
 
 ## Usage
+
+* Help
+    ```bash
+    usage: ivit-source-usage.py [-h] [-n NAME] -i INPUT [-r RESOLUTION] [-f FPS]
+
+    optional arguments:
+    -h, --help            show this help message and exit
+    -n NAME, --name NAME  The window name.
+    -i INPUT, --input INPUT
+                            The input data.
+    -r RESOLUTION, --resolution RESOLUTION
+                            The resolution you want to get from source object.
+    -f FPS, --fps FPS     The fps you want.
+    ```
 
 * Image
     ```bash
@@ -39,7 +54,7 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ${EXEC_PY} -i path/to/image/file
     
     # Resize
-    ${EXEC_PY} -i path/to/image/file -s 640x480
+    ${EXEC_PY} -i path/to/image/file -r 640x480
     ```
 
 * Video
@@ -48,7 +63,7 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ${EXEC_PY} -i path/to/video/file
     
     # Resize
-    ${EXEC_PY} -i path/to/video/file -s 640x480
+    ${EXEC_PY} -i path/to/video/file -r 640x480
     ```
 
 * RTSP
@@ -57,7 +72,7 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ${EXEC_PY} -i ${rtsp_url}
     
     # Resize
-    ${EXEC_PY} -i ${rtsp_url} -s 640x480
+    ${EXEC_PY} -i ${rtsp_url} -r 640x480
     ```
 
 * USB Camera
@@ -67,8 +82,8 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ${EXEC_PY} -i /dev/video0
     
     # Resize
-    ${EXEC_PY} -i /dev/video0 -s 640x480
+    ${EXEC_PY} -i /dev/video0 -r 640x480
 
     # Set FPS
-    ${EXEC_PY} -i /dev/video0 -s 1920x1080 -f 30
+    ${EXEC_PY} -i /dev/video0 -r 1920x1080 -f 30
     ```

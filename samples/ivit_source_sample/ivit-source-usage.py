@@ -5,8 +5,7 @@
 
 import cv2, os, sys, time, argparse
 
-sys.path.append( '/workspace/' )
-from ivit_i.io import get_source_object, Source
+from ivit_i.io import Source
 from ivit_i.common import Metric
 
 def get_argparser():

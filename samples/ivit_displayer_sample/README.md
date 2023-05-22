@@ -39,18 +39,22 @@ iVIT Displayer Module can displaying CV window and sending RTSP at the same time
 
 * Help
     ```bash
-    usage: ivit-displayer-usage.py [-h] -i INPUT [-n NAME] [-s SIZE] [-f FPS] [--cv] [--rtsp]
+    usage: ivit-displayer-usage.py [-h] -i INPUT [--cv] [--rtsp] [-n NAME] [-r RESOLUTION] [-f FPS]
 
     optional arguments:
     -h, --help            show this help message and exit
+
+    Options:
     -i INPUT, --input INPUT
                             The input data.
-    -n NAME, --name NAME  The window name and rtsp namespace.
-    -s SIZE, --size SIZE  The size you want to get from source object.
-    -f FPS, --fps FPS     The size you want to get from source object.
     --cv                  Display OpenCV Window
     --rtsp                Display OpenCV Window
 
+    Input/Output options:
+    -n NAME, --name NAME  The window name and rtsp namespace.
+    -r RESOLUTION, --resolution RESOLUTION
+                            The resolution you want to get from source object.
+    -f FPS, --fps FPS     The fps you want.
     ```
 
 * Only Enable CV Windwos
