@@ -63,7 +63,7 @@ def basic_usage():
 
             if dpr.get_press_key() == ord('q'): break
 
-            print('FPS: {}'.format(1//metric.update()))
+            print('FPS: {}'.format(1//metric.update()), end='\r')
 
     except KeyboardInterrupt:
         pass
