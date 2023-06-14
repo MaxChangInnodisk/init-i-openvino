@@ -20,7 +20,7 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
         {   #CPU information.
             'CPU':{
                     'id': 0,                            # the idex wget from device. 
-                    'uuid': 'CPU',                      # the name get from device. 
+                    'uid': 'CPU',                      # the name get from device. 
                     'load': 0,                          # loading capacity get from device. 
                     'memoryUtil': 0,                    # amount of memory usage get from device. 
                     'temperature': 30.857142857142858   # temperature get from device
@@ -28,7 +28,7 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
             #GNA information.   
             'GNA':{
                     'id': 1,                            # the idex wget from device. 
-                    'uuid': 'GNA',                      # the name get from device. 
+                    'uid': 'GNA',                      # the name get from device. 
                     'load': 0,                          # loading capacity get from device. 
                     'memoryUtil': 0,                    # amount of memory usage get from device. 
                     'temperature': 30.857142857142858   # temperature get from device
@@ -36,7 +36,7 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
             #GPU information.      
             'GPU':{
                     'id': 2,                            # the idex wget from device.s
-                    'uuid': 'GPU',                      # the name get from device. 
+                    'uid': 'GPU',                      # the name get from device. 
                     'load': 0,                          # loading capacity get from device.
                     'memoryUtil': 0,                    # amount of memory usage get from device.
                     'temperature': 30.857142857142858   # temperature get from device
@@ -53,7 +53,7 @@ iVIT-I iDEVICE Sample, this sample demonstrates how to do use iDEVICE to monitor
         {
             "CPU":{
                 'id': 0,                            # the idex wget from device.
-                'uuid': 'CPU',                      # the name get from device. 
+                'uid': 'CPU',                      # the name get from device. 
                 'load': 0,                          # loading capacity get from device.
                 'memoryUtil': 0,                    # amount of memory usage get from device.
                 'temperature': 30.857142857142858   # temperature get from device
