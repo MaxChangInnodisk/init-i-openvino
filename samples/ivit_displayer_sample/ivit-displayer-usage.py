@@ -5,7 +5,7 @@
 
 import cv2, os, sys, time, argparse
 
-from ivit_i.io import Source, Displayer
+from ivit_i.io import Source, Displayer, SourceV2
 from ivit_i.common import Metric, put_highlighted_text
 
 def get_argparser():
@@ -72,6 +72,58 @@ def basic_usage():
         src.release()
         dpr.release()
 
+def basic_usage_v2():
+
+    args = get_argparser()
+    
+    src = SourceV2(
+        input = args.input,
+        resolution = args.resolution,
+        fps = args.fps,
+        start = True )
+
+    dpr = Displayer(
+        cv=args.cv,
+        rtsp=args.rtsp,
+        name=args.name, 
+        width=src.get_shape()[1], 
+        height=src.get_shape()[0], 
+        fps=src.get_fps() )
+    
+    if args.rtsp:
+        print(dpr.get_rtsp_url())
+
+    metric = Metric()
+    
+    try:
+
+        while(True):
+            
+            t_start = time.time() 
+
+            ret, frame = src.read()
+
+            metric.paint_metrics(frame)
+
+            dpr.show(frame)
+
+            if dpr.get_press_key() == ord('q'): break
+
+            # print('FPS: {}'.format(1//metric.update()), end='\r')
+
+            t_cur = time.time()-t_start
+            t_delay = 0.033-t_cur
+            if 0 < t_delay < 1:
+                time.sleep(t_delay-(1e-5))
+
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        src.release()
+        dpr.release()
+
 if __name__ == "__main__":
+    # sys.exit(basic_usage_v2() or 0)
     sys.exit(basic_usage() or 0)
 
