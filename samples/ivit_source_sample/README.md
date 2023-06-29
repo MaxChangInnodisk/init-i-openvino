@@ -20,7 +20,7 @@ iVIT Source Module will create a thread to keeping update the lastest frame and 
     ```
 * Setting Varaible
     ```bash
-    EXEC_PY="python3 ./ivit-rource-usage.py"
+    EXEC_PY="python3 ivit-source-usage.py"
 
     ROOT=/workspace
     INPUT=${ROOT}/data/4-corner-downtown.mp4
