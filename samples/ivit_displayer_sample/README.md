@@ -78,7 +78,7 @@ iVIT Displayer Module can displaying CV window and sending RTSP at the same time
         $ sudo docker ps -a
 
         CONTAINER ID   IMAGE                                COMMAND                 CREATED         STATUS                     PORTS     NAMES
-        8bf385f31947   maxchanginnodisk/ivit-i-intel:v1.1   "entrypoint bash"       4 seconds ago   Up 3 seconds                         ivit-i-intel-v1.1
+        8bf385f31947   innodiskorg/ivit-i-intel:v1.1   "entrypoint bash"       4 seconds ago   Up 3 seconds                         ivit-i-intel-v1.1
         ecff312558b2   aler9/rtsp-simple-server             "/rtsp-simple-server"   5 seconds ago   Exited (1) 4 seconds ago             docker-rtsp-1
 
         ```
