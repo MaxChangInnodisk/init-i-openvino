@@ -2,6 +2,6 @@
   "PROJECT": "ivit-i",
   "PLATFORM": "intel",
   "FRAMEWORK": "openvino",
-  "VERSION": "v1.1",
+  "VERSION": "v1.2",
   "TAG": "runtime"
 }

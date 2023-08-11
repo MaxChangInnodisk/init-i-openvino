@@ -17,7 +17,7 @@ iVIT-I is an AI inference tool which could support multiple AI framework and thi
     
     * Donwload Target Version
         ```bash
-        git clone -b r1.1 https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
+        git clone -b v1.2 https://github.com/InnoIPA/ivit-i-intel.git && cd ivit-i-intel
         ```
 
 2. Run iVIT-I Docker Container
@@ -50,7 +50,7 @@ iVIT-I is an AI inference tool which could support multiple AI framework and thi
 
 # Compare with OpenVINO
 
-* iVIT ( r1.1 )
+* iVIT ( v1.2 )
     1. A Simplier Way to use.
         1. Initialize iVIT Model.
         2. Initialize Source Object.
