@@ -34,3 +34,4 @@ model/*
 !docs
 !**/.gitkeep
 tool/
+**/*/core
