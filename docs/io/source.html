@@ -31,7 +31,7 @@
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
 <dt id="ivit_i.io.source.get_source_object"><code class="name flex">
-<span>def <span class="ident">get_source_object</span></span>(<span>input: str, camera_resolution: Tuple[int, int] = (1280, 720), fps: int = 30) ‑> ivit_i.io.source.Wrapper</span>
+<span>def <span class="ident">get_source_object</span></span>(<span>input: str, camera_resolution: Optional[Tuple[int, int]] = (1280, 720), fps: Optional[int] = 30) ‑> ivit_i.io.source.Wrapper</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Trying to instance the source object</p>
@@ -62,7 +62,7 @@
 <dl>
 <dt id="ivit_i.io.source.Source"><code class="flex name class">
 <span>class <span class="ident">Source</span></span>
-<span>(</span><span>input: str, resolution: Tuple[int, int] = None, fps: int = None)</span>
+<span>(</span><span>input: str, resolution: Optional[Tuple[int, int]] = None, fps: Optional[int] = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>iVIT Source Object</p>
@@ -143,7 +143,7 @@
 </dd>
 <dt id="ivit_i.io.source.SourceV2"><code class="flex name class">
 <span>class <span class="ident">SourceV2</span></span>
-<span>(</span><span>input: str, resolution: Tuple[int, int] = None, fps: int = None, start: bool = False)</span>
+<span>(</span><span>input: str, resolution: Optional[Tuple[int, int]] = None, fps: Optional[int] = None, start: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>iVIT Source Object ( Async )</p>
