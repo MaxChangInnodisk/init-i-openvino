@@ -81,7 +81,7 @@ inheritance.</p>
 </dd>
 <dt id="ivit_i.core.models.iDetection"><code class="flex name class">
 <span>class <span class="ident">iDetection</span></span>
-<span>(</span><span>model_path: str, label_path: str, architecture_type: Literal['yolo', 'yolov4'], device: Literal['CPU', 'GPU', None] = 'CPU', confidence_threshold: Union[int, float] = 0.9, anchors: Optional[str] = None, resize_type: Optional[str] = None, mean_values: Optional[List[float]] = None, scale_values: Optional[List[float]] = None, reverse_input_channels: Optional[bool] = False, **kwargs)</span>
+<span>(</span><span>model_path: str, label_path: str, architecture_type: Literal['yolo', 'yolov4'], device: Literal['CPU', 'GPU', None] = 'CPU', confidence_threshold: Union[int, float] = 0.9, anchors: Optional[list] = None, resize_type: Optional[str] = None, mean_values: Optional[List[float]] = None, scale_values: Optional[List[float]] = None, reverse_input_channels: Optional[bool] = False, **kwargs)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Helper class that provides a standard way to create an ABC using
@@ -94,7 +94,7 @@ inheritance.</p>
 <li>device (Literal[&#39;CPU&#39;, &#39;GPU&#39;, None], optional): device type. Defaults to 'CPU'.</li>
 <li>architecture_type (str): architecture type</li>
 <li>confidence_threshold (Union[float, int], optional): define the threshold of the confidence. Defaults to 0.9.</li>
-<li>anchors (Optional[str], optional): <em>description</em>. Defaults to None.</li>
+<li>anchors (Optional[list], optional): <em>description</em>. Defaults to None.</li>
 <li>resize_type (Optional[str], optional): resize type for openvino function. Defaults to None.</li>
 <li>mean_values (Optional[List[float]], optional): custom mean value. Defaults to None.</li>
 <li>scale_values (Optional[List[float]], optional): custom scale value. Defaults to None.</li>
