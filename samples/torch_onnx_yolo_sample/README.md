@@ -14,7 +14,7 @@ iVIT Object Detection Sample, this sample demonstrates how to do inference of im
     INPUT=${ROOT}/data/sd-card.png
     MODEL=${ROOT}/model/sd_card_yolo_torch_ir/sd_card_yolo_torch_ir.xml
     LABEL=${ROOT}/model/sd_card_yolo_torch_ir/coco.name
-    ARCHT=yolo
+    ARCHT=torch-yolo
     ${EXEC_PY} -m ${MODEL} -l ${LABEL} -i ${INPUT} -at ${ARCHT}
     ```
 
