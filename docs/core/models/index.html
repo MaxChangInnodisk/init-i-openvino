@@ -30,6 +30,14 @@
 <dd>
 <div class="desc"><p>Copyright (C) 2020-2023 Intel Corporation …</p></div>
 </dd>
+<dt><code class="name"><a title="ivit_i.core.models.onnx_utils" href="onnx_utils.html">ivit_i.core.models.onnx_utils</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt><code class="name"><a title="ivit_i.core.models.onnx_yolo" href="onnx_yolo.html">ivit_i.core.models.onnx_yolo</a></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
 </section>
 <section>
@@ -129,6 +137,102 @@ inheritance.</p>
 </ul>
 </li>
 </ul>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx"><code class="flex name class">
+<span>class <span class="ident">iDetectionOnnx</span></span>
+<span>(</span><span>model_path: str, label_path: str, architecture_type: Literal['yolo', 'yolov4', 'yolov4-tiny'] = 'yolov4-tiny', device: Literal['CPU', 'GPU', None] = 'CPU', confidence_threshold: Union[int, float] = 0.9, anchors: Optional[str] = None, resize_type: Optional[str] = None, mean_values: Optional[List[float]] = None, scale_values: Optional[List[float]] = None, reverse_input_channels: Optional[bool] = False, **kwargs)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>iVIT Object Detection</p>
+<h2 id="args">Args</h2>
+<ul>
+<li>model_path (str): path to model file ( xml )</li>
+<li>label_path (str): path to label file</li>
+<li>device (Literal[&#39;CPU&#39;, &#39;GPU&#39;, None], optional): device type. Defaults to 'CPU'.</li>
+<li>architecture_type (str): architecture type</li>
+<li>confidence_threshold (Union[float, int], optional): define the threshold of the confidence. Defaults to 0.9.</li>
+<li>anchors (Optional[str], optional): <em>description</em>. Defaults to None.</li>
+<li>resize_type (Optional[str], optional): resize type for openvino function. Defaults to None.</li>
+<li>mean_values (Optional[List[float]], optional): custom mean value. Defaults to None.</li>
+<li>scale_values (Optional[List[float]], optional): custom scale value. Defaults to None.</li>
+<li>reverse_input_channels (Optional[bool], optional): if need reverse channels. Defaults to False.</li>
+</ul></div>
+<h3>Static methods</h3>
+<dl>
+<dt id="ivit_i.core.models.iDetectionOnnx.available_wrappers"><code class="name flex">
+<span>def <span class="ident">available_wrappers</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="ivit_i.core.models.iDetectionOnnx.get_fps"><code class="name flex">
+<span>def <span class="ident">get_fps</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get inference FPS</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>the fps value</dd>
+</dl></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.get_labels"><code class="name flex">
+<span>def <span class="ident">get_labels</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get labels</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>a list include all labels</dd>
+</dl></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.get_thres"><code class="name flex">
+<span>def <span class="ident">get_thres</span></span>(<span>self) ‑> float</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get threshold</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code></dt>
+<dd>threshold</dd>
+</dl></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.inference"><code class="name flex">
+<span>def <span class="ident">inference</span></span>(<span>self, frame: numpy.ndarray)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.preprocess"><code class="name flex">
+<span>def <span class="ident">preprocess</span></span>(<span>self, frame: numpy.ndarray) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.release"><code class="name flex">
+<span>def <span class="ident">release</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Release iModel</p></div>
+</dd>
+<dt id="ivit_i.core.models.iDetectionOnnx.set_thres"><code class="name flex">
+<span>def <span class="ident">set_thres</span></span>(<span>self, thres_value: float)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Setup threshold value</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>thres_value</code></strong> :&ensp;<code>float</code></dt>
+<dd>threshold</dd>
+</dl>
+<p>Attributes
+model.confidence_threshold</p></div>
+</dd>
+</dl>
 </dd>
 <dt id="ivit_i.core.models.iModel"><code class="flex name class">
 <span>class <span class="ident">iModel</span></span>
@@ -285,6 +389,8 @@ model.confidence_threshold</p></div>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="ivit_i.core.models.model" href="model.html">ivit_i.core.models.model</a></code></li>
+<li><code><a title="ivit_i.core.models.onnx_utils" href="onnx_utils.html">ivit_i.core.models.onnx_utils</a></code></li>
+<li><code><a title="ivit_i.core.models.onnx_yolo" href="onnx_yolo.html">ivit_i.core.models.onnx_yolo</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -296,6 +402,19 @@ model.confidence_threshold</p></div>
 <h4><code><a title="ivit_i.core.models.iDetection" href="#ivit_i.core.models.iDetection">iDetection</a></code></h4>
 <ul class="">
 <li><code><a title="ivit_i.core.models.iDetection.available_wrappers" href="#ivit_i.core.models.iDetection.available_wrappers">available_wrappers</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="ivit_i.core.models.iDetectionOnnx" href="#ivit_i.core.models.iDetectionOnnx">iDetectionOnnx</a></code></h4>
+<ul class="two-column">
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.available_wrappers" href="#ivit_i.core.models.iDetectionOnnx.available_wrappers">available_wrappers</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.get_fps" href="#ivit_i.core.models.iDetectionOnnx.get_fps">get_fps</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.get_labels" href="#ivit_i.core.models.iDetectionOnnx.get_labels">get_labels</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.get_thres" href="#ivit_i.core.models.iDetectionOnnx.get_thres">get_thres</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.inference" href="#ivit_i.core.models.iDetectionOnnx.inference">inference</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.preprocess" href="#ivit_i.core.models.iDetectionOnnx.preprocess">preprocess</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.release" href="#ivit_i.core.models.iDetectionOnnx.release">release</a></code></li>
+<li><code><a title="ivit_i.core.models.iDetectionOnnx.set_thres" href="#ivit_i.core.models.iDetectionOnnx.set_thres">set_thres</a></code></li>
 </ul>
 </li>
 <li>
