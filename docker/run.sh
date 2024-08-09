@@ -88,7 +88,8 @@ SET_MEM="--ipc=host"
 # ========================================================
 
 # [ACCELERATOR]
-MOUNT_ACCELERATOR="--device /dev/dri --device-cgroup-rule='c 189:* rmw'"
+MOUNT_ACCELERATOR="--user=root --device=/dev/dri --device=/dev/accel --group-add=$(stat -c '%g' /dev/dri/render* | head -n 1) --group-add=$(stat -c '%g' /dev/dri/card* | head -n 1)"
+
 
 # [VISION] Set up Vision option for docker if need
 if [[ ! -z $(echo ${DISPLAY}) ]];then
